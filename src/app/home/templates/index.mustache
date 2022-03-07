@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+        <title>Gegevens toevoegen aan IRMA</title>
+
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="stylesheet" href="{{assets}}/style/theme.css"/>
+        <link rel="stylesheet" href="{{assets}}/style/main.css"/>
+
+    </head>
+    <body>
+        <div id="app">
+            <div class="fixedHeaderContainer">
+                <div class="headerWrapper wrapper">
+                    <header>
+                        <a href="/irma/gemeente/start" style="height: 50px;"><img class="logo" src=""></a>
+                        <img class="logo" src="{{assets}}/img/irmaLogo.png" alt="IRMA Laden">
+                        <div class="navigationWrapper navigationSlider">
+                            <nav class="slidingNav"></nav>
+                        </div>
+                    </header>
+                </div>
+            </div>
+            <div class="navPusher">
+                <div>
+                    <div class="homeContainer">
+                        <div class="homeSplashFade">
+                            <div class="wrapper homeWrapper">
+                                <div class="inner">
+                                    <h1 class="projectTitle">Gegevens toevoegen aan IRMA</h1>
+                                </div>
+                                <div style="margin: 0px auto; max-width: 800px;"><br><br><p>Haal je persoonsgegevens en adres op via DigiD.<br>Je logt in bij de Gemeente Nijmegen, ook als je niet in Nijmegen woont.</p>
+                                    <p>De
+                                        <b>gemeente Nijmegen</b>
+                                        stelt deze gegevens beschikbaar voor iedereen in Nederland.</p>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; max-width: 600px; margin: 50px auto;">
+                                    <div style="flex: 1 1 0%; min-width: 300px;">
+                                        <a href="issue"><img src=""></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mainContainer" style="padding-bottom: 0px;">
+                        <div class="container lightBackground paddingBottom" style="padding-top: 20px;">
+                            <div class="wrapper municipalityLogos">
+                                <h2>Deze dienst wordt mede mogelijk gemaakt door:</h2>
+                                {{#gemeentes}}
+                                    <img src="{{assets}}/img/gemeenten-logos/{{.}}.png"/>
+                                {{/gemeentes}}
+                            </div>
+                        </div>
+                        <footer class="nav-footer" id="footer">
+                            <section class="sitemap">
+                                <a href="" class="nav-home" style="opacity: 1;">
+                                    <img src="{{assets}}/img/irmaLogo.png" alt="IRMA Laden" style="width: 72px;"></a>
+                            </section>
+                        </footer>
+                    </div>
+                </div>
+            </body>
+        </body>
+    </body>
+</html></body></html>
