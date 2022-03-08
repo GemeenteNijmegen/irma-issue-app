@@ -1,0 +1,8 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "Lambda for authentication landing after digid authentication",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
+}

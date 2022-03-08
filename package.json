@@ -7,11 +7,14 @@
     "compile": "npx projen compile",
     "default": "npx projen default",
     "deploy": "npx projen deploy",
+    "deploy:full": "npx projen deploy:full",
     "destroy": "npx projen destroy",
     "diff": "npx projen diff",
     "eject": "npx projen eject",
     "eslint": "npx projen eslint",
     "install:home": "npx projen install:home",
+    "install:issue": "npx projen install:issue",
+    "install:manual_auth": "npx projen install:manual_auth",
     "package": "npx projen package",
     "post-compile": "npx projen post-compile",
     "post-upgrade": "npx projen post-upgrade",
@@ -49,6 +52,7 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
+    "@aws-solutions-constructs/aws-lambda-dynamodb": "2.0.0",
     "aws-cdk-lib": "^2.1.0",
     "constructs": "^10.0.5"
   },

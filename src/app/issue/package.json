@@ -1,0 +1,14 @@
+{
+  "name": "issue",
+  "version": "1.0.0",
+  "description": "Irma issue lambda",
+  "main": "index.js",
+  "scripts": {
+    "test": ""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mustache": "^4.2.0"
+  }
+}

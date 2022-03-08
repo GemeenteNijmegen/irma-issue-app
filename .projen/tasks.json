@@ -82,6 +82,14 @@
         }
       ]
     },
+    "deploy:full": {
+      "name": "deploy:full",
+      "steps": [
+        {
+          "exec": "npx cdk deploy irma-issue-app/assets-stack irma-issue-app/api-stack irma-issue-app/sessions-stack"
+        }
+      ]
+    },
     "destroy": {
       "name": "destroy",
       "description": "Destroys your cdk app in the AWS cloud",
@@ -129,6 +137,22 @@
         }
       ]
     },
+    "install:issue": {
+      "name": "install:issue",
+      "steps": [
+        {
+          "exec": "copyfiles -f src/shared/*.js src/app/issue/shared && cd src/app/issue && npm install"
+        }
+      ]
+    },
+    "install:manual_auth": {
+      "name": "install:manual_auth",
+      "steps": [
+        {
+          "exec": "copyfiles -f src/shared/*.js src/app/manual_auth/shared && cd src/app/manual_auth && npm install"
+        }
+      ]
+    },
     "package": {
       "name": "package",
       "description": "Creates the distribution package"
@@ -150,7 +174,7 @@
       "name": "postinstall",
       "steps": [
         {
-          "exec": "npm run install:home"
+          "exec": "npm run install:home && npm run install:issue && npm run install:manual_auth"
         }
       ]
     },
@@ -232,7 +256,7 @@
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk copyfiles esbuild eslint-import-resolver-node eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit json-schema npm-check-updates ts-jest ts-node typescript aws-cdk-lib constructs"
+          "exec": "yarn upgrade @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk copyfiles esbuild eslint-import-resolver-node eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit json-schema npm-check-updates ts-jest ts-node typescript @aws-solutions-constructs/aws-lambda-dynamodb aws-cdk-lib constructs"
         },
         {
           "exec": "npx projen"

@@ -9,6 +9,12 @@ import { AppStage } from './AppStage';
 
 const app = new App();
 
-new AppStage(app, 'irma-issue-app');
+
+// TODO configure different pipelines per environment with different configurations for each environment.
+
+new AppStage(app, 'irma-issue-app', {
+  enableManualAuthentication: true, // Never enable in production!
+  enableIrmaAuthentication: true,
+});
 
 app.synth();
