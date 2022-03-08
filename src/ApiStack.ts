@@ -5,6 +5,7 @@ import { aws_apigateway as apiGateway } from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
+import { ApiFunction } from './ApiFunction';
 import { SessionsTable } from './SessionsTable';
 
 
@@ -28,11 +29,13 @@ export class ApiStack extends cdk.Stack {
     });
 
     // Construct the home lambda
-    const homeLambda = new lambda.Function(this, 'home-lambda', {
-      runtime: Runtime.NODEJS_14_X,
+    const homeLambda = new ApiFunction(this, 'home-lambda-function', {
+      cdkName: 'home-lambda',
       handler: 'index.handler',
       description: 'Home lambda for IRMA issue app',
-      code: lambda.Code.fromAsset(Path.join(__dirname, 'app', 'home')),
+      source: Path.join(__dirname, 'app', 'home'),
+      table: props.sessionsTable.table,
+      tablePermissions: 'ReadWrite',
       environment: {
         ASSETS_URL: props.assetsUrl,
         IRMA_AUTH_ENABLED: props.enableIrmaAuthentication.toString(),
@@ -41,11 +44,13 @@ export class ApiStack extends cdk.Stack {
     });
 
     // Construct the issue lambda
-    const issueLambda = new lambda.Function(this, 'issue-lambda', {
-      runtime: Runtime.NODEJS_14_X,
+    const issueLambda = new ApiFunction(this, 'issue-lambda-function', {
+      cdkName: 'issue-lambda',
       handler: 'index.handler',
       description: 'Issue lambda for IRMA issue app',
-      code: lambda.Code.fromAsset(Path.join(__dirname, 'app', 'issue')),
+      source: Path.join(__dirname, 'app', 'issue'),
+      table: props.sessionsTable.table,
+      tablePermissions: 'ReadWrite',
       environment: {
         ASSETS_URL: props.assetsUrl,
         SESSION_TABLE: props.sessionsTable.table.tableName,
@@ -53,11 +58,13 @@ export class ApiStack extends cdk.Stack {
     });
 
     // Construct the auth lambda
-    const authLambda = new lambda.Function(this, 'auth-lambda', {
-      runtime: Runtime.NODEJS_14_X,
+    const authLambda = new ApiFunction(this, 'auth-lambda-function', {
+      cdkName: 'auth-lambda',
       handler: 'index.handler',
       description: 'Authentication landing lambda for IRMA issue app',
-      code: lambda.Code.fromAsset(Path.join(__dirname, 'app', 'auth')),
+      source: Path.join(__dirname, 'app', 'auth'),
+      table: props.sessionsTable.table,
+      tablePermissions: 'ReadWrite',
       environment: {
         ASSETS_URL: props.assetsUrl,
         SESSION_TABLE: props.sessionsTable.table.tableName,
@@ -65,13 +72,13 @@ export class ApiStack extends cdk.Stack {
     });
 
     // Add each of the lambdas to the api gateway as resources
-    api.root.addMethod('GET', new apiGateway.LambdaIntegration(homeLambda));
+    api.root.addMethod('GET', new apiGateway.LambdaIntegration(homeLambda.lambda));
 
     const issue = api.root.addResource('issue');
-    issue.addMethod('GET', new apiGateway.LambdaIntegration(issueLambda));
+    issue.addMethod('GET', new apiGateway.LambdaIntegration(issueLambda.lambda));
 
     const auth = api.root.addResource('auth');
-    auth.addMethod('GET', new apiGateway.LambdaIntegration(authLambda));
+    auth.addMethod('GET', new apiGateway.LambdaIntegration(authLambda.lambda));
 
     // Enable the manual authentication (protected with basic auth) if required
     if (props.enableManualAuthentication) {
@@ -109,19 +116,22 @@ export class ApiStack extends cdk.Stack {
     });
 
     // Construct a authentication bypass lambda
-    const manualAuthLambda = new lambda.Function(this, 'manual-auth-lambda', {
-      runtime: Runtime.NODEJS_14_X,
+    const manualAuthLambda = new ApiFunction(this, 'manual-auth-function', {
+      cdkName: 'manual-auth-lambda',
       handler: 'index.handler',
       description: 'Manual authentication lambda for IRMA issue app',
-      code: lambda.Code.fromAsset(Path.join(__dirname, 'app', 'manual_auth')),
+      source: Path.join(__dirname, 'app', 'manual_auth'),
+      table: props.sessionsTable.table,
+      tablePermissions: 'ReadWrite',
       environment: {
+        ASSETS_URL: props.assetsUrl,
         SESSION_TABLE: props.sessionsTable.table.tableName,
       },
     });
 
     // Let manual_auth lamba access dynamodb
     new LambdaToDynamoDB(this, 'lambda-with-db', {
-      existingLambdaObj: manualAuthLambda,
+      existingLambdaObj: manualAuthLambda.lambda,
       existingTableObj: props.sessionsTable.table,
       tablePermissions: 'ReadWrite',
       tableEnvironmentVariableName: 'SESSION_TABLE',
@@ -129,7 +139,7 @@ export class ApiStack extends cdk.Stack {
 
     // Create endpoint in the api for this lambda and secure it
     const home = api.root.addResource('manual_auth');
-    home.addMethod('GET', new apiGateway.LambdaIntegration(manualAuthLambda), {
+    home.addMethod('GET', new apiGateway.LambdaIntegration(manualAuthLambda.lambda), {
       authorizer: authorizer,
     });
 
