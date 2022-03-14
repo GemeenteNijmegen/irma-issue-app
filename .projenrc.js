@@ -19,6 +19,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   },
   deps: [
     '@aws-solutions-constructs/aws-lambda-dynamodb@2.0.0',
+    'dotenv@16.0.0',
   ],
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
   // devDeps: [],             /* Build dependencies for this module. */

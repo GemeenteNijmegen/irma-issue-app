@@ -3,7 +3,6 @@ import { aws_lambda as Lambda, aws_dynamodb as dynamodb } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
 export interface ApiFunctionProps {
-  cdkName : string;
   handler: string;
   description: string;
   source: string;
@@ -19,7 +18,7 @@ export class ApiFunction extends Construct {
   constructor(scope: Construct, id: string, props: ApiFunctionProps) {
     super(scope, id);
 
-    this.lambda = new Lambda.Function(this, props.cdkName, {
+    this.lambda = new Lambda.Function(this, 'lambda', {
       runtime: Lambda.Runtime.NODEJS_14_X,
       handler: props.handler,
       description: props.description,

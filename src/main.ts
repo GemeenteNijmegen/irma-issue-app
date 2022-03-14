@@ -1,5 +1,6 @@
 import { App } from 'aws-cdk-lib';
 import { AppStage } from './AppStage';
+import { ParameterStage } from './ParameterStage';
 
 // For now only deploy to sandbox trough cli no need to define an environment.
 // const sandboxEnvironment = {
@@ -15,6 +16,10 @@ const app = new App();
 new AppStage(app, 'irma-issue-app', {
   enableManualAuthentication: true, // Never enable in production!
   enableIrmaAuthentication: true,
+});
+
+new ParameterStage(app, 'irma-issue-app-parameters', {
+  environment: 'sandbox',
 });
 
 app.synth();

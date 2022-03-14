@@ -1,12 +1,12 @@
 import * as Path from 'path';
-import { LambdaToDynamoDB } from '@aws-solutions-constructs/aws-lambda-dynamodb';
 import * as cdk from 'aws-cdk-lib';
-import { aws_apigateway as apiGateway } from 'aws-cdk-lib';
+import { aws_apigateway as apiGateway, aws_secretsmanager as SecretsManager, aws_ssm as SSM } from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
 import { SessionsTable } from './SessionsTable';
+import { Statics } from './Statics';
 
 
 export interface ApiStackProps extends cdk.StackProps {
@@ -29,8 +29,7 @@ export class ApiStack extends cdk.Stack {
     });
 
     // Construct the home lambda
-    const homeLambda = new ApiFunction(this, 'home-lambda-function', {
-      cdkName: 'home-lambda',
+    const homeLambda = new ApiFunction(this, 'home-lambda', {
       handler: 'index.handler',
       description: 'Home lambda for IRMA issue app',
       source: Path.join(__dirname, 'app', 'home'),
@@ -44,8 +43,13 @@ export class ApiStack extends cdk.Stack {
     });
 
     // Construct the issue lambda
-    const issueLambda = new ApiFunction(this, 'issue-lambda-function', {
-      cdkName: 'issue-lambda',
+    const secretKey = SecretsManager.Secret.fromSecretNameV2(this, 'secret-key-irma', Statics.irmaIssueServerSecretKey);
+    const accessKey = SSM.StringParameter.fromStringParameterName(this, 'access-key-irma', Statics.irmaIssueServerAccessKey);
+    const irmaEndpoint = SSM.StringParameter.fromStringParameterName(this, 'endpoint-irma', Statics.iramIssueServerEndpoint);
+    const irmaRegion = SSM.StringParameter.fromStringParameterName(this, 'region-irma', Statics.irmaIssueServerZone);
+    const irmaNamespace = SSM.StringParameter.fromStringParameterName(this, 'irma-namespace', Statics.irmaNamespace);
+    const irmaApiKey = SecretsManager.Secret.fromSecretNameV2(this, 'irma-api-key', Statics.irmaApiKey);
+    const issueLambda = new ApiFunction(this, 'issue-lambda', {
       handler: 'index.handler',
       description: 'Issue lambda for IRMA issue app',
       source: Path.join(__dirname, 'app', 'issue'),
@@ -54,12 +58,18 @@ export class ApiStack extends cdk.Stack {
       environment: {
         ASSETS_URL: props.assetsUrl,
         SESSION_TABLE: props.sessionsTable.table.tableName,
+        IRMA_ISSUE_SERVER_ENDPOINT: irmaEndpoint.stringValue,
+        IRMA_ISSUE_SERVER_IAM_ACCESS_KEY: accessKey.stringValue,
+        IRMA_ISSUE_SERVER_IAM_REGION: irmaRegion.stringValue,
+        IRMA_NAMESPACE: irmaNamespace.stringValue,
+        IRMA_ISSUE_SERVER_IAM_SECRET_KEY_ARN: secretKey.secretArn,
       },
     });
+    secretKey.grantRead(issueLambda.lambda);
+    irmaApiKey.grantRead(issueLambda.lambda);
 
     // Construct the auth lambda
-    const authLambda = new ApiFunction(this, 'auth-lambda-function', {
-      cdkName: 'auth-lambda',
+    const authLambda = new ApiFunction(this, 'auth-lambda', {
       handler: 'index.handler',
       description: 'Authentication landing lambda for IRMA issue app',
       source: Path.join(__dirname, 'app', 'auth'),
@@ -116,8 +126,7 @@ export class ApiStack extends cdk.Stack {
     });
 
     // Construct a authentication bypass lambda
-    const manualAuthLambda = new ApiFunction(this, 'manual-auth-function', {
-      cdkName: 'manual-auth-lambda',
+    const manualAuthLambda = new ApiFunction(this, 'manual-auth-lambda', {
       handler: 'index.handler',
       description: 'Manual authentication lambda for IRMA issue app',
       source: Path.join(__dirname, 'app', 'manual_auth'),
@@ -127,14 +136,6 @@ export class ApiStack extends cdk.Stack {
         ASSETS_URL: props.assetsUrl,
         SESSION_TABLE: props.sessionsTable.table.tableName,
       },
-    });
-
-    // Let manual_auth lamba access dynamodb
-    new LambdaToDynamoDB(this, 'lambda-with-db', {
-      existingLambdaObj: manualAuthLambda.lambda,
-      existingTableObj: props.sessionsTable.table,
-      tablePermissions: 'ReadWrite',
-      tableEnvironmentVariableName: 'SESSION_TABLE',
     });
 
     // Create endpoint in the api for this lambda and secure it

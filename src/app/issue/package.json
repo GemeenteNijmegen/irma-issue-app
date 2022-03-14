@@ -9,6 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "@aws-sdk/client-dynamodb": "^3.47.0",
+    "@aws-sdk/client-secrets-manager": "^3.47.0",
+    "cookie": "^0.4.1",
+    "@aws-sdk/client-ssm": "^3.54.0",
+    "axios": "^0.26.1",
+    "aws4-axios": "^2.4.9"
   }
 }
