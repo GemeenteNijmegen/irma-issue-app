@@ -10,11 +10,11 @@ function parseEvent(event) {
 
 // Initialize irma client
 const irmaClient = new IrmaClient();
-irmaClient.initializeParameters().then(() => {
-    console.log('Initialized IRMA client');
-}).catch(error => {
-    console.error('Could not initalize irma client', error)
-});
+// irmaClient.initializeParameters().then(() => {
+//     console.log('Initialized IRMA client');
+// }).catch(error => {
+//     console.error('Could not initalize irma client', error)
+// });
 
 // Initialize brp client
 const brpClient = new BrpClient();
@@ -30,6 +30,8 @@ exports.handler = async (event, context) => {
     const template = __dirname + '/templates/index.mustache';
 
     try {
+        await irmaClient.initializeParameters();
+        await brpClient.initializeParameters();
 
         const params = parseEvent(event);
         let session = new Session(params.cookies);
@@ -40,19 +42,26 @@ exports.handler = async (event, context) => {
         }
 
         // Get bsn from session
-        const bsn = session.getValue('bsn');
+        const bsn = session.getValue('bsn').toString();
 
         // Fetch data from BRP based on bsn
-        const personalData = brpClient.getBrpIrmaData(bsn); //TODO unmock this method
+        const personalData = await brpClient.getBrpIrmaData(bsn); 
+        console.log(personalData);
 
         // Start the irma session
-        const irmaResponse = irmaClient.startIrmaSession(personalData);
+        const irmaResponse = await irmaClient.startIrmaSession(personalData);
 
-        // TODO Show irma session qr code to user
-        // Render the issue page
+        const x = new URL(irmaClient.endpoint);
+        const irmaServer = x.protocol + '//' + x.host;
+        console.debug(irmaServer);
+
+        // Render the issue page with the irma qr code
         const html = await render(template, {
             assets: process.env.ASSETS_URL,
-            bsn: bsn
+            irmaServer: irmaServer,
+            sessionPtr: encodeURI(JSON.stringify(irmaResponse.sessionPtr)),
+            sessionToken: irmaResponse.token,
+            frontendRequest: encodeURI(JSON.stringify(irmaResponse.frontendRequest))
         });
 
         return Response.htmlResponse(html);

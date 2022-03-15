@@ -49,6 +49,9 @@ export class ApiStack extends cdk.Stack {
     const irmaRegion = SSM.StringParameter.fromStringParameterName(this, 'region-irma', Statics.irmaIssueServerZone);
     const irmaNamespace = SSM.StringParameter.fromStringParameterName(this, 'irma-namespace', Statics.irmaNamespace);
     const irmaApiKey = SecretsManager.Secret.fromSecretNameV2(this, 'irma-api-key', Statics.irmaApiKey);
+    const brpIrmaEndpoint = SSM.StringParameter.fromStringParameterName(this, 'brp-irma-endpoint', Statics.brpEndpoint);
+    const brpCertificate = SSM.StringParameter.fromStringParameterName(this, 'brp-cert', Statics.brpCertificate);
+    const brpCertificateKey = SecretsManager.Secret.fromSecretNameV2(this, 'brp-cert-key', Statics.brpCertificateKey);
     const issueLambda = new ApiFunction(this, 'issue-lambda', {
       handler: 'index.handler',
       description: 'Issue lambda for IRMA issue app',
@@ -63,10 +66,16 @@ export class ApiStack extends cdk.Stack {
         IRMA_ISSUE_SERVER_IAM_REGION: irmaRegion.stringValue,
         IRMA_NAMESPACE: irmaNamespace.stringValue,
         IRMA_ISSUE_SERVER_IAM_SECRET_KEY_ARN: secretKey.secretArn,
+        IRMA_API_KEY_ARN: irmaApiKey.secretArn,
+        BRP_CERTIFICATE_PARAM_NAME: Statics.brpCertificate,
+        BRP_CERTIFICATE_KEY_ARN: brpCertificateKey.secretArn,
+        BRP_IRMA_ENDPOINT: brpIrmaEndpoint.stringValue,
       },
     });
     secretKey.grantRead(issueLambda.lambda);
     irmaApiKey.grantRead(issueLambda.lambda);
+    brpCertificateKey.grantRead(issueLambda.lambda);
+    brpCertificate.grantRead(issueLambda.lambda);
 
     // Construct the auth lambda
     const authLambda = new ApiFunction(this, 'auth-lambda', {

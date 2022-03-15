@@ -82,6 +82,22 @@
         }
       ]
     },
+    "deploy:api": {
+      "name": "deploy:api",
+      "steps": [
+        {
+          "exec": "npx cdk deploy irma-issue-app/api-stack irma-issue-app/sessions-stack"
+        }
+      ]
+    },
+    "deploy:assets": {
+      "name": "deploy:assets",
+      "steps": [
+        {
+          "exec": "npx cdk deploy irma-issue-app/assets-stack"
+        }
+      ]
+    },
     "deploy:full": {
       "name": "deploy:full",
       "steps": [

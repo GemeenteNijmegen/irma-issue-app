@@ -7,6 +7,8 @@
     "compile": "npx projen compile",
     "default": "npx projen default",
     "deploy": "npx projen deploy",
+    "deploy:api": "npx projen deploy:api",
+    "deploy:assets": "npx projen deploy:assets",
     "deploy:full": "npx projen deploy:full",
     "destroy": "npx projen destroy",
     "diff": "npx projen diff",

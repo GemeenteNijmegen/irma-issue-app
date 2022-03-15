@@ -1,7 +1,6 @@
-
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
 const axios = require('axios').default;
-const aws4Interceptor = require('aws4-axios');
+const aws4Axios = require('aws4-axios');
 
 class IrmaClient {
     endpoint = '';
@@ -27,24 +26,17 @@ class IrmaClient {
         this.irmaNamespace = process.env.IRMA_NAMESPACE;
         console.debug("Initialized non secret values", this.awsAccessKey, this.awsRegion, this.endpoint, this.irmaNamespace);
 
-        const secretsManagerClient = new SecretsManagerClient();
-        this.awsSecretKey = await this._getSecretString(secretsManagerClient, process.env.IRMA_ISSUE_SERVER_IAM_SECRET_KEY_ARN);
-        this.irmaApiKey = await this._getSecretString(secretsManagerClient, process.env.IRMA_API_KEY_ARN);
+        this.awsSecretKey = await this._getSecretString(process.env.IRMA_ISSUE_SERVER_IAM_SECRET_KEY_ARN);
+        this.irmaApiKey = await this._getSecretString(process.env.IRMA_API_KEY_ARN);
 
-
-        this.interceptor = aws4Interceptor({
-            region: this.region,
-            service: this.awsService,
-        }, {
-            accessKeyId: this.awsAccessKey,
-            secretAccessKey: this.awsSecretKey,
-        });
+        
 
 
         console.debug("Finished initalization of IRMA client");
     }
 
-    async _getSecretString(client, arn) {
+    async _getSecretString(arn) {
+        const client = new SecretsManagerClient();
         const command = new GetSecretValueCommand({ SecretId: arn });
         const data = await client.send(command);
         if (data.SecretBinary !== undefined) {
@@ -53,7 +45,7 @@ class IrmaClient {
         return data.SecretString;
     }
 
-    startIrmaSession(data) {
+    async startIrmaSession(data) {
         const person = data.Persoon.Persoonsgegevens;
         const age = data.Persoon.ageLimits;
         const address = data.Persoon.Adres;
@@ -80,7 +72,7 @@ class IrmaClient {
                     "validity": validity.valueOf(),
                     "attributes": {
                         "initials": person.Voorletters,
-                        "firstnames": person.Voornaamen,
+                        "firstnames": person.Voornamen,
                         "prefix": person.Voorvoegsel,
                         "familyname": person.Geslachtsnaam,
                         "fullname": person.Naam,
@@ -102,32 +94,24 @@ class IrmaClient {
             ]
         }
 
-        // const awsCredentials = {
-        //     accessKeyId: this.awsAccessKey,
-        //     secretAccessKey: this.awsSecretKey
-        // }
-        // aws4.sign({
-        //     host: this.endpoint,
-        //     method: 'POST',
-        //     path: '/session',
-        //     service: this.awsService,
-        //     region: this.awsRegion,
-        //     headers: {
-        //         'irma-Authorization': this.irmaApiKey
-        //     },
-        //     body: JSON.stringify(data)
-        // }, awsCredentials)
-
-
         const client = axios.create();
-        client.interceptors.request.use(this.interceptor);
+        client.interceptors.request.use(aws4Axios.aws4Interceptor({
+            region: this.awsRegion,
+            service: this.awsService,
+        }, {
+            accessKeyId: this.awsAccessKey,
+            secretAccessKey: this.awsSecretKey,
+        }));
 
-        axios.post(this.endpoint, body, {
+        console.debug('Sending irma post to start session!');
+
+        const response = await client.post(this.endpoint, body, {
             headers: {
-                'irma-Authorization': this.irmaApiKey
+                'irma-authorization': this.irmaApiKey
             }
         });
 
+        return response.data;
     }
 
 }
