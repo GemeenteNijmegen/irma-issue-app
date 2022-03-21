@@ -46,9 +46,9 @@ export class ParameterStack extends cdk.Stack {
       description: 'AWS IAM uses for irma issue access secret key',
     });
 
-    new SSM.StringParameter(this, 'irma-server-iam-access-key', {
-      stringValue: this.getOrDefault('IRMA_ISSUE_SERVER_IAM_ACCESS_KEY', 'AKIA3I3FDGDHNDWXQIUN'),
-      parameterName: Statics.irmaIssueServerAccessKey,
+    new SecretsManager.Secret(this, 'irma-server-iam-access-key', {
+      secretName: Statics.irmaIssueServerSecretKey,
+      description: 'AWS IAM uses for irma issue access secret key',
     });
 
     new SSM.StringParameter(this, 'irma-server-iam-zone', {
