@@ -18,6 +18,8 @@ export interface ApiStackProps extends cdk.StackProps {
 
 export class ApiStack extends cdk.Stack {
 
+  apiGatewayDomain: string;
+
   constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id, props);
 
@@ -27,6 +29,8 @@ export class ApiStack extends cdk.Stack {
         stageName: 'irma-issue',
       },
     });
+
+    this.apiGatewayDomain = api.url;
 
     // Construct the home lambda
     const homeLambda = new ApiFunction(this, 'home-lambda', {
@@ -43,6 +47,7 @@ export class ApiStack extends cdk.Stack {
     });
 
     // Construct the issue lambda
+    // TODO: Move accessKey to secret manager.
     const secretKey = SecretsManager.Secret.fromSecretNameV2(this, 'secret-key-irma', Statics.irmaIssueServerSecretKey);
     const accessKey = SSM.StringParameter.fromStringParameterName(this, 'access-key-irma', Statics.irmaIssueServerAccessKey);
     const irmaEndpoint = SSM.StringParameter.fromStringParameterName(this, 'endpoint-irma', Statics.iramIssueServerEndpoint);
@@ -174,5 +179,21 @@ export class ApiStack extends cdk.Stack {
     console.log(api.domainName);
 
   }
+
+  /**
+     * Clean and return the apigateway subdomain placeholder
+     * https://${Token[TOKEN.246]}.execute-api.eu-west-1.${Token[AWS.URLSuffix.3]}/
+     * which can't be parsed by the URL class.
+     *
+     * @returns a domain-like string cleaned of protocol and trailing slash
+     */
+  getApiGatewayDomain(): string {
+    if (!this.apiGatewayDomain) { return ''; }
+    let cleanedUrl = this.apiGatewayDomain
+      .replace(/^https?:\/\//, '') //protocol
+      .replace(/\/$/, ''); //optional trailing slash
+    return cleanedUrl;
+  }
+
 
 }

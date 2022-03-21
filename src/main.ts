@@ -10,16 +10,15 @@ import { ParameterStage } from './ParameterStage';
 
 const app = new App();
 
-
-// TODO configure different pipelines per environment with different configurations for each environment.
-
+// TODO: configure different pipelines per environment with different configurations for each environment.
 new AppStage(app, 'irma-issue-app', {
   enableManualAuthentication: true, // Never enable in production!
   enableIrmaAuthentication: true,
+  branch: 'acceptance',
 });
 
 new ParameterStage(app, 'irma-issue-app-parameters', {
-  environment: 'sandbox',
+  defaultsEnvFile: 'sandbox',
 });
 
 app.synth();

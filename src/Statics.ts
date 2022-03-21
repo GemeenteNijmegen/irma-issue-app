@@ -20,4 +20,30 @@ export abstract class Statics {
   static readonly brpEndpoint: string = '/irma-issue-app/brp-endpoint';
 
 
+  /**
+   * Hosted zone reference per environment
+   */
+  static readonly envRootHostedZoneId: string = '/gemeente-nijmegen/formFio/hostedzone/id';
+  static readonly envRootHostedZoneName: string = '/gemeente-nijmegen/formio/hostedzone/name';
+
+  /**
+   * Our hosted zone reference
+   */
+  static readonly hostedZoneId: string = '/irma-issue-app/hosted-zone/id';
+  static readonly hostedZoneName: string = '/irma-issue-app/hosted-zone/name';
+
+  /**
+   * Construct subdomain name for this app
+   * @param branch name of the git branch acceptance / production
+   * @returns subdomain prefix depending on branch
+   */
+  static subDomain(branch: string) {
+    const subdomainMap = {
+      acceptance: 'irma-issue.accp',
+      production: 'irma-issue',
+    };
+    const subdomain = subdomainMap[branch as keyof typeof subdomainMap] ?? 'irma-issue-dev';
+    return subdomain;
+  }
+
 }

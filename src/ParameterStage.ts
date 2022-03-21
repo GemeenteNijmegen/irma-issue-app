@@ -6,7 +6,7 @@ import * as dotenv from 'dotenv';
 import { Statics } from './Statics';
 
 export interface ParameterStageProps extends cdk.StageProps {
-  environment: string;
+  defaultsEnvFile: string;
 }
 
 /**
@@ -17,13 +17,13 @@ export class ParameterStage extends cdk.Stage {
     super(scope, id, props);
 
     new ParameterStack(this, 'params', {
-      environment: props.environment,
+      defaultsEnvFile: props.defaultsEnvFile,
     });
   }
 }
 
 export interface ParameterStackProps extends cdk.StackProps {
-  environment: string;
+  defaultsEnvFile: string;
 }
 
 /**
@@ -34,7 +34,7 @@ export class ParameterStack extends cdk.Stack {
     super(scope, id);
 
     // Load environment file with defauls for the configured environment
-    const file = props.environment + '.env';
+    const file = props.defaultsEnvFile + '.env';
     const path = Path.join(__dirname, file);
     dotenv.config({ path: path });
 
