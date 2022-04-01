@@ -23,8 +23,9 @@ export abstract class Statics {
   /**
    * Hosted zone reference per environment
    */
-  static readonly envRootHostedZoneId: string = '/gemeente-nijmegen/formFio/hostedzone/id';
-  static readonly envRootHostedZoneName: string = '/gemeente-nijmegen/formio/hostedzone/name';
+  static readonly envRootHostedZoneId: string = '/gemeente-nijmegen/account/hostedzone/id';
+  static readonly envRootHostedZoneName: string = '/gemeente-nijmegen/account/hostedzone/name';
+
 
   /**
    * Our hosted zone reference

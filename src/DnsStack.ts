@@ -8,7 +8,7 @@ export interface DnsStackProps extends cdk.StackProps {
 }
 
 export class DnsStack extends cdk.Stack {
-  cspRootZone: Route53.IHostedZone;
+  accountRootZone: Route53.IHostedZone;
   zone: Route53.IHostedZone;
   subdomain: string;
 
@@ -18,21 +18,21 @@ export class DnsStack extends cdk.Stack {
     // Get the subdomain name based on the branch
     this.subdomain = Statics.subDomain(props.branch);
 
-    // Import the csp-nijmegen.nl hosted zone for this aws account.
+    // Import the csp-nijmegen.nl hosted zone for the current aws account.
     // Note: On the accounts auth-accp and auth-prod these parameters point to accp.csp-nijmegen.nl and csp-nijmegen.nl respectively.
     const rootZoneId = SSM.StringParameter.valueForStringParameter(this, Statics.envRootHostedZoneId);
     const rootZoneName = SSM.StringParameter.valueForStringParameter(this, Statics.envRootHostedZoneName);
-    this.cspRootZone = Route53.HostedZone.fromHostedZoneAttributes(this, 'account-root-hostedzone', {
+    this.accountRootZone = Route53.HostedZone.fromHostedZoneAttributes(this, 'account-root-hostedzone', {
       hostedZoneId: rootZoneId,
       zoneName: rootZoneName,
     });
 
     // Define the new subdomain zone
     this.zone = new Route53.HostedZone(this, 'irma-issue-subdomain', {
-      zoneName: `${this.subdomain}.${this.cspRootZone.zoneName}`,
+      zoneName: `${this.subdomain}.${this.accountRootZone.zoneName}`,
     });
 
-    // Export properties for importing the hosted zone in other stacks
+    // Export properties for importing the hosted zone in other stacks of this app
     new SSM.StringParameter(this, 'irma-issue-subdomain-zone-id', {
       parameterName: Statics.hostedZoneId,
       stringValue: this.zone.hostedZoneId,
@@ -42,25 +42,18 @@ export class DnsStack extends cdk.Stack {
       stringValue: this.zone.zoneName,
     });
 
-    this.addNameServersToRootZone();
+    // Register the subdomain in the imported hosted zone
+    if (this.zone.hostedZoneNameServers == undefined){
+      throw 'Could not setup subdomain for this environment as the name servers are undefined for this hosted zone';
+    }
+    new Route53.ZoneDelegationRecord(this, 'irma-issue-zone-delegation', {
+      nameServers: this.zone.hostedZoneNameServers,
+      zone: this.accountRootZone
+    })
 
     // TODO: set validation headers for a certificate
     // TODO: set DNSSEC
 
-  }
-
-  /**
-     * Add the name servers of the new subdomain zone to
-     * the root zone that is configured for this environment
-     * @returns null
-     */
-  addNameServersToRootZone() {
-    if (!this.zone.hostedZoneNameServers) { return; }
-    new Route53.NsRecord(this, 'ns-record', {
-      zone: this.cspRootZone,
-      values: this.zone.hostedZoneNameServers,
-      recordName: this.subdomain,
-    });
   }
 
 }
