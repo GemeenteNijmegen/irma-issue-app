@@ -33,6 +33,11 @@ export abstract class Statics {
   static readonly hostedZoneName: string = '/irma-issue-app/hosted-zone/name';
 
   /**
+   * Code star connection to github
+   */
+  static readonly codeStarConnectionArn: string = 'arn:aws:codestar-connections:eu-west-1:418648875085:connection/4f647929-c982-4f30-94f4-24ff7dbf9766';
+
+  /**
    * Construct subdomain name for this app
    * @param branch name of the git branch acceptance / production
    * @returns subdomain prefix depending on branch
