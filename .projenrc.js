@@ -3,6 +3,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   cdkVersion: '2.1.0',
   defaultReleaseBranch: 'main',
   name: 'irma-issue-app',
+  github: false,
   gitignore: [
     'src/app/**/node_modules',
     'src/app/**/shared',
