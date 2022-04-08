@@ -43,13 +43,13 @@ export class DnsStack extends cdk.Stack {
     });
 
     // Register the subdomain in the imported hosted zone
-    if (this.zone.hostedZoneNameServers == undefined){
+    if (this.zone.hostedZoneNameServers == undefined) {
       throw 'Could not setup subdomain for this environment as the name servers are undefined for this hosted zone';
     }
     new Route53.ZoneDelegationRecord(this, 'irma-issue-zone-delegation', {
       nameServers: this.zone.hostedZoneNameServers,
-      zone: this.accountRootZone
-    })
+      zone: this.accountRootZone,
+    });
 
     // TODO: set validation headers for a certificate
     // TODO: set DNSSEC
