@@ -199,7 +199,8 @@ export class ApiStack extends cdk.Stack {
     if (!this.api.url) { return ''; }
     let cleanedUrl = this.api.url
       .replace(/^https?:\/\//, '') //protocol
-      .replace(/\/$/, ''); //optional trailing slash
+      .replace(/\/$/, '') // trailing /
+      .replace(Statics.apiGatewayStageName, ''); // path in url
     return cleanedUrl;
   }
 
