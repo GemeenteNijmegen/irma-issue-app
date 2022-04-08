@@ -39,6 +39,7 @@ export class AppStage extends cdk.Stage {
 
     const cloudfrontStack = new CloudFrontStack(this, 'cloud-front-stack', {
       branch: props.branch,
+      apiGatewayDomain: apiStack.getApiGatewayDomain(),
     });
     cloudfrontStack.addDependency(apiStack);
     cloudfrontStack.addDependency(dnsStack);

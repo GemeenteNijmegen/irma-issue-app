@@ -22,12 +22,11 @@ export class AssetsStack extends cdk.Stack {
     });
 
     const dist = new cloudFront.Distribution(this, 'assets-distribution', {
-      comment: 'Servers assets for the irma-issue-app',
+      comment: 'Irma issue app (static resources)',
       defaultBehavior: {
         origin: new origins.S3Origin(assets),
       },
       priceClass: PriceClass.PRICE_CLASS_100,
-
     });
 
     // Set the distribution name to use in other stacks

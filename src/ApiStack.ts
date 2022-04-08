@@ -15,6 +15,7 @@ export interface ApiStackProps extends cdk.StackProps {
 
 export class ApiStack extends cdk.Stack {
   staticResourcesUrl : string;
+  api: apiGateway.RestApi;
 
   constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id, props);
@@ -26,17 +27,17 @@ export class ApiStack extends cdk.Stack {
     const sessionTable = DynamoDb.Table.fromTableArn(this, 'session-table', sessionTableArn);
 
     // Create the API gateway itself
-    const api = new apiGateway.RestApi(this, 'gateway', {
+    this.api = new apiGateway.RestApi(this, 'gateway', {
       deployOptions: {
         stageName: Statics.apiGatewayStageName,
       },
     });
 
     // Expot the gateway url for importing in other stacks
-    new SSM.StringParameter(this, 'apigateway-url', {
-      parameterName: Statics.ssmApiGatewayUrl,
-      stringValue: this.cleanApiGatewayDomain(api.url),
-    });
+    //new SSM.StringParameter(this, 'apigateway-url', {
+    //  parameterName: Statics.ssmApiGatewayUrl,
+    //  stringValue: this.cleanApiGatewayDomain(api.url),
+    //});
 
     // Construct the home lambda
     const homeLambda = new ApiFunction(this, 'home-lambda', {
@@ -103,22 +104,22 @@ export class ApiStack extends cdk.Stack {
     });
 
     // Add each of the lambdas to the api gateway as resources
-    api.root.addMethod('GET', new apiGateway.LambdaIntegration(homeLambda.lambda));
+    this.api.root.addMethod('GET', new apiGateway.LambdaIntegration(homeLambda.lambda));
 
-    const issue = api.root.addResource('issue');
+    const issue = this.api.root.addResource('issue');
     issue.addMethod('GET', new apiGateway.LambdaIntegration(issueLambda.lambda));
 
-    const auth = api.root.addResource('auth');
+    const auth = this.api.root.addResource('auth');
     auth.addMethod('GET', new apiGateway.LambdaIntegration(authLambda.lambda));
 
     // Enable the manual authentication (protected with basic auth) if required
     if (props.enableManualAuthentication) {
-      this.enableManualAuthenticationLambda(api, sessionTable);
+      this.enableManualAuthenticationLambda(this.api, sessionTable);
     }
 
     // Enable the iram authentication lambdas when required
     if (props.enableIrmaAuthentication) {
-      this.enableIrmaAuthentication(api);
+      this.enableIrmaAuthentication(this.api);
     }
 
   }
@@ -194,12 +195,11 @@ export class ApiStack extends cdk.Stack {
      *
      * @returns a domain-like string cleaned of protocol and trailing slash
      */
-  private cleanApiGatewayDomain(url : string): string {
-    if (!url) { return ''; }
-    let cleanedUrl = url
+  getApiGatewayDomain(): string {
+    if (!this.api.url) { return ''; }
+    let cleanedUrl = this.api.url
       .replace(/^https?:\/\//, '') //protocol
-      .replace(/\/$/, '') //optional trailing slash
-      .replace(Statics.apiGatewayStageName, '');
+      .replace(/\/$/, ''); //optional trailing slash
     return cleanedUrl;
   }
 

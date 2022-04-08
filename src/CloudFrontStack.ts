@@ -9,12 +9,9 @@ import {
 import {
   Distribution,
   PriceClass,
-  AllowedMethods,
   ResponseHeadersPolicy,
   HeadersFrameOption,
   HeadersReferrerPolicy,
-  OriginRequestPolicy,
-  OriginRequestHeaderBehavior,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { Construct } from 'constructs';
@@ -25,20 +22,24 @@ export interface CloudFrontStackProps extends StackProps {
        * current branch: Determines subdomain of csp-nijmegen.nl
        */
   branch: string;
+  /**
+   * Where the api gateway lives
+   */
+  apiGatewayDomain: string;
 }
 
 export class CloudFrontStack extends Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
-    super(scope, id, props);
+    super(scope, id);
 
-    const apiGatewayUrlStr = SSM.StringParameter.fromStringParameterName(this, 'api-gateway-url', Statics.ssmApiGatewayUrl).stringValue;
+    //const apiGatewayUrlStr = SSM.StringParameter.fromStringParameterName(this, 'api-gateway-url', Statics.ssmApiGatewayUrl).stringValue;
     //const apiGatewayUrl = new URL(apiGatewayUrlStr);
 
     //const subdomain = Statics.subDomain(props.branch);
     //const cspDomain = `${subdomain}.csp-nijmegen.nl`;
     //const domains = [cspDomain];
 
-    const cloudfrontDistribution = this.setCloudfrontStack(apiGatewayUrlStr);
+    const cloudfrontDistribution = this.setCloudfrontStack(props.apiGatewayDomain);
     this.addDnsRecords(cloudfrontDistribution);
   }
 
@@ -53,41 +54,12 @@ export class CloudFrontStack extends Stack {
      * @returns {Distribution} the cloudfront distribution
      */
   setCloudfrontStack(apiGatewayDomain: string): Distribution { //, certificateArn?: string
-    // TODO: Add certificate to couldfront distribution
-    //   const certificate = (certificateArn) ? CertificateManager.Certificate.fromCertificateArn(this, 'certificate', certificateArn) : undefined;
     const distribution = new Distribution(this, 'cf-distribution', {
+      comment: 'Irma issue app (api gateway)',
       priceClass: PriceClass.PRICE_CLASS_100,
-      //domainNames,
-      // certificate,
       defaultBehavior: {
         origin: new HttpOrigin(apiGatewayDomain),
-        originRequestPolicy: new OriginRequestPolicy(this, 'cf-originrequestpolicy', {
-          originRequestPolicyName: 'cfOriginRequestPolicyIrmaIssue',
-          headerBehavior: OriginRequestHeaderBehavior.allowList( // TODO: These headers are forwarded to the api gateway, check which headers are needed
-            'Accept-Charset',
-            'Origin',
-            'Accept',
-            'Referer',
-            'Accept-Language',
-            'Accept-Datetime',
-            'Authoriz',
-          ),
-        }),
-        //viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        allowedMethods: AllowedMethods.ALLOW_ALL,
-        // cachePolicy: new CachePolicy(this, 'cf-caching', {
-        //   cachePolicyName: 'cfCachingSessionsIrmaIssue',
-        //   cookieBehavior: CacheCookieBehavior.all(),
-        //   headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
-        //   queryStringBehavior: CacheQueryStringBehavior.all(),
-        //   defaultTtl: Duration.seconds(0),
-        //   minTtl: Duration.seconds(0),
-        //   maxTtl: Duration.seconds(1),
-        // }),
-        //responseHeadersPolicy: this.responseHeadersPolicy(),
       },
-      // logBucket: this.logBucket(), // TODO: Add bucket to collect the logs
-      //minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2019,
     });
     return distribution;
   }
