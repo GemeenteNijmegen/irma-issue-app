@@ -18,6 +18,7 @@ import {
 import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { Construct } from 'constructs';
 import { Statics } from './Statics';
+import { URL } from 'url';
 
 export interface CloudFrontStackProps extends StackProps {
   /**
@@ -30,13 +31,14 @@ export class CloudFrontStack extends Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id);
 
-    const hostDomain = SSM.StringParameter.fromStringParameterName(this, 'api-gateway-url', Statics.ssmApiGatewayUrl).stringValue;
-
+    const apiGatewayUrlStr = SSM.StringParameter.fromStringParameterName(this, 'api-gateway-url', Statics.ssmApiGatewayUrl).stringValue;
+    const apiGatewayUrl = new URL(apiGatewayUrlStr);
+    
     const subdomain = Statics.subDomain(props.branch);
     const cspDomain = `${subdomain}.csp-nijmegen.nl`;
     const domains = [cspDomain];
 
-    const cloudfrontDistribution = this.setCloudfrontStack(hostDomain, domains);
+    const cloudfrontDistribution = this.setCloudfrontStack(apiGatewayUrl.host, domains);
     this.addDnsRecords(cloudfrontDistribution);
   }
 
