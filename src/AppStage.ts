@@ -42,7 +42,7 @@ export class AppStage extends cdk.Stage {
     });
     cloudfrontStack.addDependency(apiStack);
     cloudfrontStack.addDependency(dnsStack);
-    
+
     // cloudfrontStack.addDependency(usEastCertificateStack);
 
   }
