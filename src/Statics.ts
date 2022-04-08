@@ -42,6 +42,10 @@ export abstract class Statics {
   static readonly ssmApiGatewayUrl: string = '/irma-issue-app/api-gateway-url';
   static readonly ssmStaticResourcesUrl: string = '/irma-issue-app/static-resources-url';
 
+  /**
+   * Other
+   */
+  static readonly sessionTableKeyAlias: string = 'irmaissueapp/userdata';
 
   /**
    * Code star connection to github

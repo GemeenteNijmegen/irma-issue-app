@@ -21,7 +21,7 @@ export class KeyStack extends Stack {
     this.key = new KMS.Key(this, 'kmskey', {
       enableKeyRotation: true,
       description: 'encryption key for Mijn Nijmegen',
-      alias: 'mijnnijmegen/userdata',
+      alias: Statics.sessionTableKeyAlias,
     });
 
     // Store key arn to be used in other stacks/projects
