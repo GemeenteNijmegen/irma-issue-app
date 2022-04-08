@@ -20,10 +20,11 @@ export class ApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id, props);
 
+    // Import assets url
     this.staticResourcesUrl = SSM.StringParameter.fromStringParameterName(this, 'statics-url', Statics.ssmStaticResourcesUrl).stringValue;
 
+    // Import session table by arn
     const sessionTableArn = SSM.StringParameter.fromStringParameterName(this, 'session-table-arn', Statics.ssmSessionsTableArn).stringValue;
-
     const sessionTable = DynamoDb.Table.fromTableArn(this, 'session-table', sessionTableArn);
 
     // Create the API gateway itself
@@ -33,11 +34,15 @@ export class ApiStack extends cdk.Stack {
       },
     });
 
-    // Expot the gateway url for importing in other stacks
-    //new SSM.StringParameter(this, 'apigateway-url', {
-    //  parameterName: Statics.ssmApiGatewayUrl,
-    //  stringValue: this.cleanApiGatewayDomain(api.url),
-    //});
+    // Explicit stack outputs
+    new cdk.CfnOutput(this, 'cfn-output-full-url', {
+      value: this.api.url,
+      exportName: 'full-api-gateway-url',
+    });
+    new cdk.CfnOutput(this, 'cfn-output-cleaned-url', {
+      value: this.getApiGatewayDomain(),
+      exportName: 'cleaned-api-gateway-url',
+    });
 
     // Construct the home lambda
     const homeLambda = new ApiFunction(this, 'home-lambda', {
@@ -200,7 +205,7 @@ export class ApiStack extends cdk.Stack {
     let cleanedUrl = this.api.url
       .replace(/^https?:\/\//, '') //protocol
       .replace(/\/$/, '') // trailing /
-      .replace(Statics.apiGatewayStageName, ''); // path in url
+      .substring(0, this.api.url.length - Statics.apiGatewayStageName.length + 1); // path in url
     return cleanedUrl;
   }
 
