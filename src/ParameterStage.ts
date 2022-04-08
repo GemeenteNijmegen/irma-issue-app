@@ -35,7 +35,7 @@ export class ParameterStack extends cdk.Stack {
 
     // Load environment file with defauls for the configured environment
     const file = props.defaultsEnvFile + '.env';
-    const path = Path.join(__dirname, file);
+    const path = Path.join(__dirname, 'params', file);
     dotenv.config({ path: path });
 
     /**

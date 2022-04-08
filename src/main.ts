@@ -31,7 +31,7 @@ if ('BRANCH_NAME' in process.env == false || process.env.BRANCH_NAME == 'develop
       env: sandboxEnvironment,
       branchName: 'development',
       deployToEnvironment: sandboxEnvironment,
-      defaultsEnvFile: 'sandbox',
+      defaultsEnvFile: 'development',
       enableIrmaAuthentication: true,
       enableManualAuthentication: true,
     },
@@ -42,7 +42,7 @@ if ('BRANCH_NAME' in process.env == false || process.env.BRANCH_NAME == 'develop
       env: deploymentEnvironment,
       branchName: 'development',
       deployToEnvironment: acceptanceEnvironment,
-      defaultsEnvFile: 'sandbox',
+      defaultsEnvFile: 'acceptance',
       enableIrmaAuthentication: true,
       enableManualAuthentication: true,
     },
@@ -53,7 +53,7 @@ if ('BRANCH_NAME' in process.env == false || process.env.BRANCH_NAME == 'develop
       env: deploymentEnvironment,
       branchName: 'development',
       deployToEnvironment: productionEnvironment,
-      defaultsEnvFile: 'sandbox',
+      defaultsEnvFile: 'production',
       enableIrmaAuthentication: false, // Never enable in production!
       enableManualAuthentication: false, // Never enable in production!
     },
