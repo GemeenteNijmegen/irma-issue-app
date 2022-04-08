@@ -56,7 +56,7 @@ export class ApiStack extends cdk.Stack {
     // Construct the issue lambda
     // TODO: Move accessKey to secret manager.
     const secretKey = SecretsManager.Secret.fromSecretNameV2(this, 'secret-key-irma', Statics.irmaIssueServerSecretKey);
-    const accessKey = SSM.StringParameter.fromStringParameterName(this, 'access-key-irma', Statics.irmaIssueServerAccessKey);
+    const accessKey = SecretsManager.Secret.fromSecretNameV2(this, 'access-key-irma', Statics.irmaIssueServerAccessKey);
     const irmaEndpoint = SSM.StringParameter.fromStringParameterName(this, 'endpoint-irma', Statics.iramIssueServerEndpoint);
     const irmaRegion = SSM.StringParameter.fromStringParameterName(this, 'region-irma', Statics.irmaIssueServerZone);
     const irmaNamespace = SSM.StringParameter.fromStringParameterName(this, 'irma-namespace', Statics.irmaNamespace);
@@ -74,7 +74,7 @@ export class ApiStack extends cdk.Stack {
         ASSETS_URL: this.staticResourcesUrl,
         SESSION_TABLE: sessionTable.tableName,
         IRMA_ISSUE_SERVER_ENDPOINT: irmaEndpoint.stringValue,
-        IRMA_ISSUE_SERVER_IAM_ACCESS_KEY: accessKey.stringValue,
+        IRMA_ISSUE_SERVER_IAM_ACCESS_KEY: accessKey.secretArn,
         IRMA_ISSUE_SERVER_IAM_REGION: irmaRegion.stringValue,
         IRMA_NAMESPACE: irmaNamespace.stringValue,
         IRMA_ISSUE_SERVER_IAM_SECRET_KEY_ARN: secretKey.secretArn,
@@ -85,6 +85,7 @@ export class ApiStack extends cdk.Stack {
       },
     });
     secretKey.grantRead(issueLambda.lambda);
+    accessKey.grantRead(issueLambda.lambda);
     irmaApiKey.grantRead(issueLambda.lambda);
     brpCertificateKey.grantRead(issueLambda.lambda);
     brpCertificate.grantRead(issueLambda.lambda);
