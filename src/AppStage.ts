@@ -20,7 +20,7 @@ export class AppStage extends cdk.Stage {
 
     const keyStack = new KeyStack(this, 'key-stack');
     const sessionsStack = new SessionsStack(this, 'sessions-stack', { key: keyStack.key });
-    new DnsStack(this, 'dns-stack', { branch: props.branch });
+    const dnsStack = new DnsStack(this, 'dns-stack', { branch: props.branch });
 
     // TODO fix certificates and dsnsec
     // const usEastCertificateStack = new UsEastCertificateStack(this, 'us-cert-stack', { branch: props.branch, env: { region: 'us-east-1' } });
@@ -37,9 +37,12 @@ export class AppStage extends cdk.Stage {
     apiStack.addDependency(assetsStack);
     apiStack.addDependency(sessionsStack);
 
-    new CloudFrontStack(this, 'cloud-front-stack', {
+    const cloudfrontStack = new CloudFrontStack(this, 'cloud-front-stack', {
       branch: props.branch,
     });
+    cloudfrontStack.addDependency(apiStack);
+    cloudfrontStack.addDependency(dnsStack);
+    
     // cloudfrontStack.addDependency(usEastCertificateStack);
 
   }
