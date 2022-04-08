@@ -46,6 +46,7 @@ export abstract class Statics {
    * Other
    */
   static readonly sessionTableKeyAlias: string = 'irmaissueapp/userdata';
+  static readonly apiGatewayStageName: string = 'irma-issue';
 
   /**
    * Code star connection to github

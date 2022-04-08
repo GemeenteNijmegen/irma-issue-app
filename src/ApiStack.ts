@@ -16,7 +16,6 @@ export interface ApiStackProps extends cdk.StackProps {
 export class ApiStack extends cdk.Stack {
   staticResourcesUrl : string;
 
-
   constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id, props);
 
@@ -24,12 +23,12 @@ export class ApiStack extends cdk.Stack {
 
     const sessionTableArn = SSM.StringParameter.fromStringParameterName(this, 'session-table-arn', Statics.ssmSessionsTableArn).stringValue;
 
-    const sessionTable = (DynamoDb.Table.fromTableArn(this, 'session-table', sessionTableArn) as DynamoDb.Table); // TODO: Find out of this is legal?
+    const sessionTable = DynamoDb.Table.fromTableArn(this, 'session-table', sessionTableArn);
 
     // Create the API gateway itself
     const api = new apiGateway.RestApi(this, 'gateway', {
       deployOptions: {
-        stageName: 'irma-issue',
+        stageName: Statics.apiGatewayStageName,
       },
     });
 
@@ -131,7 +130,7 @@ export class ApiStack extends cdk.Stack {
    * browser.
    * @param api
    */
-  enableManualAuthenticationLambda(api: apiGateway.RestApi, sessionTable: DynamoDb.Table) {
+  enableManualAuthenticationLambda(api: apiGateway.RestApi, sessionTable: DynamoDb.ITable) {
 
     // First secure this endpoint with basic authentication
     const authorizerLambda = new lambda.Function(this, 'authorizer-lambda', {
@@ -199,7 +198,8 @@ export class ApiStack extends cdk.Stack {
     if (!url) { return ''; }
     let cleanedUrl = url
       .replace(/^https?:\/\//, '') //protocol
-      .replace(/\/$/, ''); //optional trailing slash
+      .replace(/\/$/, '') //optional trailing slash
+      .replace(Statics.apiGatewayStageName, '');
     return cleanedUrl;
   }
 
