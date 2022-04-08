@@ -20,8 +20,8 @@ export class DnsStack extends cdk.Stack {
 
     // Import the csp-nijmegen.nl hosted zone for the current aws account.
     // Note: On the accounts auth-accp and auth-prod these parameters point to accp.csp-nijmegen.nl and csp-nijmegen.nl respectively.
-    const rootZoneId = SSM.StringParameter.valueForStringParameter(this, Statics.envRootHostedZoneId);
-    const rootZoneName = SSM.StringParameter.valueForStringParameter(this, Statics.envRootHostedZoneName);
+    const rootZoneId = SSM.StringParameter.valueForStringParameter(this, Statics.envRootHostedZoneIdOld);
+    const rootZoneName = SSM.StringParameter.valueForStringParameter(this, Statics.envRootHostedZoneNameOld);
     this.accountRootZone = Route53.HostedZone.fromHostedZoneAttributes(this, 'account-root-hostedzone', {
       hostedZoneId: rootZoneId,
       zoneName: rootZoneName,

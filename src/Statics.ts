@@ -19,12 +19,13 @@ export abstract class Statics {
   static readonly brpCertificateKey: string = '/irma-issue-app/brp-certificate-key';
   static readonly brpEndpoint: string = '/irma-issue-app/brp-endpoint';
 
-
   /**
    * Hosted zone reference per environment
    */
   static readonly envRootHostedZoneId: string = '/gemeente-nijmegen/account/hostedzone/id';
   static readonly envRootHostedZoneName: string = '/gemeente-nijmegen/account/hostedzone/name';
+  static readonly envRootHostedZoneIdOld: string = '/gemeente-nijmegen/formio/hostedzone/id';
+  static readonly envRootHostedZoneNameOld: string = '/gemeente-nijmegen/formio/hostedzone/name';
 
 
   /**
