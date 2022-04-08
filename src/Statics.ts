@@ -39,6 +39,8 @@ export abstract class Statics {
    */
   static readonly ssmSessionsTableArn: string = '/irma-issue-app/sessionstable-arn';
   static readonly ssmDataKeyArn: string = '/irma-issue-app/kms-datakey-arn';
+  static readonly ssmApiGatewayUrl: string = '/irma-issue-app/api-gateway-url';
+  static readonly ssmStaticResourcesUrl: string = '/irma-issue-app/static-resources-url';
 
 
   /**

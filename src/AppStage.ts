@@ -31,16 +31,14 @@ export class AppStage extends cdk.Stage {
     const assetsStack = new AssetsStack(this, 'assets-stack');
 
     const apiStack = new ApiStack(this, 'api-stack', {
-      assetsUrl: assetsStack.url,
       enableManualAuthentication: props.enableManualAuthentication,
       enableIrmaAuthentication: props.enableIrmaAuthentication,
-      sessionsTable: sessionsStack.sessionsTable,
     });
+    apiStack.addDependency(assetsStack);
+    apiStack.addDependency(sessionsStack);
 
     new CloudFrontStack(this, 'cloud-front-stack', {
       branch: props.branch,
-      hostDomain: apiStack.getApiGatewayDomain(),
-      certificateArn: '',
     });
     // cloudfrontStack.addDependency(usEastCertificateStack);
 

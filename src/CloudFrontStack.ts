@@ -21,14 +21,6 @@ import { Statics } from './Statics';
 
 export interface CloudFrontStackProps extends StackProps {
   /**
-       * ARN for the TLS certificate
-       */
-  certificateArn: string;
-  /**
-       * Domain for the default origin (HTTPorigin)
-       */
-  hostDomain: string;
-  /**
        * current branch: Determines subdomain of csp-nijmegen.nl
        */
   branch: string;
@@ -38,11 +30,13 @@ export class CloudFrontStack extends Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id);
 
+    const hostDomain = SSM.StringParameter.fromStringParameterName(this, 'api-gateway-url', Statics.ssmApiGatewayUrl).stringValue;
+
     const subdomain = Statics.subDomain(props.branch);
     const cspDomain = `${subdomain}.csp-nijmegen.nl`;
     const domains = [cspDomain];
 
-    const cloudfrontDistribution = this.setCloudfrontStack(props.hostDomain, domains);
+    const cloudfrontDistribution = this.setCloudfrontStack(hostDomain, domains);
     this.addDnsRecords(cloudfrontDistribution);
   }
 

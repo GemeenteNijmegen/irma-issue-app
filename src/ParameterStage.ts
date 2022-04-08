@@ -47,7 +47,7 @@ export class ParameterStack extends cdk.Stack {
     });
 
     new SecretsManager.Secret(this, 'irma-server-iam-access-key', {
-      secretName: Statics.irmaIssueServerSecretKey,
+      secretName: Statics.irmaIssueServerAccessKey,
       description: 'AWS IAM uses for irma issue access secret key',
     });
 
