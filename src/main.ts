@@ -31,7 +31,7 @@ if ('BRANCH_NAME' in process.env == false || process.env.BRANCH_NAME == 'develop
       env: sandboxEnvironment,
       branchName: 'development',
       deployToEnvironment: sandboxEnvironment,
-      defaultsEnvFile: 'sandbox',
+      defaultsEnvFile: 'development',
       enableIrmaAuthentication: true,
       enableManualAuthentication: true,
     },
@@ -40,9 +40,9 @@ if ('BRANCH_NAME' in process.env == false || process.env.BRANCH_NAME == 'develop
   new PipelineStackAcceptance(app, 'irma-issue-pipeline-acceptance',
     {
       env: deploymentEnvironment,
-      branchName: 'development',
+      branchName: 'acceptance',
       deployToEnvironment: acceptanceEnvironment,
-      defaultsEnvFile: 'sandbox',
+      defaultsEnvFile: 'acceptance',
       enableIrmaAuthentication: true,
       enableManualAuthentication: true,
     },
@@ -51,9 +51,9 @@ if ('BRANCH_NAME' in process.env == false || process.env.BRANCH_NAME == 'develop
   new PipelineStackProduction(app, 'irma-issue-pipeline-production',
     {
       env: deploymentEnvironment,
-      branchName: 'development',
+      branchName: 'production',
       deployToEnvironment: productionEnvironment,
-      defaultsEnvFile: 'sandbox',
+      defaultsEnvFile: 'production',
       enableIrmaAuthentication: false, // Never enable in production!
       enableManualAuthentication: false, // Never enable in production!
     },

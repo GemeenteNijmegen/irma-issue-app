@@ -25,14 +25,27 @@ export abstract class Statics {
   static readonly envRootHostedZoneId: string = '/gemeente-nijmegen/account/hostedzone/id';
   static readonly envRootHostedZoneName: string = '/gemeente-nijmegen/account/hostedzone/name';
   static readonly envRootHostedZoneIdOld: string = '/gemeente-nijmegen/formio/hostedzone/id';
-  static readonly envRootHostedZoneNameOld: string = '/gemeente-nijmegen/formio/hostedzone/name';
-
+  static readonly envRootHostedZoneNameOld: string = '/gemeente-nijmegen/formFio/hostedzone/name';
 
   /**
    * Our hosted zone reference
    */
   static readonly hostedZoneId: string = '/irma-issue-app/hosted-zone/id';
   static readonly hostedZoneName: string = '/irma-issue-app/hosted-zone/name';
+
+
+  /**
+   * Other parameters to keep stacks from getting entangled
+   */
+  static readonly ssmSessionsTableArn: string = '/irma-issue-app/sessionstable-arn';
+  static readonly ssmDataKeyArn: string = '/irma-issue-app/kms-datakey-arn';
+  static readonly ssmApiGatewayUrl: string = '/irma-issue-app/api-gateway-url';
+  static readonly ssmStaticResourcesUrl: string = '/irma-issue-app/static-resources-url';
+
+  /**
+   * Other
+   */
+  static readonly sessionTableKeyAlias: string = 'irmaissueapp/userdata';
 
   /**
    * Code star connection to github

@@ -1,13 +1,12 @@
 import * as Path from 'path';
 import * as cdk from 'aws-cdk-lib';
-import { aws_s3 as s3, aws_cloudfront_origins as origins, aws_s3_deployment as s3deploy, aws_cloudfront as cloudFront } from 'aws-cdk-lib';
+import { aws_s3 as s3, aws_cloudfront_origins as origins, aws_s3_deployment as s3deploy, aws_cloudfront as cloudFront, aws_ssm as SSM } from 'aws-cdk-lib';
 import { PriceClass } from 'aws-cdk-lib/aws-cloudfront';
 import { Construct } from 'constructs';
+import { Statics } from './Statics';
 
 
 export class AssetsStack extends cdk.Stack {
-
-  url : string;
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -32,7 +31,11 @@ export class AssetsStack extends cdk.Stack {
     });
 
     // Set the distribution name to use in other stacks
-    this.url = 'https://' + dist.distributionDomainName;
+    new SSM.StringParameter(this, 'static-resources-url', {
+      stringValue: `https://${dist.distributionDomainName}`,
+      parameterName: Statics.ssmStaticResourcesUrl,
+    });
+
 
   }
 }

@@ -1,27 +1,30 @@
 import * as Path from 'path';
 import * as cdk from 'aws-cdk-lib';
-import { aws_apigateway as apiGateway, aws_secretsmanager as SecretsManager, aws_ssm as SSM } from 'aws-cdk-lib';
+import { aws_apigateway as apiGateway, aws_secretsmanager as SecretsManager, aws_ssm as SSM, aws_dynamodb as DynamoDb } from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
-import { SessionsTable } from './SessionsTable';
 import { Statics } from './Statics';
 
 
 export interface ApiStackProps extends cdk.StackProps {
-  assetsUrl: string;
   enableManualAuthentication: boolean;
   enableIrmaAuthentication: boolean;
-  sessionsTable: SessionsTable;
 }
 
 export class ApiStack extends cdk.Stack {
+  staticResourcesUrl : string;
 
-  apiGatewayDomain: string;
 
   constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id, props);
+
+    this.staticResourcesUrl = SSM.StringParameter.fromStringParameterName(this, 'statics-url', Statics.ssmStaticResourcesUrl).stringValue;
+
+    const sessionTableArn = SSM.StringParameter.fromStringParameterName(this, 'session-table-arn', Statics.ssmSessionsTableArn).stringValue;
+
+    const sessionTable = (DynamoDb.Table.fromTableArn(this, 'session-table', sessionTableArn) as DynamoDb.Table); // TODO: Find out of this is legal?
 
     // Create the API gateway itself
     const api = new apiGateway.RestApi(this, 'gateway', {
@@ -30,26 +33,30 @@ export class ApiStack extends cdk.Stack {
       },
     });
 
-    this.apiGatewayDomain = api.url;
+    // Expot the gateway url for importing in other stacks
+    new SSM.StringParameter(this, 'apigateway-url', {
+      parameterName: Statics.ssmApiGatewayUrl,
+      stringValue: this.cleanApiGatewayDomain(api.url),
+    });
 
     // Construct the home lambda
     const homeLambda = new ApiFunction(this, 'home-lambda', {
       handler: 'index.handler',
       description: 'Home lambda for IRMA issue app',
       source: Path.join(__dirname, 'app', 'home'),
-      table: props.sessionsTable.table,
+      table: sessionTable,
       tablePermissions: 'ReadWrite',
       environment: {
-        ASSETS_URL: props.assetsUrl,
+        ASSETS_URL: this.staticResourcesUrl,
         IRMA_AUTH_ENABLED: props.enableIrmaAuthentication.toString(),
-        SESSION_TABLE: props.sessionsTable.table.tableName,
+        SESSION_TABLE: sessionTable.tableName,
       },
     });
 
     // Construct the issue lambda
     // TODO: Move accessKey to secret manager.
     const secretKey = SecretsManager.Secret.fromSecretNameV2(this, 'secret-key-irma', Statics.irmaIssueServerSecretKey);
-    const accessKey = SSM.StringParameter.fromStringParameterName(this, 'access-key-irma', Statics.irmaIssueServerAccessKey);
+    const accessKey = SecretsManager.Secret.fromSecretNameV2(this, 'access-key-irma', Statics.irmaIssueServerAccessKey);
     const irmaEndpoint = SSM.StringParameter.fromStringParameterName(this, 'endpoint-irma', Statics.iramIssueServerEndpoint);
     const irmaRegion = SSM.StringParameter.fromStringParameterName(this, 'region-irma', Statics.irmaIssueServerZone);
     const irmaNamespace = SSM.StringParameter.fromStringParameterName(this, 'irma-namespace', Statics.irmaNamespace);
@@ -61,13 +68,13 @@ export class ApiStack extends cdk.Stack {
       handler: 'index.handler',
       description: 'Issue lambda for IRMA issue app',
       source: Path.join(__dirname, 'app', 'issue'),
-      table: props.sessionsTable.table,
+      table: sessionTable,
       tablePermissions: 'ReadWrite',
       environment: {
-        ASSETS_URL: props.assetsUrl,
-        SESSION_TABLE: props.sessionsTable.table.tableName,
+        ASSETS_URL: this.staticResourcesUrl,
+        SESSION_TABLE: sessionTable.tableName,
         IRMA_ISSUE_SERVER_ENDPOINT: irmaEndpoint.stringValue,
-        IRMA_ISSUE_SERVER_IAM_ACCESS_KEY: accessKey.stringValue,
+        IRMA_ISSUE_SERVER_IAM_ACCESS_KEY: accessKey.secretArn,
         IRMA_ISSUE_SERVER_IAM_REGION: irmaRegion.stringValue,
         IRMA_NAMESPACE: irmaNamespace.stringValue,
         IRMA_ISSUE_SERVER_IAM_SECRET_KEY_ARN: secretKey.secretArn,
@@ -78,6 +85,7 @@ export class ApiStack extends cdk.Stack {
       },
     });
     secretKey.grantRead(issueLambda.lambda);
+    accessKey.grantRead(issueLambda.lambda);
     irmaApiKey.grantRead(issueLambda.lambda);
     brpCertificateKey.grantRead(issueLambda.lambda);
     brpCertificate.grantRead(issueLambda.lambda);
@@ -87,11 +95,11 @@ export class ApiStack extends cdk.Stack {
       handler: 'index.handler',
       description: 'Authentication landing lambda for IRMA issue app',
       source: Path.join(__dirname, 'app', 'auth'),
-      table: props.sessionsTable.table,
+      table: sessionTable,
       tablePermissions: 'ReadWrite',
       environment: {
-        ASSETS_URL: props.assetsUrl,
-        SESSION_TABLE: props.sessionsTable.table.tableName,
+        ASSETS_URL: this.staticResourcesUrl,
+        SESSION_TABLE: sessionTable.tableName,
       },
     });
 
@@ -106,7 +114,7 @@ export class ApiStack extends cdk.Stack {
 
     // Enable the manual authentication (protected with basic auth) if required
     if (props.enableManualAuthentication) {
-      this.enableManualAuthenticationLambda(api, props);
+      this.enableManualAuthenticationLambda(api, sessionTable);
     }
 
     // Enable the iram authentication lambdas when required
@@ -123,7 +131,7 @@ export class ApiStack extends cdk.Stack {
    * browser.
    * @param api
    */
-  enableManualAuthenticationLambda(api: apiGateway.RestApi, props: ApiStackProps) {
+  enableManualAuthenticationLambda(api: apiGateway.RestApi, sessionTable: DynamoDb.Table) {
 
     // First secure this endpoint with basic authentication
     const authorizerLambda = new lambda.Function(this, 'authorizer-lambda', {
@@ -144,11 +152,11 @@ export class ApiStack extends cdk.Stack {
       handler: 'index.handler',
       description: 'Manual authentication lambda for IRMA issue app',
       source: Path.join(__dirname, 'app', 'manual_auth'),
-      table: props.sessionsTable.table,
+      table: sessionTable,
       tablePermissions: 'ReadWrite',
       environment: {
-        ASSETS_URL: props.assetsUrl,
-        SESSION_TABLE: props.sessionsTable.table.tableName,
+        ASSETS_URL: this.staticResourcesUrl,
+        SESSION_TABLE: sessionTable.tableName,
       },
     });
 
@@ -187,9 +195,9 @@ export class ApiStack extends cdk.Stack {
      *
      * @returns a domain-like string cleaned of protocol and trailing slash
      */
-  getApiGatewayDomain(): string {
-    if (!this.apiGatewayDomain) { return ''; }
-    let cleanedUrl = this.apiGatewayDomain
+  private cleanApiGatewayDomain(url : string): string {
+    if (!url) { return ''; }
+    let cleanedUrl = url
       .replace(/^https?:\/\//, '') //protocol
       .replace(/\/$/, ''); //optional trailing slash
     return cleanedUrl;
