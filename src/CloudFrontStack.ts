@@ -79,21 +79,21 @@ export class CloudFrontStack extends Stack {
             'Authoriz',
           ),
         }),
-        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        //viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: AllowedMethods.ALLOW_ALL,
-        cachePolicy: new CachePolicy(this, 'cf-caching', {
-          cachePolicyName: 'cfCachingSessionsIrmaIssue',
-          cookieBehavior: CacheCookieBehavior.all(),
-          headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
-          queryStringBehavior: CacheQueryStringBehavior.all(),
-          defaultTtl: Duration.seconds(0),
-          minTtl: Duration.seconds(0),
-          maxTtl: Duration.seconds(1),
-        }),
+        // cachePolicy: new CachePolicy(this, 'cf-caching', {
+        //   cachePolicyName: 'cfCachingSessionsIrmaIssue',
+        //   cookieBehavior: CacheCookieBehavior.all(),
+        //   headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
+        //   queryStringBehavior: CacheQueryStringBehavior.all(),
+        //   defaultTtl: Duration.seconds(0),
+        //   minTtl: Duration.seconds(0),
+        //   maxTtl: Duration.seconds(1),
+        // }),
         //responseHeadersPolicy: this.responseHeadersPolicy(),
       },
       // logBucket: this.logBucket(), // TODO: Add bucket to collect the logs
-      minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2019,
+      //minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2019,
     });
     return distribution;
   }
