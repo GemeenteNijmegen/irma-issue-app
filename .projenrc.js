@@ -1,9 +1,11 @@
 const { awscdk } = require('projen');
 const project = new awscdk.AwsCdkTypeScriptApp({
+  projenVersion: '0.54.9',
   cdkVersion: '2.1.0',
-  defaultReleaseBranch: 'main',
+  defaultReleaseBranch: 'production',
+  release: true,
+  majorVersion: 0,
   name: 'irma-issue-app',
-  github: false,
   gitignore: [
     'src/app/**/node_modules',
     'src/app/**/shared',
