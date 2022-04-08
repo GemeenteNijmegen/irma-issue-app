@@ -14,6 +14,13 @@ import {
   HeadersFrameOption,
   HeadersReferrerPolicy,
   SecurityPolicyProtocol,
+  OriginRequestPolicy,
+  OriginRequestHeaderBehavior,
+  ViewerProtocolPolicy,
+  CachePolicy,
+  CacheCookieBehavior,
+  CacheQueryStringBehavior,
+  CacheHeaderBehavior,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { Construct } from 'constructs';
@@ -60,30 +67,30 @@ export class CloudFrontStack extends Stack {
       // certificate,
       defaultBehavior: {
         origin: new HttpOrigin(apiGatewayDomain),
-        // originRequestPolicy: new OriginRequestPolicy(this, 'cf-originrequestpolicy', {
-        //     originRequestPolicyName: 'cfOriginRequestPolicyIrmaIssue',
-        //     headerBehavior: OriginRequestHeaderBehavior.allowList( // TODO: These headers are forwarded to the api gateway, check which headers are needed
-        //         'Accept-Charset',
-        //         'Origin',
-        //         'Accept',
-        //         'Referer',
-        //         'Accept-Language',
-        //         'Accept-Datetime',
-        //         'Authoriz',
-        //     ),
-        // }),
-        //   viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        originRequestPolicy: new OriginRequestPolicy(this, 'cf-originrequestpolicy', {
+          originRequestPolicyName: 'cfOriginRequestPolicyIrmaIssue',
+          headerBehavior: OriginRequestHeaderBehavior.allowList( // TODO: These headers are forwarded to the api gateway, check which headers are needed
+            'Accept-Charset',
+            'Origin',
+            'Accept',
+            'Referer',
+            'Accept-Language',
+            'Accept-Datetime',
+            'Authoriz',
+          ),
+        }),
+        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: AllowedMethods.ALLOW_ALL,
-        // cachePolicy: new CachePolicy(this, 'cf-caching', {
-        //     cachePolicyName: 'cfCachingSessionsIrmaIssue',
-        //     cookieBehavior: CacheCookieBehavior.all(),
-        //     headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
-        //     queryStringBehavior: CacheQueryStringBehavior.all(),
-        //     defaultTtl: Duration.seconds(0),
-        //     minTtl: Duration.seconds(0),
-        //     maxTtl: Duration.seconds(1),
-        // }),
-        // responseHeadersPolicy: this.responseHeadersPolicy(),
+        cachePolicy: new CachePolicy(this, 'cf-caching', {
+          cachePolicyName: 'cfCachingSessionsIrmaIssue',
+          cookieBehavior: CacheCookieBehavior.all(),
+          headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
+          queryStringBehavior: CacheQueryStringBehavior.all(),
+          defaultTtl: Duration.seconds(0),
+          minTtl: Duration.seconds(0),
+          maxTtl: Duration.seconds(1),
+        }),
+        //responseHeadersPolicy: this.responseHeadersPolicy(),
       },
       // logBucket: this.logBucket(), // TODO: Add bucket to collect the logs
       minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2019,
