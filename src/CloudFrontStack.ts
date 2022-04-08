@@ -28,16 +28,16 @@ export interface CloudFrontStackProps extends StackProps {
 
 export class CloudFrontStack extends Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
-    super(scope, id);
+    super(scope, id, props);
 
     const apiGatewayUrlStr = SSM.StringParameter.fromStringParameterName(this, 'api-gateway-url', Statics.ssmApiGatewayUrl).stringValue;
     //const apiGatewayUrl = new URL(apiGatewayUrlStr);
 
-    const subdomain = Statics.subDomain(props.branch);
-    const cspDomain = `${subdomain}.csp-nijmegen.nl`;
-    const domains = [cspDomain];
+    //const subdomain = Statics.subDomain(props.branch);
+    //const cspDomain = `${subdomain}.csp-nijmegen.nl`;
+    //const domains = [cspDomain];
 
-    const cloudfrontDistribution = this.setCloudfrontStack(apiGatewayUrlStr, domains);
+    const cloudfrontDistribution = this.setCloudfrontStack(apiGatewayUrlStr);
     this.addDnsRecords(cloudfrontDistribution);
   }
 
@@ -51,12 +51,12 @@ export class CloudFrontStack extends Stack {
      * @param {string} apiGatewayDomain the domain the api gateway can be reached at
      * @returns {Distribution} the cloudfront distribution
      */
-  setCloudfrontStack(apiGatewayDomain: string, domainNames?: string[]): Distribution { //, certificateArn?: string
+  setCloudfrontStack(apiGatewayDomain: string): Distribution { //, certificateArn?: string
     // TODO: Add certificate to couldfront distribution
     //   const certificate = (certificateArn) ? CertificateManager.Certificate.fromCertificateArn(this, 'certificate', certificateArn) : undefined;
     const distribution = new Distribution(this, 'cf-distribution', {
       priceClass: PriceClass.PRICE_CLASS_100,
-      domainNames,
+      //domainNames,
       // certificate,
       defaultBehavior: {
         origin: new HttpOrigin(apiGatewayDomain),
