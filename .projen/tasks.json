@@ -219,7 +219,8 @@
       "name": "release:production",
       "description": "Prepare a release from \"production\" branch",
       "env": {
-        "RELEASE": "true"
+        "RELEASE": "true",
+        "MAJOR": "1"
       },
       "steps": [
         {
