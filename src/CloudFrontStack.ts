@@ -13,14 +13,8 @@ import {
   ResponseHeadersPolicy,
   HeadersFrameOption,
   HeadersReferrerPolicy,
-  SecurityPolicyProtocol,
   OriginRequestPolicy,
   OriginRequestHeaderBehavior,
-  ViewerProtocolPolicy,
-  CachePolicy,
-  CacheCookieBehavior,
-  CacheQueryStringBehavior,
-  CacheHeaderBehavior,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { Construct } from 'constructs';
