@@ -29,9 +29,10 @@ export class ApiStack extends cdk.Stack {
 
     // Create the API gateway itself
     this.api = new apiGateway.RestApi(this, 'gateway', {
-      deployOptions: {
-        stageName: Statics.apiGatewayStageName,
-      },
+      // deployOptions: {
+      //   stageName: Statics.apiGatewayStageName,
+      // },
+      description: 'irma-issue-app-api-gateway'
     });
 
     // Explicit stack outputs
@@ -204,8 +205,7 @@ export class ApiStack extends cdk.Stack {
     if (!this.api.url) { return ''; }
     let cleanedUrl = this.api.url
       .replace(/^https?:\/\//, '') //protocol
-      .replace(/\/$/, '') // trailing /
-      .substring(0, this.api.url.length - Statics.apiGatewayStageName.length + 1); // path in url
+      .replace(/\/$/, ''); // trailing /
     return cleanedUrl;
   }
 
