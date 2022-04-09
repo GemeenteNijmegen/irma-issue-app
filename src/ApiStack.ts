@@ -175,7 +175,6 @@ export class ApiStack extends cdk.Stack {
     });
 
 
-
     // Modify the default api gateway unauhtorized response
     // api.addGatewayResponse('basic-auth-unauthorized', {
     //   statusCode: '401',
