@@ -11,7 +11,6 @@ import {
   Distribution,
   PriceClass,
   OriginRequestPolicy,
-  ViewerProtocolPolicy,
   AllowedMethods,
   ResponseHeadersPolicy,
   HeadersFrameOption,
@@ -21,7 +20,6 @@ import {
   CacheCookieBehavior,
   CacheHeaderBehavior,
   CacheQueryStringBehavior,
-  SecurityPolicyProtocol,
   OriginAccessIdentity,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins';
@@ -83,7 +81,7 @@ export class CloudFrontStack extends Stack {
             'Authoriz',
           ),
         }),
-        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        //viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: AllowedMethods.ALLOW_ALL,
         cachePolicy: new CachePolicy(this, 'cf-caching', {
           cachePolicyName: 'cfCachingSessionsIrmaIssueApp',
@@ -97,7 +95,7 @@ export class CloudFrontStack extends Stack {
         responseHeadersPolicy: this.responseHeadersPolicy(),
       },
       //logBucket: this.logBucket(),
-      minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2019,
+      //minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2019,
     });
     return distribution;
   }
