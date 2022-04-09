@@ -5,8 +5,6 @@ import {
   aws_route53 as Route53,
   aws_route53_targets as Route53Targets,
   aws_ssm as SSM,
-  aws_s3 as S3,
-  aws_s3_deployment,
   aws_iam as IAM,
 } from 'aws-cdk-lib';
 import {
@@ -74,7 +72,7 @@ export class CloudFrontStack extends Stack {
       defaultBehavior: {
         origin: new HttpOrigin(apiGatewayDomain),
         originRequestPolicy: new OriginRequestPolicy(this, 'cf-originrequestpolicy', {
-          originRequestPolicyName: 'cfOriginRequestPolicyMijnUitkering',
+          originRequestPolicyName: 'cfOriginRequestPolicyIrmaIssueApp',
           headerBehavior: OriginRequestHeaderBehavior.allowList(
             'Accept-Charset',
             'Origin',
@@ -88,7 +86,7 @@ export class CloudFrontStack extends Stack {
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: AllowedMethods.ALLOW_ALL,
         cachePolicy: new CachePolicy(this, 'cf-caching', {
-          cachePolicyName: 'cfCachingSessionsMijnUitkering',
+          cachePolicyName: 'cfCachingSessionsIrmaIssueApp',
           cookieBehavior: CacheCookieBehavior.all(),
           headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
           queryStringBehavior: CacheQueryStringBehavior.all(),
@@ -169,21 +167,6 @@ export class CloudFrontStack extends Stack {
     return cspValues.replace(/[ ]+/g, ' ').trim();
   }
 
-  /**
-   * Create an s3 bucket to hold static resources.
-   * Must be unencrypted to allow cloudfront to serve
-   * these resources.
-   *
-   * @returns S3.Bucket
-   */
-  staticResourcesBucket() {
-    const bucket = new S3.Bucket(this, 'resources-bucket', {
-      blockPublicAccess: S3.BlockPublicAccess.BLOCK_ALL,
-      encryption: S3.BucketEncryption.UNENCRYPTED,
-    });
-
-    return bucket;
-  }
 
   /**
    * Allow listBucket to the origin access identity
@@ -210,20 +193,5 @@ export class CloudFrontStack extends Stack {
     );
   }
 
-  /**
-   * Deploy contents of folder to the s3 bucket
-   *
-   * Invalidates the correct cloudfront path
-   * @param bucket s3.Bucket
-   * @param distribution Distribution
-   */
-  deployBucket(bucket: S3.Bucket, distribution: Distribution) {
-    //Deploy static resources to s3
-    new aws_s3_deployment.BucketDeployment(this, 'staticResources', {
-      sources: [aws_s3_deployment.Source.asset('./src/app/static-resources/')],
-      destinationBucket: bucket,
-      distribution: distribution,
-      distributionPaths: ['/static/*'],
-    });
-  }
+
 }
