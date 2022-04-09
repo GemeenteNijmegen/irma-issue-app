@@ -32,7 +32,7 @@ export class ApiStack extends cdk.Stack {
       // deployOptions: {
       //   stageName: Statics.apiGatewayStageName,
       // },
-      description: 'irma-issue-app-api-gateway'
+      description: 'irma-issue-app-api-gateway',
     });
 
     // Explicit stack outputs

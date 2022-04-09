@@ -7,6 +7,11 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   release: true,
   majorVersion: 1,
   name: 'irma-issue-app',
+  depsUpgradeOptions: {
+    workflowOptions: {
+      branches: ['acceptance'],
+    },
+  },
   gitignore: [
     'src/app/**/node_modules',
     'src/app/**/shared',
