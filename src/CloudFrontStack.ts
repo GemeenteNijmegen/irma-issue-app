@@ -23,7 +23,7 @@ import {
   OriginAccessIdentity,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins';
-import { Bucket } from 'aws-cdk-lib/aws-s3';
+import { BlockPublicAccess, Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import { Statics } from './Statics';
 
@@ -94,10 +94,29 @@ export class CloudFrontStack extends Stack {
         }),
         responseHeadersPolicy: this.responseHeadersPolicy(),
       },
-      //logBucket: this.logBucket(),
+      logBucket: this.logBucket(),
       //minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2019,
     });
     return distribution;
+  }
+
+  /**
+   * Create a bucket to hold cloudfront logs
+   * @returns s3.Bucket
+   */
+  logBucket() {
+    const cfLogBucket = new Bucket(this, 'CloudfrontLogs', {
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      encryption: BucketEncryption.S3_MANAGED,
+      lifecycleRules: [
+        {
+          id: 'delete objects after 180 days',
+          enabled: true,
+          expiration: Duration.days(180),
+        },
+      ],
+    });
+    return cfLogBucket;
   }
 
   /**
