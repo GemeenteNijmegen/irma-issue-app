@@ -9,6 +9,21 @@
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
+"@aws-cdk/aws-apigatewayv2-alpha@^2.20.0-alpha.0":
+  version "2.20.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-apigatewayv2-alpha/-/aws-apigatewayv2-alpha-2.20.0-alpha.0.tgz#417c586a8e06af2536945371ffbfb53fd3dff0f4"
+  integrity sha512-TPlYWaeT8MsPOM4mmc7ms/yO9pfsE8UTaxJ5Q7gJDPHWW7gxiye9OG3+vRfc9VSmK4OKQ+YrHp+ERNATGdZtdQ==
+
+"@aws-cdk/aws-apigatewayv2-authorizers-alpha@^2.20.0-alpha.0":
+  version "2.20.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-apigatewayv2-authorizers-alpha/-/aws-apigatewayv2-authorizers-alpha-2.20.0-alpha.0.tgz#cd4fa5d7954ae768c50287f74dc6846f5edd40a9"
+  integrity sha512-cxI5hE6YNfYj+cOYk4TYBXll8zROoCgfz0LxmYS/ywewXFSIFgCBe9dw2j9a8PIhGxOPGnrUCmDZeFP1EXNHXA==
+
+"@aws-cdk/aws-apigatewayv2-integrations-alpha@^2.20.0-alpha.0":
+  version "2.20.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-apigatewayv2-integrations-alpha/-/aws-apigatewayv2-integrations-alpha-2.20.0-alpha.0.tgz#5c8d7c01cded308186d1f90a02c85c218567a0cd"
+  integrity sha512-GrB23ZUhyanLTSpeVWrId4OsCdPr55M3g5gdqkkLRvXi0hum75kMoLKGmnEaPj3urxb/MlfVJGzaan5F2t4wmg==
+
 "@aws-solutions-constructs/aws-lambda-dynamodb@2.0.0":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@aws-solutions-constructs/aws-lambda-dynamodb/-/aws-lambda-dynamodb-2.0.0.tgz"

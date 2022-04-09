@@ -30,6 +30,9 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'deploy:api': 'npx cdk deploy irma-issue-app/api-stack irma-issue-app/sessions-stack',
   },
   deps: [
+    '@aws-cdk/aws-apigatewayv2-alpha',
+    '@aws-cdk/aws-apigatewayv2-integrations-alpha',
+    '@aws-cdk/aws-apigatewayv2-authorizers-alpha',
     '@aws-solutions-constructs/aws-lambda-dynamodb@2.0.0',
     'dotenv@16.0.0',
   ],
