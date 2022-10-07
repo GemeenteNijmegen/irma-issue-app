@@ -1,57 +1,57 @@
 export abstract class Statics {
-  static readonly projectName: string = 'mijn-nijmegen';
-  static readonly sessionTableName: string = 'mijn-nijmegen-sessions';
+  static readonly projectName: string = 'irma-issue-app';
+  static readonly sessionTableName: string = 'irma-issue-sessions';
 
   /**
    * Repo information
    */
 
-  static readonly repository: string = 'mijn-nijmegen';
+  static readonly repository: string = 'irma-issue-app';
   static readonly repositoryOwner: string = 'GemeenteNijmegen';
 
   /**
    * IAM params
    */
   static readonly iamAccountId: string = '098799052470';
-  static readonly ssmReadOnlyRoleArn: string = '/cdk/mijn-nijmegen/role-readonly-arn';
+  static readonly ssmReadOnlyRoleArn: string = '/cdk/irma-issue-app/role-readonly-arn';
 
   /**
    * Authentication URL base, used in auth and login lambda
    */
-  static readonly ssmAuthUrlBaseParameter: string = '/cdk/mijn-nijmegen/authUrlBase';
+  static readonly ssmAuthUrlBaseParameter: string = '/cdk/irma-issue-app/authUrlBase';
   /**
    * OpenID Connect client ID (sent in URL as querystring-param, not secret)
    */
-  static readonly ssmOIDCClientID: string = '/cdk/mijn-nijmegen/authClientID';
+  static readonly ssmOIDCClientID: string = '/cdk/irma-issue-app/authClientID';
   /**
    * OpenID Connect scope
    */
-  static readonly ssmOIDCScope: string = '/cdk/mijn-nijmegen/authScope';
+  static readonly ssmOIDCScope: string = '/cdk/irma-issue-app/authScope';
 
   /**
    * OpenID Connect secret name
    */
-  static readonly secretOIDCClientSecret: string = '/cdk/mijn-nijmegen/oidc-clientsecret';
+  static readonly secretOIDCClientSecret: string = '/cdk/irma-issue-app/oidc-clientsecret';
 
   /**
    * Certificate private key for mTLS
    */
-  static readonly secretMTLSPrivateKey: string = '/cdk/mijn-nijmegen/mtls-privatekey';
+  static readonly secretMTLSPrivateKey: string = '/cdk/irma-issue-app/mtls-privatekey';
 
   /**
    * Certificate for mTLS
    */
-  static readonly ssmMTLSClientCert: string = '/cdk/mijn-nijmegen/mtls-clientcert';
+  static readonly ssmMTLSClientCert: string = '/cdk/irma-issue-app/mtls-clientcert';
 
   /**
     * Root CA for mTLS (PKIO root)
     */
-  static readonly ssmMTLSRootCA: string = '/cdk/mijn-nijmegen/mtls-rootca';
+  static readonly ssmMTLSRootCA: string = '/cdk/irma-issue-app/mtls-rootca';
 
   /**
    * BRP API endpoint
    */
-  static readonly ssmBrpApiEndpointUrl: string = '/cdk/mijn-nijmegen/brp-api-url';
+  static readonly ssmBrpApiEndpointUrl: string = '/cdk/irma-issue-app/brp-api-url';
 
 
   /**
@@ -76,49 +76,50 @@ export abstract class Statics {
 
 
   /**
-   * Route53 Zone ID and name for the zone for Mijn Nijmegen. decouples stacks to not pass
+   * Route53 Zone ID and name for the zone for IRMA issue app. decouples stacks to not pass
    * the actual zone between stacks. This param is set by DNSStack and should not be modified after.
    */
-  static readonly ssmZonePath: string = '/cdk/mijn-nijmegen/zones';
-  static readonly ssmZoneId: string = '/cdk/mijn-nijmegen/zone-id';
-  static readonly ssmZoneName: string = '/cdk/mijn-nijmegen/zone-name';
-  static readonly ssmZoneIdNew: string = '/cdk/mijn-nijmegen/zones/csp-id';
-  static readonly ssmZoneNameNew: string = '/cdk/mijn-nijmegen/zones/csp-name';
+  static readonly ssmZonePath: string = '/cdk/irma-issue-app/zones';
+  static readonly ssmZoneId: string = '/cdk/irma-issue-app/zone-id';
+  static readonly ssmZoneName: string = '/cdk/irma-issue-app/zone-name';
+  static readonly ssmZoneIdNew: string = '/cdk/irma-issue-app/zones/csp-id';
+  static readonly ssmZoneNameNew: string = '/cdk/irma-issue-app/zones/csp-name';
 
-  /** There seems to be no way to get the required ds record value in the CDK/API */
-  static readonly ssmNijmegenDSRecordValue: string = '/cdk/mijn-nijmegen/ds-record-value';
+  static readonly certificatePath: string = '/cdk/irma-issue-app/certificates';
+  static readonly certificateArn: string = '/cdk/irma-issue-app/certificates/certificate-arn';
 
-  static readonly certificatePath: string = '/cdk/mijn-nijmegen/certificates';
-  static readonly certificateArn: string = '/cdk/mijn-nijmegen/certificates/certificate-arn';
+  static readonly ssmApiGatewayId: string = '/cdk/irma-issue-app/apigateway-id';
 
-  static readonly ssmApiGatewayId: string = '/cdk/mijn-nijmegen/apigateway-id';
+  static readonly ssmSessionsTableArn: string = '/cdk/irma-issue-app/sessionstable-arn';
 
-  static readonly ssmSessionsTableArn: string = '/cdk/mijn-nijmegen/sessionstable-arn';
+  static readonly ssmDataKeyArn: string = '/cdk/irma-issue-app/kms-datakey-arn';
 
-  static readonly ssmDataKeyArn: string = '/cdk/mijn-nijmegen/kms-datakey-arn';
+  static readonly wafPath: string = '/cdk/irma-issue-app/waf';
+  static readonly ssmWafAclArn: string = '/cdk/irma-issue-app/waf/acl-arn';
 
-  static readonly wafPath: string = '/cdk/mijn-nijmegen/waf';
-  static readonly ssmWafAclArn: string = '/cdk/mijn-nijmegen/waf/acl-arn';
+  static readonly ssmMonitoringLambdaArn: string = '/cdk/irma-issue-app/monitoring-lambda-arn';
+  static readonly ssmSlackWebhookUrl: string = '/cdk/irma-issue-app/slack-webhook-url';
 
-  static readonly ssmMonitoringLambdaArn: string = '/cdk/mijn-nijmegen/monitoring-lambda-arn';
-  static readonly ssmSlackWebhookUrl: string = '/cdk/mijn-nijmegen/slack-webhook-url';
+  static readonly codeStarConnectionArn: string = 'arn:aws:codestar-connections:eu-west-1:418648875085:connection/4f647929-c982-4f30-94f4-24ff7dbf9766';
 
 
   static subDomain(branch: string) {
     const subdomainMap = {
-      acceptance: 'mijn.accp',
-      production: 'mijn',
+      development: 'irma-issue.sandbox',
+      acceptance: 'irma-issue.accp',
+      production: 'irma-issue',
     };
-    const subdomain = subdomainMap[branch as keyof typeof subdomainMap] ?? 'mijn-dev';
+    const subdomain = subdomainMap[branch as keyof typeof subdomainMap] ?? 'irma-issue';
     return subdomain;
   }
 
   static cspSubDomain(branch: string) {
     const subdomainMap = {
-      acceptance: 'mijn.accp',
-      production: 'mijn.auth-prod',
+      development: 'irma-issue.sandbox',
+      acceptance: 'irma-issue.accp',
+      production: 'irma-issue.auth-prod',
     };
-    const subdomain = subdomainMap[branch as keyof typeof subdomainMap] ?? 'mijn-dev';
+    const subdomain = subdomainMap[branch as keyof typeof subdomainMap] ?? 'irma-issue.auth-prod';
     return subdomain;
   }
 }

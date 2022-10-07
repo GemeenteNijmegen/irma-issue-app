@@ -1,4 +1,4 @@
-import { aws_route53 as Route53, Stack, StackProps, aws_ssm as SSM, Duration, CfnOutput } from 'aws-cdk-lib';
+import { aws_route53 as Route53, Stack, StackProps, aws_ssm as SSM, Duration } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Statics } from './statics';
 
@@ -18,24 +18,19 @@ export class DNSStack extends Stack {
     const rootZoneId = SSM.StringParameter.valueForStringParameter(this, Statics.accountRootHostedZoneId);
     const rootZoneName = SSM.StringParameter.valueForStringParameter(this, Statics.accountRootHostedZoneName);
 
-    this.accountRootZone = Route53.HostedZone.fromHostedZoneAttributes(this, 'cspzone', {
+    this.accountRootZone = Route53.HostedZone.fromHostedZoneAttributes(this, 'account-root-zone', {
       hostedZoneId: rootZoneId,
       zoneName: rootZoneName,
     });
 
-    this.zone = new Route53.HostedZone(this, 'mijn-csp', {
-      zoneName: `mijn.${this.accountRootZone.zoneName}`,
+    this.zone = new Route53.HostedZone(this, 'hosted-zone', {
+      zoneName: `irma-issue.${this.accountRootZone.zoneName}`,
     });
 
     this.addZoneIdAndNametoParams();
     this.addNSToRootCSPzone();
     this.addDsRecord();
 
-    const compat_output = new CfnOutput(this, 'temp-output', {
-      value: 'Z03105592Z01S4FRBQZQV',
-      exportName: 'mijn-api-dns-stack:ExportsOutputRefmijncspB83B491BB53D10A4',
-    });
-    compat_output.overrideLogicalId('ExportsOutputRefmijncspB83B491BB53D10A4');
   }
 
   /**
@@ -43,25 +38,14 @@ export class DNSStack extends Stack {
    * for use in other stages (Cloudfront).
    */
   private addZoneIdAndNametoParams() {
-    new SSM.StringParameter(this, 'mijn-hostedzone-id', {
+    new SSM.StringParameter(this, 'hostedzone-id', {
       stringValue: this.zone.hostedZoneId,
       parameterName: Statics.ssmZoneId,
     });
 
-    new SSM.StringParameter(this, 'mijn-hostedzone-name', {
+    new SSM.StringParameter(this, 'hostedzone-name', {
       stringValue: this.zone.zoneName,
       parameterName: Statics.ssmZoneName,
-    });
-
-    // Temporarily add params twice, with old and new name
-    new SSM.StringParameter(this, 'csp-hostedzone-id', {
-      stringValue: this.zone.hostedZoneId,
-      parameterName: Statics.ssmZoneIdNew,
-    });
-
-    new SSM.StringParameter(this, 'csp-hostedzone-name', {
-      stringValue: this.zone.zoneName,
-      parameterName: Statics.ssmZoneNameNew,
     });
   }
 
@@ -77,7 +61,7 @@ export class DNSStack extends Stack {
     new Route53.NsRecord(this, 'ns-record', {
       zone: this.accountRootZone,
       values: this.zone.hostedZoneNameServers,
-      recordName: 'mijn',
+      recordName: 'irma-issue',
     });
   }
 
@@ -99,7 +83,7 @@ export class DNSStack extends Stack {
     }
     new Route53.DsRecord(this, 'ds-record', {
       zone: this.accountRootZone,
-      recordName: 'mijn',
+      recordName: 'irma-issue',
       values: [dsValue],
       ttl: Duration.seconds(600),
     });

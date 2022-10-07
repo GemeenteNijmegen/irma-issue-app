@@ -19,14 +19,25 @@ export interface ApiStageProps extends StageProps {
 export class ApiStage extends Stage {
   constructor(scope: Construct, id: string, props: ApiStageProps) {
     super(scope, id, props);
-    const keyStack = new KeyStack(this, 'key-stack');
-    const sessionsStack = new SessionsStack(this, 'sessions-stack', { key: keyStack.key });
+
+    // Only deploy key on accp and prod
+    var key = undefined;
+    if (props.branch != 'development') {
+      const keyStack = new KeyStack(this, 'key-stack');
+      key = keyStack.key;
+    }
+
+    const sessionsStack = new SessionsStack(this, 'sessions-stack', { key: key });
     const dnsStack = new DNSStack(this, 'dns-stack', { branch: props.branch });
 
     const usEastCertificateStack = new UsEastCertificateStack(this, 'us-cert-stack', { branch: props.branch, env: { region: 'us-east-1' } });
-    const dnssecStack = new DNSSECStack(this, 'dnssec-stack', { branch: props.branch, env: { region: 'us-east-1' } });
     usEastCertificateStack.addDependency(dnsStack);
-    dnssecStack.addDependency(dnsStack);
+
+    // Only deploy DNSSEC on accp and prod
+    if (props.branch != 'development') {
+      const dnssecStack = new DNSSECStack(this, 'dnssec-stack', { branch: props.branch, env: { region: 'us-east-1' } });
+      dnssecStack.addDependency(dnsStack);
+    }
 
     const apistack = new ApiStack(this, 'api-stack', {
       branch: props.branch,
@@ -38,6 +49,10 @@ export class ApiStage extends Stage {
     });
     cloudfrontStack.addDependency(usEastCertificateStack);
 
-    new WafStack(this, 'waf-stack', { env: { region: 'us-east-1' }, branch: props.branch });
+    // Only deploy WAF on accp and prod
+    if (props.branch != 'development') {
+      const waf = new WafStack(this, 'waf-stack', { env: { region: 'us-east-1' }, branch: props.branch });
+      waf.addDependency(apistack);
+    }
   }
 }

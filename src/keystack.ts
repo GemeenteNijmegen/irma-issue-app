@@ -20,8 +20,8 @@ export class KeyStack extends Stack {
     super(scope, id);
     this.key = new KMS.Key(this, 'kmskey', {
       enableKeyRotation: true,
-      description: 'encryption key for Mijn Nijmegen',
-      alias: 'mijnnijmegen/userdata',
+      description: 'encryption key for irma-issue-app',
+      alias: 'irma-issue-app/userdata',
     });
 
     // Store key arn to be used in other stacks/projects
@@ -30,11 +30,6 @@ export class KeyStack extends Stack {
       parameterName: Statics.ssmDataKeyArn,
     });
 
-    // this.logKey = new KMS.Key(this, 'logkey', {
-    //     enableKeyRotation: true,
-    //     description: 'encryption key for Mijn Nijmegen logging',
-    //     alias: 'mijnnijmegen/logs'
-    // });
   }
 
   setPolicies() {

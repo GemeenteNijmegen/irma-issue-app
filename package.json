@@ -1,5 +1,5 @@
 {
-  "name": "mijnnijmegen",
+  "name": "irma-issue-app",
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",

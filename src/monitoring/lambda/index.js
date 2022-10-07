@@ -37,7 +37,7 @@ function createMessage(logs) {
     const message = { blocks: [] };
     for (let i = 0; i < logEvents.length; i++) {
         const event = logEvents[i];
-        let blockString = templateString.replace('<HEADER>', 'Error in Mijn Nijmegen lambda');
+        let blockString = templateString.replace('<HEADER>', 'Error in IRMA issue app lambda');
         blockString = blockString.replace('<LOGGROUP>', logGroup);
         let eventMessage = JSON.stringify('```' + event.message + '```');
         

@@ -14,7 +14,6 @@ import { Statics } from './statics';
 export interface ApiStackProps extends StackProps {
   sessionsTable: SessionsTable;
   branch: string;
-  // zone: HostedZone;
 }
 
 /**
@@ -29,8 +28,8 @@ export class ApiStack extends Stack {
   constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id);
     this.sessionsTable = props.sessionsTable.table;
-    this.api = new apigatewayv2.HttpApi(this, 'mijnuitkering-api', {
-      description: 'Mijn Uitkering webapplicatie',
+    this.api = new apigatewayv2.HttpApi(this, 'irma-issue-api', {
+      description: 'IRMA issue webapplicatie',
     });
 
     // Store apigateway ID to be used in other stacks
@@ -59,7 +58,7 @@ export class ApiStack extends Stack {
     const lambda = new Lambda.Function(this, 'lambda', {
       runtime: Lambda.Runtime.NODEJS_14_X,
       handler: 'index.handler',
-      description: 'Monitor Mijn Nijmegen cloudwatch logs',
+      description: 'Monitor IRMA issue app cloudwatch logs',
       code: Lambda.Code.fromAsset(path.join(__dirname, 'monitoring', 'lambda')),
       logRetention: RetentionDays.ONE_MONTH,
       environment: {
@@ -80,8 +79,8 @@ export class ApiStack extends Stack {
    * @param {string} baseUrl the application url
    */
   setFunctions(baseUrl: string, readOnlyRole: Role) {
-    const loginFunction = new ApiFunction(this, 'login-function', {
-      description: 'Login-pagina voor de Mijn Uitkering-applicatie.',
+    const loginFunction = new ApiFunction(this, 'irma-issue-login-function', {
+      description: 'Login-pagina voor de IRMA issue-applicatie.',
       codePath: 'app/login',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
@@ -89,8 +88,8 @@ export class ApiStack extends Stack {
       readOnlyRole,
     });
 
-    const logoutFunction = new ApiFunction(this, 'logout-function', {
-      description: 'Uitlog-pagina voor de Mijn Uitkering-applicatie.',
+    const logoutFunction = new ApiFunction(this, 'irma-issue-logout-function', {
+      description: 'Uitlog-pagina voor de IRMA issue-applicatie.',
       codePath: 'app/logout',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
@@ -99,8 +98,8 @@ export class ApiStack extends Stack {
     });
 
     const oidcSecret = aws_secretsmanager.Secret.fromSecretNameV2(this, 'oidc-secret', Statics.secretOIDCClientSecret);
-    const authFunction = new ApiFunction(this, 'auth-function', {
-      description: 'Authenticatie-lambd voor de Mijn Uitkering-applicatie.',
+    const authFunction = new ApiFunction(this, 'irma-issue-auth-function', {
+      description: 'Authenticatie-lambd voor de IRMA issue-applicatie.',
       codePath: 'app/auth',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
@@ -115,8 +114,8 @@ export class ApiStack extends Stack {
     const secretMTLSPrivateKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'tls-key-secret', Statics.secretMTLSPrivateKey);
     const tlskeyParam = SSM.StringParameter.fromStringParameterName(this, 'tlskey', Statics.ssmMTLSClientCert);
     const tlsRootCAParam = SSM.StringParameter.fromStringParameterName(this, 'tlsrootca', Statics.ssmMTLSRootCA);
-    const homeFunction = new ApiFunction(this, 'home-function', {
-      description: 'Home-lambda voor de Mijn Uitkering-applicatie.',
+    const homeFunction = new ApiFunction(this, 'irma-issue-home-function', {
+      description: 'Home-lambda voor de IRMA issue-applicatie.',
       codePath: 'app/home',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
@@ -134,25 +133,25 @@ export class ApiStack extends Stack {
     tlsRootCAParam.grantRead(homeFunction.lambda);
 
     this.api.addRoutes({
-      integration: new HttpLambdaIntegration('login', loginFunction.lambda),
+      integration: new HttpLambdaIntegration('irma-issue-login', loginFunction.lambda),
       path: '/login',
       methods: [apigatewayv2.HttpMethod.GET],
     });
 
     this.api.addRoutes({
-      integration: new HttpLambdaIntegration('logout', logoutFunction.lambda),
+      integration: new HttpLambdaIntegration('irma-issue-logout', logoutFunction.lambda),
       path: '/logout',
       methods: [apigatewayv2.HttpMethod.GET],
     });
 
     this.api.addRoutes({
-      integration: new HttpLambdaIntegration('auth', authFunction.lambda),
+      integration: new HttpLambdaIntegration('irma-issue-auth', authFunction.lambda),
       path: '/auth',
       methods: [apigatewayv2.HttpMethod.GET],
     });
 
     this.api.addRoutes({ // Also availabel at / due to CloudFront defaultRootObject
-      integration: new HttpLambdaIntegration('home', homeFunction.lambda),
+      integration: new HttpLambdaIntegration('irma-issue-home', homeFunction.lambda),
       path: '/home',
       methods: [apigatewayv2.HttpMethod.GET],
     });
@@ -173,6 +172,7 @@ export class ApiStack extends Stack {
       .replace(/\/$/, ''); //optional trailing slash
     return cleanedUrl;
   }
+
   /**
    * Create a role with read-only access to the application
    *
@@ -180,8 +180,8 @@ export class ApiStack extends Stack {
    */
   readOnlyRole(): Role {
     const readOnlyRole = new Role(this, 'read-only-role', {
-      roleName: 'mijnnijmegen-full-read',
-      description: 'Read-only role for Mijn Nijmegen with access to lambdas, logging, session store',
+      roleName: 'irma-issue-full-read',
+      description: 'Read-only role for IRMA issue app with access to lambdas, logging, session store',
       assumedBy: new PrincipalWithConditions(
         new AccountPrincipal(Statics.iamAccountId), //IAM account
         {

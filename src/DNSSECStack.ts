@@ -42,7 +42,7 @@ export class DNSSECStack extends Stack {
       // Production KSK
       const accountKmsKeyArnForDnsSec = SSM.StringParameter.valueForStringParameter(this, Statics.ssmAccountDnsSecKmsKey);
       const dnssecKeySigningNew = new Route53.CfnKeySigningKey(this, 'dnssec-keysigning-key', {
-        name: 'mijn_nijmegen_key_signing_key',
+        name: 'irma_issue_key_signing_key',
         status: 'ACTIVE',
         hostedZoneId: zoneId,
         keyManagementServiceArn: accountKmsKeyArnForDnsSec,
@@ -52,7 +52,7 @@ export class DNSSECStack extends Stack {
       // Acceptance KSK
       const accountDnssecKmsKeyArn = SSM.StringParameter.valueForStringParameter(this, Statics.ssmAccountDnsSecKmsKey);
       const dnssecKeySigning = new Route53.CfnKeySigningKey(this, 'dnssec-keysigning-key-2', {
-        name: 'mijn_nijmegen_ksk',
+        name: 'irma_issue_ksk',
         status: 'ACTIVE',
         hostedZoneId: zoneId,
         keyManagementServiceArn: accountDnssecKmsKeyArn,

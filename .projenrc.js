@@ -4,7 +4,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   defaultReleaseBranch: 'production',
   release: true,
   majorVersion: 1,
-  name: 'mijnnijmegen',
+  name: 'irma-issue-app',
   license: 'EUPL-1.2',
   deps: [
     'dotenv',

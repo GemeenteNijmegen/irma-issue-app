@@ -4,12 +4,16 @@ import { Construct } from 'constructs';
 import { Statics } from './statics';
 
 export interface SessionsTableProps extends StackProps {
-  key: KMS.Key;
+  /**
+   * If no key provided use AWS_MANAGED key
+   */
+  key?: KMS.Key;
 }
 
 export class SessionsTable extends Construct {
   table: DynamoDB.Table;
   constructor(scope: Construct, id: string, props: SessionsTableProps) {
+
     super(scope, id);
     this.table = new DynamoDB.Table(this, 'sessions-table', {
       partitionKey: { name: 'sessionid', type: DynamoDB.AttributeType.STRING },
@@ -18,7 +22,7 @@ export class SessionsTable extends Construct {
       timeToLiveAttribute: 'ttl',
       removalPolicy: RemovalPolicy.RETAIN,
       encryptionKey: props.key,
-      encryption: TableEncryption.CUSTOMER_MANAGED,
+      encryption: props.key ? TableEncryption.CUSTOMER_MANAGED : TableEncryption.AWS_MANAGED,
     });
   }
 }
