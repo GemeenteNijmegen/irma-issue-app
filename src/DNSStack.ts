@@ -82,7 +82,7 @@ export class DNSStack extends Stack {
         break;
     }
 
-    if (dsValue == '' || dsValue == undefined) {
+    if (dsValue) {
       new Route53.DsRecord(this, 'ds-record', {
         zone: this.accountRootZone,
         recordName: 'irma-issue',
