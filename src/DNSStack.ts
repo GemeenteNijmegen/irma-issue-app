@@ -81,11 +81,14 @@ export class DNSStack extends Stack {
       default:
         break;
     }
-    new Route53.DsRecord(this, 'ds-record', {
-      zone: this.accountRootZone,
-      recordName: 'irma-issue',
-      values: [dsValue],
-      ttl: Duration.seconds(600),
-    });
+
+    if (dsValue == '' || dsValue == undefined) {
+      new Route53.DsRecord(this, 'ds-record', {
+        zone: this.accountRootZone,
+        recordName: 'irma-issue',
+        values: [dsValue],
+        ttl: Duration.seconds(600),
+      });
+    }
   }
 }
