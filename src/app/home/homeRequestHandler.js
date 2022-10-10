@@ -1,5 +1,6 @@
 const { render } = require('./shared/render');
 const { BrpApi } = require('./BrpApi');
+const { IrmaApi } = require('./IrmaApi');
 const { Session } = require('@gemeentenijmegen/session');
 
 function redirectResponse(location, code = 302) {
@@ -22,14 +23,26 @@ exports.homeRequestHandler = async (cookies, apiClient, dynamoDBClient) => {
 }
 
 async function handleLoggedinRequest(session, apiClient) {
+    // BRP request
     const bsn = session.getValue('bsn');
     const brpApi = new BrpApi(apiClient);
     const brpData = await brpApi.getBrpData(bsn);
     const naam = brpData?.Persoon?.Persoonsgegevens?.Naam ? brpData.Persoon.Persoonsgegevens.Naam : 'Onbekende gebruiker';
+
+    if(naam == 'Onbekende gebruiker'){
+        // TODO fout afhandelen geen BRP data om uit te geven...
+        throw Error("Kon BRP data niet ophalen...")
+    }
+
+    // Start IRMA session 
+    const irmaApi = new IrmaApi('baseurl', true);
+    const irmaSession = irmaApi.startSession(brpData);
+
     data = {
         title: 'overzicht',
         shownav: true,
-        volledigenaam: naam
+        volledigenaam: naam,
+        irmaSessie: irmaSession,
     };
 
     // render page
