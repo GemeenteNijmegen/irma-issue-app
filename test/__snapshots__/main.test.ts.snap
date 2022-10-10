@@ -226,7 +226,8 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8:test-eu-west-1\\\\\\"\\",
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiuscertstack39194015.assets.json\\\\\\" --verbose publish \\\\\\"eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8:test-us-east-1\\\\\\"\\"
       ]
     }
   }
@@ -521,6 +522,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiuscertstack39194015.assets.json\\\\\\" --verbose publish \\\\\\"3803df2f6849acf50bb6577ee095a669940670e799f70a2be34893a399777bc3:test-us-east-1\\\\\\"\\",
         \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"3803df2f6849acf50bb6577ee095a669940670e799f70a2be34893a399777bc3:test-eu-west-1\\\\\\"\\"
       ]
     }
@@ -580,6 +582,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiuscertstack39194015.assets.json\\\\\\" --verbose publish \\\\\\"e7c95e1a12d903d913ebdd526c735f1ac58b2024882a5562110221fe685ebe85:test-us-east-1\\\\\\"\\",
         \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"e7c95e1a12d903d913ebdd526c735f1ac58b2024882a5562110221fe685ebe85:test-eu-west-1\\\\\\"\\"
       ]
     }
@@ -762,9 +765,14 @@ Object {
             Object {
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
-              "Resource": Object {
-                "Fn::Sub": "arn:\${AWS::Partition}:iam::test:role/cdk-hnb659fds-file-publishing-role-test-eu-west-1",
-              },
+              "Resource": Array [
+                Object {
+                  "Fn::Sub": "arn:\${AWS::Partition}:iam::test:role/cdk-hnb659fds-file-publishing-role-test-eu-west-1",
+                },
+                Object {
+                  "Fn::Sub": "arn:\${AWS::Partition}:iam::test:role/cdk-hnb659fds-file-publishing-role-test-us-east-1",
+                },
+              ],
             },
             Object {
               "Action": Array [

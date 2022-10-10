@@ -82,8 +82,6 @@ export abstract class Statics {
   static readonly ssmZonePath: string = '/cdk/irma-issue-app/zones';
   static readonly ssmZoneId: string = '/cdk/irma-issue-app/zone-id';
   static readonly ssmZoneName: string = '/cdk/irma-issue-app/zone-name';
-  static readonly ssmZoneIdNew: string = '/cdk/irma-issue-app/zones/csp-id';
-  static readonly ssmZoneNameNew: string = '/cdk/irma-issue-app/zones/csp-name';
 
   static readonly certificatePath: string = '/cdk/irma-issue-app/certificates';
   static readonly certificateArn: string = '/cdk/irma-issue-app/certificates/certificate-arn';

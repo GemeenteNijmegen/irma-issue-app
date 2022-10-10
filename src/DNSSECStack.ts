@@ -29,7 +29,7 @@ export class DNSSECStack extends Stack {
       path: `${Statics.ssmZonePath}/`,
       region: 'eu-west-1',
     });
-    const zoneId = parameters.get(Statics.ssmZoneIdNew);
+    const zoneId = parameters.get(Statics.ssmZoneId);
 
     const dnssec = new Route53.CfnDNSSEC(this, 'dnssec', {
       hostedZoneId: zoneId,

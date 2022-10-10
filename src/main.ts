@@ -1,8 +1,10 @@
-import { App } from 'aws-cdk-lib';
+import { App, Aspects, IAspect, Tags } from 'aws-cdk-lib';
+import { IConstruct } from 'constructs';
 import * as Dotenv from 'dotenv';
 import { PipelineStackAcceptance } from './PipelineStackAcceptance';
 import { PipelineStackDevelopment } from './PipelineStackDevelopment';
 import { PipelineStackProduction } from './PipelineStackProduction';
+import { Statics } from './statics';
 
 const deploymentEnvironment = {
   account: '418648875085',
@@ -53,5 +55,18 @@ if ('BRANCH_NAME' in process.env == false || process.env.BRANCH_NAME == 'develop
     },
   );
 }
+
+class MyAspect implements IAspect {
+  visit(node: IConstruct): void {
+    //if (node.node.id == 'Resource') {
+    //  console.log(node.node.path);
+    Tags.of(node).add('Project', Statics.projectName);
+    Tags.of(node).add('CdkManaged', 'yes');
+    //}
+  }
+
+}
+
+Aspects.of(app).add(new MyAspect());
 
 app.synth();
