@@ -53,7 +53,7 @@ export class CloudfrontStack extends Stack {
     const mainDomain = `${subdomain}.nijmegen.nl`;
     var domains = [cspDomain];
 
-    if(props.branch != 'development'){
+    if (props.branch != 'development') {
       domains.push(mainDomain);
     }
 

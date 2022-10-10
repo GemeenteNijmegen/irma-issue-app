@@ -26,7 +26,7 @@ export class UsEastCertificateStack extends Stack {
     const zone = new ImportHostedZone(this, 'zone');
 
     var subjectAlternativeNames = undefined;
-    if(branch != 'development'){
+    if (branch != 'development') {
       subjectAlternativeNames = [appDomain];
     }
 

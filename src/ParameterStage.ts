@@ -52,7 +52,7 @@ export class ssmParamsConstruct extends Construct {
     });
 
     new SSM.StringParameter(this, 'ssm_auth_2', {
-      stringValue: 'AawootW574MqIMRAfAgzdv8lhQYLuGY3',
+      stringValue: 'eQLZc8Wl0luIr5PZoajjFUt3tMPMAKHf',
       parameterName: Statics.ssmOIDCClientID,
     });
 

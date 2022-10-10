@@ -40,10 +40,17 @@ export class ApiStack extends Stack {
 
     const subdomain = Statics.subDomain(props.branch);
     const appDomain = `${subdomain}.nijmegen.nl`;
+    var baseUrl = `https://${appDomain}/`;
+
+    if (props.branch == 'development') {
+      const cspSubdomain = Statics.cspSubDomain(props.branch);
+      const cspDomain = `${cspSubdomain}.csp-nijmegen.nl`;
+      var baseUrl = `https://${cspDomain}/`;
+    }
 
     this.monitoringLambda();
     const readOnlyRole = this.readOnlyRole();
-    this.setFunctions(`https://${appDomain}/`, readOnlyRole);
+    this.setFunctions(baseUrl, readOnlyRole);
     this.allowReadAccessToTable(readOnlyRole, this.sessionsTable);
   }
 
