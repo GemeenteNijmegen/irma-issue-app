@@ -13,10 +13,10 @@ export class UsEastCertificateStack extends Stack {
   constructor(scope: Construct, id: string, props: UsEastCertificateStackProps) {
     super(scope, id, props);
     this.branch = props.branch;
-    this.createCertificate();
+    this.createCertificate(props.branch);
   }
 
-  createCertificate() {
+  createCertificate(branch: string) {
     const subdomain = Statics.subDomain(this.branch);
     const cspSubdomain = Statics.cspSubDomain(this.branch);
     const appDomain = `${subdomain}.nijmegen.nl`;
@@ -25,9 +25,14 @@ export class UsEastCertificateStack extends Stack {
     // Import hosted zone
     const zone = new ImportHostedZone(this, 'zone');
 
+    var subjectAlternativeNames = undefined;
+    if(branch != 'development'){
+      subjectAlternativeNames = [appDomain];
+    }
+
     const certificate = new CertificateManager.Certificate(this, 'certificate', {
-      domainName: appDomain,
-      subjectAlternativeNames: [cspDomain],
+      domainName: cspDomain,
+      subjectAlternativeNames,
       validation: CertificateManager.CertificateValidation.fromDns(zone.hostedZone),
     });
 
