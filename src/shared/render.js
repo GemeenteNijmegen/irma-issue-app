@@ -19,5 +19,8 @@ exports.render = async function(data, templatePath, partials) {
             partialTemplates[key] = partial;
         }
     }
+
+    data['name'] = 'IRMA'; // TODO later veranderen bij naam switch 
+
     return Mustache.render(template.toString(), data, partialTemplates);
 }
