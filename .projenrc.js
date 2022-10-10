@@ -20,7 +20,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   ], /* Build dependencies for this module. */
   depsUpgradeOptions: {
     workflowOptions: {
-      branches: ['acceptance'],
+      branches: ['development'],
     },
   },
   // packageName: undefined,  /* The "name" in package.json. */
