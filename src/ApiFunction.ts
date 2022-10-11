@@ -1,4 +1,3 @@
-import * as path from 'path';
 import { aws_lambda as Lambda, aws_dynamodb, aws_ssm as SSM, RemovalPolicy, Duration } from 'aws-cdk-lib';
 import { Alarm } from 'aws-cdk-lib/aws-cloudwatch';
 import { Role } from 'aws-cdk-lib/aws-iam';
@@ -9,7 +8,6 @@ import { Statics } from './statics';
 
 export interface ApiFunctionProps {
   description: string;
-  codePath: string;
   table: aws_dynamodb.ITable;
   tablePermissions: string;
   applicationUrlBase?: string;
@@ -18,18 +16,25 @@ export interface ApiFunctionProps {
   readOnlyRole: Role;
 }
 
-export class ApiFunction extends Construct {
-  lambda: Lambda.Function;
-  constructor(scope: Construct, id: string, props: ApiFunctionProps) {
+export class ApiFunction<T extends Lambda.Function> extends Construct {
+
+  lambda: T;
+
+  constructor(
+    scope: Construct,
+    id: string,
+    props: ApiFunctionProps,
+    apiFunction: {new(scope: Construct, id:string, props?: Lambda.FunctionProps): T},
+  ) {
     super(scope, id);
     // See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html
     const insightsArn = 'arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:16';
-    this.lambda = new Lambda.Function(this, 'lambda', {
-      runtime: Lambda.Runtime.NODEJS_14_X,
+    this.lambda = new apiFunction(this, 'lambda', {
+      runtime: Lambda.Runtime.NODEJS_14_X, // Overwritten
+      code: Lambda.Code.fromInline('empty'), // Overwritten
+      handler: 'index.handler', // Overwritten by apiFunction constructor
       memorySize: 512,
-      handler: 'index.handler',
       description: props.description,
-      code: Lambda.Code.fromAsset(path.join(__dirname, props.codePath)),
       insightsVersion: Lambda.LambdaInsightsVersion.fromInsightVersionArn(insightsArn),
       logRetention: RetentionDays.ONE_MONTH,
       environment: {
@@ -41,6 +46,7 @@ export class ApiFunction extends Construct {
         ...props.environment,
       },
     });
+
     props.table.grantReadWriteData(this.lambda.grantPrincipal);
 
     this.monitor(props.monitorFilterPattern);

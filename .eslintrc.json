@@ -144,13 +144,15 @@
       "error",
       {
         "devDependencies": [
-          "**/src/app/login/tests/**",
-          "**/src/app/auth/tests/**",
-          "**/src/app/home/tests/**",
-          "**/src/app/uitkeringen/tests/**",
           "**/src/app/logout/tests/**",
           "**//test/**",
-          "**//build-tools/**"
+          "**//build-tools/**",
+          "src/app/auth/auth.lambda.ts",
+          "src/app/issue/issue.lambda.ts",
+          "src/app/login/login.lambda.ts",
+          "src/app/logout/logout.lambda.ts",
+          "src/app/result/result.lambda.ts",
+          "src/monitoring/monitoring.lambda.ts"
         ],
         "optionalDependencies": false,
         "peerDependencies": true

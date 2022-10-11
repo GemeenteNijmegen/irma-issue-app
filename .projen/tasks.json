@@ -43,7 +43,135 @@
     },
     "bundle": {
       "name": "bundle",
-      "description": "Prepare assets"
+      "description": "Prepare assets",
+      "steps": [
+        {
+          "spawn": "bundle:app/auth/auth.lambda"
+        },
+        {
+          "spawn": "bundle:app/issue/issue.lambda"
+        },
+        {
+          "spawn": "bundle:app/login/login.lambda"
+        },
+        {
+          "spawn": "bundle:app/logout/logout.lambda"
+        },
+        {
+          "spawn": "bundle:app/result/result.lambda"
+        },
+        {
+          "spawn": "bundle:monitoring/monitoring.lambda"
+        }
+      ]
+    },
+    "bundle:app/auth/auth.lambda": {
+      "name": "bundle:app/auth/auth.lambda",
+      "description": "Create a JavaScript bundle from src/app/auth/auth.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/auth/auth.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/auth/auth.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+        }
+      ]
+    },
+    "bundle:app/auth/auth.lambda:watch": {
+      "name": "bundle:app/auth/auth.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/app/auth/auth.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/auth/auth.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/auth/auth.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --watch"
+        }
+      ]
+    },
+    "bundle:app/issue/issue.lambda": {
+      "name": "bundle:app/issue/issue.lambda",
+      "description": "Create a JavaScript bundle from src/app/issue/issue.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+        }
+      ]
+    },
+    "bundle:app/issue/issue.lambda:watch": {
+      "name": "bundle:app/issue/issue.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/app/issue/issue.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --watch"
+        }
+      ]
+    },
+    "bundle:app/login/login.lambda": {
+      "name": "bundle:app/login/login.lambda",
+      "description": "Create a JavaScript bundle from src/app/login/login.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+        }
+      ]
+    },
+    "bundle:app/login/login.lambda:watch": {
+      "name": "bundle:app/login/login.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/app/login/login.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --watch"
+        }
+      ]
+    },
+    "bundle:app/logout/logout.lambda": {
+      "name": "bundle:app/logout/logout.lambda",
+      "description": "Create a JavaScript bundle from src/app/logout/logout.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+        }
+      ]
+    },
+    "bundle:app/logout/logout.lambda:watch": {
+      "name": "bundle:app/logout/logout.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/app/logout/logout.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --watch"
+        }
+      ]
+    },
+    "bundle:app/result/result.lambda": {
+      "name": "bundle:app/result/result.lambda",
+      "description": "Create a JavaScript bundle from src/app/result/result.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/result/result.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/result/result.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+        }
+      ]
+    },
+    "bundle:app/result/result.lambda:watch": {
+      "name": "bundle:app/result/result.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/app/result/result.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/result/result.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/result/result.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --watch"
+        }
+      ]
+    },
+    "bundle:monitoring/monitoring.lambda": {
+      "name": "bundle:monitoring/monitoring.lambda",
+      "description": "Create a JavaScript bundle from src/monitoring/monitoring.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/monitoring/monitoring.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/monitoring/monitoring.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+        }
+      ]
+    },
+    "bundle:monitoring/monitoring.lambda:watch": {
+      "name": "bundle:monitoring/monitoring.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/monitoring/monitoring.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/monitoring/monitoring.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/monitoring/monitoring.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --watch"
+        }
+      ]
     },
     "clobber": {
       "name": "clobber",
@@ -134,7 +262,7 @@
       "description": "Runs eslint against the codebase",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern src src/app/login/tests src/app/auth/tests src/app/home/tests src/app/uitkeringen/tests src/app/logout/tests /test /build-tools .projenrc.js"
+          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern src src/app/logout/tests /test /build-tools .projenrc.js"
         }
       ]
     },
@@ -142,15 +270,15 @@
       "name": "install:auth",
       "steps": [
         {
-          "exec": "copyfiles -f src/shared/* src/app/auth/shared && cd src/app/auth && npm install"
+          "exec": "copyfiles -f src/app/templates/* src/app/auth/shared"
         }
       ]
     },
-    "install:home": {
-      "name": "install:home",
+    "install:issue": {
+      "name": "install:issue",
       "steps": [
         {
-          "exec": "copyfiles -f src/shared/* src/app/home/shared && cd src/app/home && npm install"
+          "exec": "copyfiles -f src/app/templates/* src/app/issue/shared"
         }
       ]
     },
@@ -158,7 +286,7 @@
       "name": "install:login",
       "steps": [
         {
-          "exec": "copyfiles -f src/shared/* src/app/login/shared && cd src/app/login && npm install"
+          "exec": "copyfiles -f src/app/templates/* src/app/login/shared"
         }
       ]
     },
@@ -166,15 +294,7 @@
       "name": "install:logout",
       "steps": [
         {
-          "exec": "copyfiles -f src/shared/* src/app/logout/shared && cd src/app/logout && npm install"
-        }
-      ]
-    },
-    "install:monitoring": {
-      "name": "install:monitoring",
-      "steps": [
-        {
-          "exec": "cd src/monitoring/lambda && npm install"
+          "exec": "copyfiles -f src/app/templates/* src/app/logout/shared"
         }
       ]
     },
@@ -182,7 +302,7 @@
       "name": "install:result",
       "steps": [
         {
-          "exec": "copyfiles -f src/shared/* src/app/result/shared && cd src/app/result && npm install"
+          "exec": "copyfiles -f src/app/templates/* src/app/result/shared"
         }
       ]
     },
@@ -201,17 +321,13 @@
     },
     "post-upgrade": {
       "name": "post-upgrade",
-      "steps": [
-        {
-          "exec": "       (cd src/app/login && npx npm-check-updates -u --dep prod,dev && npm install)       && (cd src/app/home && npx npm-check-updates -u --dep prod,dev && npm install)       && (cd src/app/login && npx npm-check-updates -u --dep prod,dev && npm install)       && (cd src/app/logout && npx npm-check-updates -u --dep prod,dev && npm install)"
-        }
-      ]
+      "description": "Runs after upgrading dependencies"
     },
     "postinstall": {
       "name": "postinstall",
       "steps": [
         {
-          "exec": "npm run install:login && npm run install:auth && npm run install:result && npm run install:home && npm run install:logout && npm run install:monitoring"
+          "exec": "npx projen install:login && npx projen install:auth && npx projen install:result && npx projen install:issue && npx projen install:logout"
         }
       ]
     },

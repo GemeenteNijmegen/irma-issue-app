@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as apigatewayv2 from '@aws-cdk/aws-apigatewayv2-alpha';
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
 import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM, aws_lambda as Lambda } from 'aws-cdk-lib';
@@ -7,7 +6,13 @@ import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
+import { AuthFunction } from './app/auth/auth-function';
+import { IssueFunction } from './app/issue/issue-function';
+import { LoginFunction } from './app/login/login-function';
+import { LogoutFunction } from './app/logout/logout-function';
+import { ResultFunction } from './app/result/result-function';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
+import { MonitoringFunction } from './monitoring/monitoring-function';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
 
@@ -62,11 +67,8 @@ export class ApiStack extends Stack {
    */
   private monitoringLambda(): Lambda.Function {
     let webhookUrl = SSM.StringParameter.valueForStringParameter(this, Statics.ssmSlackWebhookUrl);
-    const lambda = new Lambda.Function(this, 'lambda', {
-      runtime: Lambda.Runtime.NODEJS_14_X,
-      handler: 'index.handler',
+    const lambda = new MonitoringFunction(this, 'lambda', {
       description: 'Monitor IRMA issue app cloudwatch logs',
-      code: Lambda.Code.fromAsset(path.join(__dirname, 'monitoring', 'lambda')),
       logRetention: RetentionDays.ONE_MONTH,
       environment: {
         SLACK_WEBHOOK_URL: webhookUrl,
@@ -88,26 +90,23 @@ export class ApiStack extends Stack {
   setFunctions(baseUrl: string, readOnlyRole: Role) {
     const loginFunction = new ApiFunction(this, 'irma-issue-login-function', {
       description: 'Login-pagina voor de IRMA issue-applicatie.',
-      codePath: 'app/login',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
-    });
+    }, LoginFunction);
 
     const logoutFunction = new ApiFunction(this, 'irma-issue-logout-function', {
       description: 'Uitlog-pagina voor de IRMA issue-applicatie.',
-      codePath: 'app/logout',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
-    });
+    }, LogoutFunction);
 
     const oidcSecret = aws_secretsmanager.Secret.fromSecretNameV2(this, 'oidc-secret', Statics.secretOIDCClientSecret);
     const authFunction = new ApiFunction(this, 'irma-issue-auth-function', {
       description: 'Authenticatie-lambd voor de IRMA issue-applicatie.',
-      codePath: 'app/auth',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
@@ -115,7 +114,7 @@ export class ApiStack extends Stack {
       environment: {
         CLIENT_SECRET_ARN: oidcSecret.secretArn,
       },
-    });
+    }, AuthFunction);
     oidcSecret.grantRead(authFunction.lambda);
 
     const secretMTLSPrivateKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'tls-key-secret', Statics.secretMTLSPrivateKey);
@@ -126,13 +125,12 @@ export class ApiStack extends Stack {
     const secretIrmaApiAccessKeyId = aws_secretsmanager.Secret.fromSecretNameV2(this, 'irma-api-access-key', Statics.secretIrmaApiAccessKeyId);
     const secretIrmaApiSecretKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'irma-api-secret-key', Statics.secretIrmaApiSecretKey);
     const secretIrmaApiKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'irma-api-key', Statics.secretIrmaApiKey);
-    const homeFunction = new ApiFunction(this, 'irma-issue-home-function', {
-      description: 'Home-lambda voor de IRMA issue-applicatie.',
-      codePath: 'app/home',
+    const issueFunction = new ApiFunction(this, 'irma-issue-issue-function', {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
+      description: 'Home-lambda voor de IRMA issue-applicatie.',
       environment: {
         MTLS_PRIVATE_KEY_ARN: secretMTLSPrivateKey.secretArn,
         MTLS_CLIENT_CERT_NAME: Statics.ssmMTLSClientCert,
@@ -144,17 +142,16 @@ export class ApiStack extends Stack {
         IRMA_API_SECRET_KEY_ARN: secretIrmaApiSecretKey.secretArn,
         IRMA_API_KEY_ARN: secretIrmaApiKey.secretArn,
       },
-    });
-    secretMTLSPrivateKey.grantRead(homeFunction.lambda);
-    tlskeyParam.grantRead(homeFunction.lambda);
-    tlsRootCAParam.grantRead(homeFunction.lambda);
-    secretIrmaApiAccessKeyId.grantRead(homeFunction.lambda);
-    secretIrmaApiSecretKey.grantRead(homeFunction.lambda);
-    secretIrmaApiKey.grantRead(homeFunction.lambda);
+    }, IssueFunction);
+    secretMTLSPrivateKey.grantRead(issueFunction.lambda);
+    tlskeyParam.grantRead(issueFunction.lambda);
+    tlsRootCAParam.grantRead(issueFunction.lambda);
+    secretIrmaApiAccessKeyId.grantRead(issueFunction.lambda);
+    secretIrmaApiSecretKey.grantRead(issueFunction.lambda);
+    secretIrmaApiKey.grantRead(issueFunction.lambda);
 
     const resultFunction = new ApiFunction(this, 'irma-issue-result-function', {
       description: 'Result endpoint voor de IRMA issue-applicatie.',
-      codePath: 'app/result',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
@@ -166,7 +163,7 @@ export class ApiStack extends Stack {
         IRMA_API_SECRET_KEY_ARN: secretIrmaApiSecretKey.secretArn,
         IRMA_API_KEY_ARN: secretIrmaApiKey.secretArn,
       },
-    });
+    }, ResultFunction);
     secretIrmaApiAccessKeyId.grantRead(resultFunction.lambda);
     secretIrmaApiSecretKey.grantRead(resultFunction.lambda);
     secretIrmaApiKey.grantRead(resultFunction.lambda);
@@ -197,8 +194,8 @@ export class ApiStack extends Stack {
     });
 
     this.api.addRoutes({ // Also availabel at / due to CloudFront defaultRootObject
-      integration: new HttpLambdaIntegration('irma-issue-home', homeFunction.lambda),
-      path: '/home',
+      integration: new HttpLambdaIntegration('irma-issue-issue', issueFunction.lambda),
+      path: '/issue',
       methods: [apigatewayv2.HttpMethod.GET],
     });
   }
