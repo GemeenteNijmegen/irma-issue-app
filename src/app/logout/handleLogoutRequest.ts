@@ -24,8 +24,8 @@ export async function handleLogoutRequest(cookies: string, dynamoDBClient: Dynam
   }
 
   const html = await render({ title: 'Uitgelogd' }, __dirname + '/templates/logout.mustache', {
-    header: `${__dirname}/shared/header.mustache`,
-    footer: `${__dirname}/shared/footer.mustache`,
+    header: `${__dirname}/templates/header.mustache`,
+    footer: `${__dirname}/templates/footer.mustache`,
   });
   const emptyCookie = cookie.serialize('session', '', {
     httpOnly: true,

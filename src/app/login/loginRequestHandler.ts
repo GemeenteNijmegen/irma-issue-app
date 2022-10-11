@@ -44,8 +44,8 @@ export async function handleLoginRequest(cookies: string, dynamoDBClient: Dynamo
     authUrl: authUrl,
   };
   const html = await render(data, __dirname + '/templates/login.mustache', {
-    header: `${__dirname}/shared/header.mustache`,
-    footer: `${__dirname}/shared/footer.mustache`,
+    header: `${__dirname}/templates/header.mustache`,
+    footer: `${__dirname}/templates/footer.mustache`,
   });
   const newCookies = [session.getCookie()];
   return htmlResponse(html, newCookies);

@@ -266,19 +266,11 @@
         }
       ]
     },
-    "install:auth": {
-      "name": "install:auth",
-      "steps": [
-        {
-          "exec": "copyfiles -f src/app/templates/* src/app/auth/shared"
-        }
-      ]
-    },
     "install:issue": {
       "name": "install:issue",
       "steps": [
         {
-          "exec": "copyfiles -f src/app/templates/* src/app/issue/shared"
+          "exec": "copyfiles -f src/app/templates/* assets/app/issue/issue.lambda/templates && copyfiles -f src/app/templates/* src/app/issue/templates "
         }
       ]
     },
@@ -286,7 +278,7 @@
       "name": "install:login",
       "steps": [
         {
-          "exec": "copyfiles -f src/app/templates/* src/app/login/shared"
+          "exec": "copyfiles -f src/app/templates/* assets/app/login/login.lambda/templates && copyfiles -f src/app/templates/* src/app/login/templates "
         }
       ]
     },
@@ -294,15 +286,7 @@
       "name": "install:logout",
       "steps": [
         {
-          "exec": "copyfiles -f src/app/templates/* src/app/logout/shared"
-        }
-      ]
-    },
-    "install:result": {
-      "name": "install:result",
-      "steps": [
-        {
-          "exec": "copyfiles -f src/app/templates/* src/app/result/shared"
+          "exec": "copyfiles -f src/app/templates/* assets/app/logout/logout.lambda/templates && copyfiles -f src/app/templates/* src/app/logout/templates "
         }
       ]
     },
@@ -323,11 +307,11 @@
       "name": "post-upgrade",
       "description": "Runs after upgrading dependencies"
     },
-    "postinstall": {
-      "name": "postinstall",
+    "postbuild": {
+      "name": "postbuild",
       "steps": [
         {
-          "exec": "npx projen install:login && npx projen install:auth && npx projen install:result && npx projen install:issue && npx projen install:logout"
+          "exec": "npx projen install:login && npx projen install:issue && npx projen install:logout"
         }
       ]
     },

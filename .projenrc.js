@@ -55,12 +55,10 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     },
   },
   scripts: {
-    'install:login': 'copyfiles -f src/app/templates/* src/app/login/shared',
-    'install:auth': 'copyfiles -f src/app/templates/* src/app/auth/shared',
-    'install:result': 'copyfiles -f src/app/templates/* src/app/result/shared',
-    'install:issue': 'copyfiles -f src/app/templates/* src/app/issue/shared',
-    'install:logout': 'copyfiles -f src/app/templates/* src/app/logout/shared',
-    'postinstall': 'npx projen install:login && npx projen install:auth && npx projen install:result && npx projen install:issue && npx projen install:logout',
+    'install:login': 'copyfiles -f src/app/templates/* assets/app/login/login.lambda/templates && copyfiles -f src/app/templates/* src/app/login/templates ',
+    'install:issue': 'copyfiles -f src/app/templates/* assets/app/issue/issue.lambda/templates && copyfiles -f src/app/templates/* src/app/issue/templates ',
+    'install:logout': 'copyfiles -f src/app/templates/* assets/app/logout/logout.lambda/templates && copyfiles -f src/app/templates/* src/app/logout/templates ',
+    'postbuild': 'npx projen install:login && npx projen install:issue && npx projen install:logout',
   },
   eslintOptions: {
     devdirs: ['src/app/logout/tests', '/test', '/build-tools'],
@@ -68,7 +66,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   gitignore: [
     '.env',
     '.vscode',
-    'src/app/**/shared',
+    'src/app/**/templates',
     'src/app/**/tests/output',
     '.DS_Store',
     'test/playwright/report',

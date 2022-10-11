@@ -47,9 +47,9 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
   };
 
   // render page
-  const html = await render(data, __dirname + '/templates/home.mustache', {
-    header: `${__dirname}/shared/header.mustache`,
-    footer: `${__dirname}/shared/footer.mustache`,
+  const html = await render(data, __dirname + '/templates/issue.mustache', {
+    header: `${__dirname}/templates/header.mustache`,
+    footer: `${__dirname}/templates/footer.mustache`,
   });
 
   return {
