@@ -1,18 +1,20 @@
 const { ApiClient } = require('@gemeentenijmegen/apiclient');
-const { IrmaClient } = require('./IrmaApi');
+const { IrmaApi } = require('./shared/IrmaApi');
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { homeRequestHandler } = require("./homeRequestHandler");
-
+const { BrpApi } = require('./BrpApi');
 const dynamoDBClient = new DynamoDBClient();
+
 const brpClient = new ApiClient();
-const irmaClient = new irmaClient();
+const irmaApi = new IrmaApi();
 
 async function init() {
     console.time('init');
     console.timeLog('init', 'start init');
-    let promise = brpClient.init();
+    let promiseBrp = brpClient.init();
+    let promiseIrma = irmaApi.init();
     console.timeEnd('init');
-    return promise;
+    return Promise.all(promiseBrp, promiseIrma);
 }
 
 const initPromise = init();
@@ -27,7 +29,8 @@ exports.handler = async (event, context) => {
     try {
         const params = parseEvent(event);
         await initPromise;
-        return await homeRequestHandler(params.cookies, brpClient, irmaClient, dynamoDBClient);
+
+        return await homeRequestHandler(params.cookies, brpClient, irmaApi, dynamoDBClient);
     
     } catch (err) {
         console.error(err);

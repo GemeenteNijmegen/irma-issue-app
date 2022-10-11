@@ -1,7 +1,6 @@
 const { render } = require('./shared/render');
-const { BrpApi } = require('./BrpApi');
-const { IrmaApi } = require('./IrmaApi');
 const { Session } = require('@gemeentenijmegen/session');
+const { BrpApi } = require('./BrpApi');
 
 function redirectResponse(location, code = 302) {
     return {
@@ -13,16 +12,16 @@ function redirectResponse(location, code = 302) {
     }
 }
 
-exports.homeRequestHandler = async (cookies, brpClient, irmaClient, dynamoDBClient) => {
+exports.homeRequestHandler = async (cookies, brpClient, irmaApi, dynamoDBClient) => {
     let session = new Session(cookies, dynamoDBClient);
     await session.init();
     if (session.isLoggedIn() == true) {
-        return await handleLoggedinRequest(session, brpClient, irmaClient);
+        return await handleLoggedinRequest(session, brpClient, irmaApi);
     }
     return redirectResponse('/login');
 }
 
-async function handleLoggedinRequest(session, brpClient) {
+async function handleLoggedinRequest(session, brpClient, irmaApi) {
     // BRP request
     const bsn = session.getValue('bsn');
     const brpApi = new BrpApi(brpClient);
@@ -35,7 +34,7 @@ async function handleLoggedinRequest(session, brpClient) {
     }
 
     // Start IRMA session 
-    const irmaSession = irmaClient.startSession(brpData);
+    const irmaSession = irmaApi.startSession(brpData);
 
     data = {
         title: 'overzicht',

@@ -98,6 +98,15 @@ export abstract class Statics {
   static readonly ssmMonitoringLambdaArn: string = '/cdk/irma-issue-app/monitoring-lambda-arn';
   static readonly ssmSlackWebhookUrl: string = '/cdk/irma-issue-app/slack-webhook-url';
 
+  /**
+   * Access to the irma issue server
+   */
+  static readonly ssmIrmaApiHost: string = '/cdk/irma-issue-app/irma-api-host';
+  static readonly ssmIrmaApiDemo: string = '/cdk/irma-issue-app/irma-api-demo';
+  static readonly secretIrmaApiAccessKeyId: string = '/cdk/irma-issue-app/irma-api-access-key-id';
+  static readonly secretIrmaApiSecretKey: string = '/cdk/irma-issue-app/irma-api-secret-key';
+  static readonly secretIrmaApiKey: string = '/cdk/irma-issue-app/irma-api-key';
+
   static readonly codeStarConnectionArn: string = 'arn:aws:codestar-connections:eu-west-1:418648875085:connection/4f647929-c982-4f30-94f4-24ff7dbf9766';
 
 

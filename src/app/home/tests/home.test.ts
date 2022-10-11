@@ -5,6 +5,7 @@ import { SecretsManagerClient, GetSecretValueCommandOutput, GetSecretValueComman
 import { mockClient } from 'aws-sdk-client-mock';
 import { FileApiClient } from '../FileApiClient';
 import { homeRequestHandler } from '../homeRequestHandler';
+import { IrmaApiMock } from './IrmaApiMock';
 
 beforeAll(() => {
 
@@ -34,7 +35,7 @@ beforeEach(() => {
       data: {
         M: {
           loggedin: { BOOL: true },
-          bsn: { S: '12345678' },
+          bsn: { S: '900026236' },
           state: { S: '12345' },
         },
       },
@@ -49,9 +50,9 @@ test('Returns 200', async () => {
     SecretString: 'ditiseennepgeheim',
   };
   secretsMock.on(GetSecretValueCommand).resolves(output);
-  const apiClient = new FileApiClient();
+  const brpClient = new FileApiClient();
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
-  const result = await homeRequestHandler('session=12345', apiClient, dynamoDBClient);
+  const result = await homeRequestHandler('session=12345', brpClient, new IrmaApiMock(), dynamoDBClient);
 
   expect(result.statusCode).toBe(200);
   let cookies = result.cookies.filter((cookie: string) => cookie.indexOf('HttpOnly; Secure'));
@@ -64,9 +65,9 @@ test('Shows overview page', async () => {
     SecretString: 'ditiseennepgeheim',
   };
   secretsMock.on(GetSecretValueCommand).resolves(output);
-  const apiClient = new FileApiClient();
+  const brpClient = new FileApiClient();
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
-  const result = await homeRequestHandler('session=12345', apiClient, dynamoDBClient);
+  const result = await homeRequestHandler('session=12345', brpClient, new IrmaApiMock(), dynamoDBClient);
   expect(result.body).toMatch('Mijn Nijmegen');
   writeFile(path.join(__dirname, 'output', 'test.html'), result.body, () => {});
 });

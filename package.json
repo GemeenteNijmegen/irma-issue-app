@@ -80,6 +80,9 @@
       "src",
       "test"
     ],
+    "transform": {
+      "^.+\\.ts?$": "ts-jest"
+    },
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.ts?(x)",
       "<rootDir>/(test|src)/**/*(*.)@(spec|test).ts?(x)"

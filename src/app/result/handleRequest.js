@@ -1,5 +1,3 @@
-const { default: axios } = require("axios");
-const aws4 = require('aws4')
 
 function sendResponse(body, code = 200) {
     return {
@@ -9,34 +7,16 @@ function sendResponse(body, code = 200) {
     };
 }
 
-async function handleRequest(token) {
-    
-    // Make request to session result endpoint
-    const baseUrl = 'gw-test.nijmegen.nl'
-    const url = `https://${baseUrl}/irma/session/${token}/result`;
-
+async function handleRequest(irmaApi, token) {
     try {
-        let resp = await axios(aws4.sign({
-            host: baseUrl,
-            method: "GET",
-            url: url,
-            path: "/foobot/foobot",
-            headers: {
-                "irma-authorization": "APIKEY",
-            }
-        }));
-        
-        if(resp.data){
-            sendResponse(resp.data);
-        } else {
-            sendResponse({"error": "Could not get session result"}, 500); // TODO check what IRMA response is on failure?
-            return;
-        }
+        const result = await irmaApi.getSessionResult(token);
+        sendResponse(result);
     } catch (error) {
         console.error(error.message);
         sendResponse({"error": "Could not get session result"}, 500); // TODO check what IRMA response is on failure?
         return;
     }
-    return redirectResponse({}, 200); // Empty response
+    return redirectResponse({}, 400); // Empty response
 }
+
 exports.handleRequest = handleRequest;

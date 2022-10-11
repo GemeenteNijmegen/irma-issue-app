@@ -13,7 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.1.2",
-    "aws4": "^1.11.0"
+    "aws4": "^1.11.0",
+    "@aws-sdk/client-secrets-manager": "^3.186.0"
   },
   "devDependencies": {
     "aws-sdk-client-mock": "^1.0.0",

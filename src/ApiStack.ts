@@ -121,6 +121,11 @@ export class ApiStack extends Stack {
     const secretMTLSPrivateKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'tls-key-secret', Statics.secretMTLSPrivateKey);
     const tlskeyParam = SSM.StringParameter.fromStringParameterName(this, 'tlskey', Statics.ssmMTLSClientCert);
     const tlsRootCAParam = SSM.StringParameter.fromStringParameterName(this, 'tlsrootca', Statics.ssmMTLSRootCA);
+    const irmaApiHost = SSM.StringParameter.valueForStringParameter(this, Statics.ssmIrmaApiHost);
+    const irmaApiDemo = SSM.StringParameter.valueForStringParameter(this, Statics.ssmIrmaApiDemo);
+    const secretIrmaApiAccessKeyId = aws_secretsmanager.Secret.fromSecretNameV2(this, 'irma-api-access-key', Statics.secretIrmaApiAccessKeyId);
+    const secretIrmaApiSecretKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'irma-api-secret-key', Statics.secretIrmaApiSecretKey);
+    const secretIrmaApiKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'irma-api-key', Statics.secretIrmaApiKey);
     const homeFunction = new ApiFunction(this, 'irma-issue-home-function', {
       description: 'Home-lambda voor de IRMA issue-applicatie.',
       codePath: 'app/home',
@@ -133,11 +138,19 @@ export class ApiStack extends Stack {
         MTLS_CLIENT_CERT_NAME: Statics.ssmMTLSClientCert,
         MTLS_ROOT_CA_NAME: Statics.ssmMTLSRootCA,
         BRP_API_URL: SSM.StringParameter.valueForStringParameter(this, Statics.ssmBrpApiEndpointUrl),
+        IRMA_API_HOST: irmaApiHost,
+        IRMA_API_DEMO: irmaApiDemo,
+        IRMA_API_ACCESS_KEY_ID_ARN: secretIrmaApiAccessKeyId.secretArn,
+        IRMA_API_SECRET_KEY_ARN: secretIrmaApiSecretKey.secretArn,
+        IRMA_API_KEY_ARN: secretIrmaApiKey.secretArn,
       },
     });
     secretMTLSPrivateKey.grantRead(homeFunction.lambda);
     tlskeyParam.grantRead(homeFunction.lambda);
     tlsRootCAParam.grantRead(homeFunction.lambda);
+    secretIrmaApiAccessKeyId.grantRead(homeFunction.lambda);
+    secretIrmaApiSecretKey.grantRead(homeFunction.lambda);
+    secretIrmaApiKey.grantRead(homeFunction.lambda);
 
     const resultFunction = new ApiFunction(this, 'irma-issue-result-function', {
       description: 'Result endpoint voor de IRMA issue-applicatie.',
@@ -146,7 +159,18 @@ export class ApiStack extends Stack {
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
+      environment: {
+        IRMA_API_HOST: irmaApiHost,
+        IRMA_API_DEMO: irmaApiDemo,
+        IRMA_API_ACCESS_KEY_ID_ARN: secretIrmaApiAccessKeyId.secretArn,
+        IRMA_API_SECRET_KEY_ARN: secretIrmaApiSecretKey.secretArn,
+        IRMA_API_KEY_ARN: secretIrmaApiKey.secretArn,
+      },
     });
+    secretIrmaApiAccessKeyId.grantRead(resultFunction.lambda);
+    secretIrmaApiSecretKey.grantRead(resultFunction.lambda);
+    secretIrmaApiKey.grantRead(resultFunction.lambda);
+
 
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('irma-issue-login', loginFunction.lambda),
