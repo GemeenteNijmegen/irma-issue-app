@@ -1,4 +1,3 @@
-const { ApiClient } = require("@gemeentenijmegen/apiclient");
 const { default: axios } = require("axios");
 
 class IrmaApi {

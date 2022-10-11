@@ -178,6 +178,14 @@
         }
       ]
     },
+    "install:result": {
+      "name": "install:result",
+      "steps": [
+        {
+          "exec": "copyfiles -f src/shared/* src/app/result/shared && cd src/app/result && npm install"
+        }
+      ]
+    },
     "package": {
       "name": "package",
       "description": "Creates the distribution package"
@@ -203,7 +211,7 @@
       "name": "postinstall",
       "steps": [
         {
-          "exec": "npm run install:login && npm run install:auth && npm run install:home && npm run install:logout && npm run install:monitoring"
+          "exec": "npm run install:login && npm run install:auth && npm run install:result && npm run install:home && npm run install:logout && npm run install:monitoring"
         }
       ]
     },

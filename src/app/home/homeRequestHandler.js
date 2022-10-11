@@ -13,19 +13,19 @@ function redirectResponse(location, code = 302) {
     }
 }
 
-exports.homeRequestHandler = async (cookies, apiClient, dynamoDBClient) => {
+exports.homeRequestHandler = async (cookies, brpClient, irmaClient, dynamoDBClient) => {
     let session = new Session(cookies, dynamoDBClient);
     await session.init();
     if (session.isLoggedIn() == true) {
-        return await handleLoggedinRequest(session, apiClient);
+        return await handleLoggedinRequest(session, brpClient, irmaClient);
     }
     return redirectResponse('/login');
 }
 
-async function handleLoggedinRequest(session, apiClient) {
+async function handleLoggedinRequest(session, brpClient) {
     // BRP request
     const bsn = session.getValue('bsn');
-    const brpApi = new BrpApi(apiClient);
+    const brpApi = new BrpApi(brpClient);
     const brpData = await brpApi.getBrpData(bsn);
     const naam = brpData?.Persoon?.Persoonsgegevens?.Naam ? brpData.Persoon.Persoonsgegevens.Naam : 'Onbekende gebruiker';
 
@@ -35,8 +35,7 @@ async function handleLoggedinRequest(session, apiClient) {
     }
 
     // Start IRMA session 
-    const irmaApi = new IrmaApi('baseurl', true);
-    const irmaSession = irmaApi.startSession(brpData);
+    const irmaSession = irmaClient.startSession(brpData);
 
     data = {
         title: 'overzicht',

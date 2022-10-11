@@ -139,6 +139,15 @@ export class ApiStack extends Stack {
     tlskeyParam.grantRead(homeFunction.lambda);
     tlsRootCAParam.grantRead(homeFunction.lambda);
 
+    const resultFunction = new ApiFunction(this, 'irma-issue-result-function', {
+      description: 'Result endpoint voor de IRMA issue-applicatie.',
+      codePath: 'app/result',
+      table: this.sessionsTable,
+      tablePermissions: 'ReadWrite',
+      applicationUrlBase: baseUrl,
+      readOnlyRole,
+    });
+
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('irma-issue-login', loginFunction.lambda),
       path: '/login',
@@ -154,6 +163,12 @@ export class ApiStack extends Stack {
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('irma-issue-auth', authFunction.lambda),
       path: '/auth',
+      methods: [apigatewayv2.HttpMethod.GET],
+    });
+
+    this.api.addRoutes({ // Endpoint for relaying signed request to IRMA issue server (secured with AWS credentials)
+      integration: new HttpLambdaIntegration('irma-issue-result', resultFunction.lambda),
+      path: '/result',
       methods: [apigatewayv2.HttpMethod.GET],
     });
 
