@@ -1,0 +1,45 @@
+{{>header}}
+
+<main>
+    <!-- START: template component(s) -->
+    <div class="container" id="section-1">
+        <div class="row">
+            <div class="col-12">
+            <h1>{{name}} opladen</h1>
+                <p class="lead">Laad uw persoonsgegevens in uw {{name}} app.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div id="irma-issue-element"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- END: template component(s) -->
+</main>
+
+
+<script src="statics/scripts/irma.js"></script>
+
+<script>
+    const exampleWeb = irma.newWeb({
+    debugging: true,
+    element: '#irma-issue-element',
+    session: {
+        url: 'http://example.com',
+        start: {},
+        mapping: {
+            // The only thing included in the request is the session pointer, so no additional parsing is needed.
+            sessionPtr: r => return {{irmaSessie.sessionPtr}},
+        },
+    }
+    });
+
+    exampleWeb.start()
+    .then(result => console.log("Successful disclosure! 🎉", result))
+    .catch(error => console.error("Couldn't do what you asked 😢", error));
+
+</script>
+
+{{>footer}}

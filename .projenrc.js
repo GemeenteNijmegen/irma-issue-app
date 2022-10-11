@@ -12,11 +12,32 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '@aws-cdk/aws-apigatewayv2-integrations-alpha',
     '@aws-solutions-constructs/aws-lambda-dynamodb',
     'cdk-remote-stack',
+
+    // Lambda packages
+    '@aws-sdk/client-dynamodb',
+    '@aws-sdk/client-secrets-manager',
+    '@aws-sdk/client-ssm',
+    '@gemeentenijmegen/apiclient',
+    '@gemeentenijmegen/session',
+    '@gemeentenijmegen/utils',
+    '@privacybydesign/irma-frontend',
+    'axios@^0.27.2', // TODO upgrade however aws4-axios is not yet compatible with v1
+    'mustache',
+    '@types/mustache',
+    //'aws4',
+    //'@types/aws4',
+    'aws4-axios',
+    'openid-client',
+    '@types/cookie',
+    'cookie',
+
+
   ], /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
   devDeps: [
     'copyfiles',
     '@playwright/test',
+    'aws-sdk-client-mock',
   ], /* Build dependencies for this module. */
   depsUpgradeOptions: {
     workflowOptions: {
@@ -34,20 +55,15 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     },
   },
   scripts: {
-    'install:login': 'copyfiles -f src/shared/* src/app/login/shared && cd src/app/login && npm install',
-    'install:auth': 'copyfiles -f src/shared/* src/app/auth/shared && cd src/app/auth && npm install',
-    'install:home': 'copyfiles -f src/shared/* src/app/home/shared && cd src/app/home && npm install',
-    'install:logout': 'copyfiles -f src/shared/* src/app/logout/shared && cd src/app/logout && npm install',
-    'install:monitoring': 'cd src/monitoring/lambda && npm install',
-    'postinstall': 'npm run install:login && npm run install:auth && npm run install:home && npm run install:logout && npm run install:monitoring',
-    'post-upgrade': ' \
-      (cd src/app/login && npx npm-check-updates -u --dep prod,dev && npm install) \
-      && (cd src/app/home && npx npm-check-updates -u --dep prod,dev && npm install) \
-      && (cd src/app/login && npx npm-check-updates -u --dep prod,dev && npm install) \
-      && (cd src/app/logout && npx npm-check-updates -u --dep prod,dev && npm install)',
+    'install:login': 'copyfiles -f src/app/templates/* src/app/login/shared',
+    'install:auth': 'copyfiles -f src/app/templates/* src/app/auth/shared',
+    'install:result': 'copyfiles -f src/app/templates/* src/app/result/shared',
+    'install:issue': 'copyfiles -f src/app/templates/* src/app/issue/shared',
+    'install:logout': 'copyfiles -f src/app/templates/* src/app/logout/shared',
+    'postinstall': 'npx projen install:login && npx projen install:auth && npx projen install:result && npx projen install:issue && npx projen install:logout',
   },
   eslintOptions: {
-    devdirs: ['src/app/login/tests', 'src/app/auth/tests', 'src/app/home/tests', 'src/app/uitkeringen/tests', 'src/app/logout/tests', '/test', '/build-tools'],
+    devdirs: ['src/app/logout/tests', '/test', '/build-tools'],
   },
   gitignore: [
     '.env',
