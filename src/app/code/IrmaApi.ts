@@ -28,12 +28,12 @@ export class IrmaApi {
   }
 
   async init() {
-    if (!process.env.IRMA_API_ACCESS_KEY_ARN || !process.env.IRMA_API_SECRET_KEY_ARN || !process.env.IRMA_API_KEY_ARN) {
+    if (!process.env.IRMA_API_ACCESS_KE_ID_ARN || !process.env.IRMA_API_SECRET_KEY_ARN || !process.env.IRMA_API_KEY_ARN) {
       throw Error('Clould not initialize IRMA API client');
     }
     this.apiKey = await this.getSecret(process.env.IRMA_API_KEY_ARN);
     this.credentials = {
-      accessKeyId: await this.getSecret(process.env.IRMA_API_ACCESS_KEY_ARN),
+      accessKeyId: await this.getSecret(process.env.IRMA_API_ACCESS_KE_ID_ARN),
       secretAccessKey: await this.getSecret(process.env.IRMA_API_SECRET_KEY_ARN),
     };
   }
