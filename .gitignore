@@ -32,7 +32,6 @@ jspm_packages/
 .cache
 .env
 .vscode
-src/app/**/templates
 src/app/**/tests/output
 .DS_Store
 test/playwright/report

@@ -65,7 +65,6 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   gitignore: [
     '.env',
     '.vscode',
-    'src/app/**/templates',
     'src/app/**/tests/output',
     '.DS_Store',
     'test/playwright/report',
