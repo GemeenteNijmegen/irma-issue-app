@@ -88,7 +88,7 @@
       "description": "Create a JavaScript bundle from src/app/issue/issue.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+          "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text"
         }
       ]
     },
@@ -106,7 +106,7 @@
       "description": "Create a JavaScript bundle from src/app/login/login.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+          "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text"
         }
       ]
     },
@@ -124,7 +124,7 @@
       "description": "Create a JavaScript bundle from src/app/logout/logout.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+          "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text"
         }
       ]
     },
@@ -266,46 +266,6 @@
         }
       ]
     },
-    "install:auth": {
-      "name": "install:auth",
-      "steps": [
-        {
-          "exec": "copyfiles -f src/app/templates/* src/app/auth/shared"
-        }
-      ]
-    },
-    "install:issue": {
-      "name": "install:issue",
-      "steps": [
-        {
-          "exec": "copyfiles -f src/app/templates/* src/app/issue/shared"
-        }
-      ]
-    },
-    "install:login": {
-      "name": "install:login",
-      "steps": [
-        {
-          "exec": "copyfiles -f src/app/templates/* src/app/login/shared"
-        }
-      ]
-    },
-    "install:logout": {
-      "name": "install:logout",
-      "steps": [
-        {
-          "exec": "copyfiles -f src/app/templates/* src/app/logout/shared"
-        }
-      ]
-    },
-    "install:result": {
-      "name": "install:result",
-      "steps": [
-        {
-          "exec": "copyfiles -f src/app/templates/* src/app/result/shared"
-        }
-      ]
-    },
     "package": {
       "name": "package",
       "description": "Creates the distribution package"
@@ -322,14 +282,6 @@
     "post-upgrade": {
       "name": "post-upgrade",
       "description": "Runs after upgrading dependencies"
-    },
-    "postinstall": {
-      "name": "postinstall",
-      "steps": [
-        {
-          "exec": "npx projen install:login && npx projen install:auth && npx projen install:result && npx projen install:issue && npx projen install:logout"
-        }
-      ]
     },
     "pre-compile": {
       "name": "pre-compile",

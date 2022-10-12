@@ -3,6 +3,8 @@ import { Session } from '@gemeentenijmegen/session';
 import { OpenIDConnect } from '../code/OpenIDConnect';
 import render from '../code/Render';
 
+import * as template from '../templates/login.mustache';
+
 function redirectResponse(location: string, status = 302) {
   const response = {
     statusCode: status,
@@ -43,10 +45,7 @@ export async function handleLoginRequest(cookies: string, dynamoDBClient: Dynamo
     title: 'Inloggen',
     authUrl: authUrl,
   };
-  const html = await render(data, __dirname + '/templates/login.mustache', {
-    header: `${__dirname}/shared/header.mustache`,
-    footer: `${__dirname}/shared/footer.mustache`,
-  });
+  const html = await render(data, template.default);
   const newCookies = [session.getCookie()];
   return htmlResponse(html, newCookies);
 }

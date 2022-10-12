@@ -24,15 +24,9 @@
     "diff": "npx projen diff",
     "eject": "npx projen eject",
     "eslint": "npx projen eslint",
-    "install:auth": "npx projen install:auth",
-    "install:issue": "npx projen install:issue",
-    "install:login": "npx projen install:login",
-    "install:logout": "npx projen install:logout",
-    "install:result": "npx projen install:result",
     "package": "npx projen package",
     "post-compile": "npx projen post-compile",
     "post-upgrade": "npx projen post-upgrade",
-    "postinstall": "npx projen postinstall",
     "pre-compile": "npx projen pre-compile",
     "release:production": "npx projen release:production",
     "synth": "npx projen synth",
@@ -60,6 +54,7 @@
     "eslint-plugin-import": "^2.26.0",
     "jest": "^27",
     "jest-junit": "^13",
+    "jest-raw-loader": "^1.0.1",
     "json-schema": "^0.4.0",
     "npm-check-updates": "^15",
     "projen": "0.63.13",
@@ -97,6 +92,19 @@
     "setupFiles": [
       "dotenv/config"
     ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "jsx",
+      "ts",
+      "tsx",
+      "node",
+      "mustache"
+    ],
+    "transform": {
+      "\\.[jt]sx?$": "ts-jest",
+      "^.+\\.mustache$": "jest-raw-loader"
+    },
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/cdk.out",

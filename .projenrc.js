@@ -24,13 +24,10 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'axios@^0.27.2', // TODO upgrade however aws4-axios is not yet compatible with v1
     'mustache',
     '@types/mustache',
-    //'aws4',
-    //'@types/aws4',
     'aws4-axios',
     'openid-client',
     '@types/cookie',
     'cookie',
-
 
   ], /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
@@ -38,6 +35,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'copyfiles',
     '@playwright/test',
     'aws-sdk-client-mock',
+    'jest-raw-loader',
   ], /* Build dependencies for this module. */
   depsUpgradeOptions: {
     workflowOptions: {
@@ -50,17 +48,16 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   jestOptions: {
     jestConfig: {
       setupFiles: ['dotenv/config'],
+      moduleFileExtensions: [
+        'js', 'json', 'jsx', 'ts', 'tsx', 'node', 'mustache',
+      ],
+      transform: {
+        '\\.[jt]sx?$': 'ts-jest',
+        '^.+\\.mustache$': 'jest-raw-loader',
+      },
       testPathIgnorePatterns: ['/node_modules/', '/cdk.out', '/test/playwright'],
       roots: ['src', 'test'],
     },
-  },
-  scripts: {
-    'install:login': 'copyfiles -f src/app/templates/* src/app/login/shared',
-    'install:auth': 'copyfiles -f src/app/templates/* src/app/auth/shared',
-    'install:result': 'copyfiles -f src/app/templates/* src/app/result/shared',
-    'install:issue': 'copyfiles -f src/app/templates/* src/app/issue/shared',
-    'install:logout': 'copyfiles -f src/app/templates/* src/app/logout/shared',
-    'postinstall': 'npx projen install:login && npx projen install:auth && npx projen install:result && npx projen install:issue && npx projen install:logout',
   },
   eslintOptions: {
     devdirs: ['src/app/logout/tests', '/test', '/build-tools'],
@@ -68,12 +65,19 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   gitignore: [
     '.env',
     '.vscode',
-    'src/app/**/shared',
     'src/app/**/tests/output',
     '.DS_Store',
     'test/playwright/report',
     'test/playwright/screenshots',
   ],
 });
+
+// During bundling copy the templates to lambda deployment directories
+project.tasks.tryFind('bundle:app/issue/issue.lambda').reset();
+project.tasks.tryFind('bundle:app/login/login.lambda').reset();
+project.tasks.tryFind('bundle:app/logout/logout.lambda').reset();
+project.tasks.tryFind('bundle:app/issue/issue.lambda').exec('esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
+project.tasks.tryFind('bundle:app/login/login.lambda').exec('esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
+project.tasks.tryFind('bundle:app/logout/logout.lambda').exec('esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
 
 project.synth();
