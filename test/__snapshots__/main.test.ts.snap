@@ -345,7 +345,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"1103059c6236a81b6fd27bbf8def425d8a3c890c5a611df89e8edb1101fdb6ca:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"ee15d56ff0bd12c41150a6faf83d3f3fcc0bf5fe3c9ebe57556c85737c30c858:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -404,7 +404,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"638c2dd078b74b4986e782d3f270a19ec71d0a523b6d561bef78c69e4734266b:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"ddc2849346ce7418b68c9831713f2743e75f7286dfd877774c03f0a2a1e42311:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -522,7 +522,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"699e2b6f881c760431989c7ec92322541a60ea5d72e041d2d096b201ea1786ec:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"f0cfa57b6bbc352b24f8ee2617de38e761c207aa1f4342a730c8dcac74bc8b51:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -581,7 +581,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"c75f4db7465a10ceb73efd5aa9996f72869b0ce6b428f065f066f1628253fa3f:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"9b92afc82e4aadd9c398b5d57856b0d4435a105bc373dcdc748c09a2ccf344d8:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
