@@ -1,6 +1,6 @@
 import { aws_certificatemanager as CertificateManager, Stack, StackProps, aws_ssm as SSM } from 'aws-cdk-lib';
-import { RemoteParameters } from 'cdk-remote-stack';
 import { Construct } from 'constructs';
+import { ImportHostedZone } from './constructs/ImportHostedZone';
 import { Statics } from './statics';
 
 export interface UsEastCertificateStackProps extends StackProps {
@@ -13,28 +13,27 @@ export class UsEastCertificateStack extends Stack {
   constructor(scope: Construct, id: string, props: UsEastCertificateStackProps) {
     super(scope, id, props);
     this.branch = props.branch;
-    this.createCertificate();
+    this.createCertificate(props.branch);
   }
 
-  getZoneAttributesFromEuWest(parameters: RemoteParameters, id: string, name: string): { hostedZoneId: string; zoneName: string} {
-    const zoneId = parameters.get(id);
-    const zoneName = parameters.get(name);
-    return {
-      hostedZoneId: zoneId,
-      zoneName: zoneName,
-    };
-  }
-
-  createCertificate() {
+  createCertificate(branch: string) {
     const subdomain = Statics.subDomain(this.branch);
     const cspSubdomain = Statics.cspSubDomain(this.branch);
     const appDomain = `${subdomain}.nijmegen.nl`;
     const cspDomain = `${cspSubdomain}.csp-nijmegen.nl`;
 
+    // Import hosted zone
+    const zone = new ImportHostedZone(this, 'zone');
+
+    var subjectAlternativeNames = undefined;
+    if (branch != 'development') {
+      subjectAlternativeNames = [appDomain];
+    }
+
     const certificate = new CertificateManager.Certificate(this, 'certificate', {
-      domainName: appDomain,
-      subjectAlternativeNames: [cspDomain],
-      validation: CertificateManager.CertificateValidation.fromDns(),
+      domainName: cspDomain,
+      subjectAlternativeNames,
+      validation: CertificateManager.CertificateValidation.fromDns(zone.hostedZone),
     });
 
     new SSM.StringParameter(this, 'cert-arn', {

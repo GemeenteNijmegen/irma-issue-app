@@ -79,11 +79,9 @@ export abstract class Statics {
    * Route53 Zone ID and name for the zone for IRMA issue app. decouples stacks to not pass
    * the actual zone between stacks. This param is set by DNSStack and should not be modified after.
    */
-  static readonly ssmZonePath: string = '/cdk/irma-issue-app/zones';
+  static readonly ssmZonePath: string = '/cdk/irma-issue-app/';
   static readonly ssmZoneId: string = '/cdk/irma-issue-app/zone-id';
   static readonly ssmZoneName: string = '/cdk/irma-issue-app/zone-name';
-  static readonly ssmZoneIdNew: string = '/cdk/irma-issue-app/zones/csp-id';
-  static readonly ssmZoneNameNew: string = '/cdk/irma-issue-app/zones/csp-name';
 
   static readonly certificatePath: string = '/cdk/irma-issue-app/certificates';
   static readonly certificateArn: string = '/cdk/irma-issue-app/certificates/certificate-arn';
@@ -99,6 +97,15 @@ export abstract class Statics {
 
   static readonly ssmMonitoringLambdaArn: string = '/cdk/irma-issue-app/monitoring-lambda-arn';
   static readonly ssmSlackWebhookUrl: string = '/cdk/irma-issue-app/slack-webhook-url';
+
+  /**
+   * Access to the irma issue server
+   */
+  static readonly ssmIrmaApiHost: string = '/cdk/irma-issue-app/irma-api-host';
+  static readonly ssmIrmaApiDemo: string = '/cdk/irma-issue-app/irma-api-demo';
+  static readonly secretIrmaApiAccessKeyId: string = '/cdk/irma-issue-app/irma-api-access-key-id';
+  static readonly secretIrmaApiSecretKey: string = '/cdk/irma-issue-app/irma-api-secret-key';
+  static readonly secretIrmaApiKey: string = '/cdk/irma-issue-app/irma-api-key';
 
   static readonly codeStarConnectionArn: string = 'arn:aws:codestar-connections:eu-west-1:418648875085:connection/4f647929-c982-4f30-94f4-24ff7dbf9766';
 

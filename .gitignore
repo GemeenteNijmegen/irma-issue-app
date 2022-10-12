@@ -32,7 +32,6 @@ jspm_packages/
 .cache
 .env
 .vscode
-src/app/**/shared
 src/app/**/tests/output
 .DS_Store
 test/playwright/report
@@ -46,7 +45,7 @@ junit.xml
 /dist/version.txt
 !/.github/workflows/release.yml
 !/.mergify.yml
-!/.github/workflows/upgrade-acceptance.yml
+!/.github/workflows/upgrade-development.yml
 !/.github/pull_request_template.md
 !/test/
 !/tsconfig.json
@@ -60,3 +59,9 @@ junit.xml
 /cdk.out/
 .cdk.staging/
 .parcel-cache/
+!/src/app/auth/auth-function.ts
+!/src/app/issue/issue-function.ts
+!/src/app/login/login-function.ts
+!/src/app/logout/logout-function.ts
+!/src/app/result/result-function.ts
+!/src/monitoring/monitoring-function.ts

@@ -12,15 +12,34 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '@aws-cdk/aws-apigatewayv2-integrations-alpha',
     '@aws-solutions-constructs/aws-lambda-dynamodb',
     'cdk-remote-stack',
+
+    // Lambda packages
+    '@aws-sdk/client-dynamodb',
+    '@aws-sdk/client-secrets-manager',
+    '@aws-sdk/client-ssm',
+    '@gemeentenijmegen/apiclient',
+    '@gemeentenijmegen/session',
+    '@gemeentenijmegen/utils',
+    '@privacybydesign/irma-frontend',
+    'axios@^0.27.2', // TODO upgrade however aws4-axios is not yet compatible with v1
+    'mustache',
+    '@types/mustache',
+    'aws4-axios',
+    'openid-client',
+    '@types/cookie',
+    'cookie',
+
   ], /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
   devDeps: [
     'copyfiles',
     '@playwright/test',
+    'aws-sdk-client-mock',
+    'jest-raw-loader',
   ], /* Build dependencies for this module. */
   depsUpgradeOptions: {
     workflowOptions: {
-      branches: ['acceptance'],
+      branches: ['development'],
     },
   },
   // packageName: undefined,  /* The "name" in package.json. */
@@ -29,35 +48,36 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   jestOptions: {
     jestConfig: {
       setupFiles: ['dotenv/config'],
+      moduleFileExtensions: [
+        'js', 'json', 'jsx', 'ts', 'tsx', 'node', 'mustache',
+      ],
+      transform: {
+        '\\.[jt]sx?$': 'ts-jest',
+        '^.+\\.mustache$': 'jest-raw-loader',
+      },
       testPathIgnorePatterns: ['/node_modules/', '/cdk.out', '/test/playwright'],
       roots: ['src', 'test'],
     },
   },
-  scripts: {
-    'install:login': 'copyfiles -f src/shared/* src/app/login/shared && cd src/app/login && npm install',
-    'install:auth': 'copyfiles -f src/shared/* src/app/auth/shared && cd src/app/auth && npm install',
-    'install:home': 'copyfiles -f src/shared/* src/app/home/shared && cd src/app/home && npm install',
-    'install:logout': 'copyfiles -f src/shared/* src/app/logout/shared && cd src/app/logout && npm install',
-    'install:monitoring': 'cd src/monitoring/lambda && npm install',
-    'postinstall': 'npm run install:login && npm run install:auth && npm run install:home && npm run install:logout && npm run install:monitoring',
-    'post-upgrade': ' \
-      (cd src/app/login && npx npm-check-updates -u --dep prod,dev && npm install) \
-      && (cd src/app/home && npx npm-check-updates -u --dep prod,dev && npm install) \
-      && (cd src/app/login && npx npm-check-updates -u --dep prod,dev && npm install) \
-      && (cd src/app/logout && npx npm-check-updates -u --dep prod,dev && npm install)',
-  },
   eslintOptions: {
-    devdirs: ['src/app/login/tests', 'src/app/auth/tests', 'src/app/home/tests', 'src/app/uitkeringen/tests', 'src/app/logout/tests', '/test', '/build-tools'],
+    devdirs: ['src/app/logout/tests', '/test', '/build-tools'],
   },
   gitignore: [
     '.env',
     '.vscode',
-    'src/app/**/shared',
     'src/app/**/tests/output',
     '.DS_Store',
     'test/playwright/report',
     'test/playwright/screenshots',
   ],
 });
+
+// During bundling copy the templates to lambda deployment directories
+project.tasks.tryFind('bundle:app/issue/issue.lambda').reset();
+project.tasks.tryFind('bundle:app/login/login.lambda').reset();
+project.tasks.tryFind('bundle:app/logout/logout.lambda').reset();
+project.tasks.tryFind('bundle:app/issue/issue.lambda').exec('esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
+project.tasks.tryFind('bundle:app/login/login.lambda').exec('esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
+project.tasks.tryFind('bundle:app/logout/logout.lambda').exec('esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
 
 project.synth();

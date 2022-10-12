@@ -52,7 +52,7 @@ export class ssmParamsConstruct extends Construct {
     });
 
     new SSM.StringParameter(this, 'ssm_auth_2', {
-      stringValue: 'AawootW574MqIMRAfAgzdv8lhQYLuGY3',
+      stringValue: 'eQLZc8Wl0luIr5PZoajjFUt3tMPMAKHf',
       parameterName: Statics.ssmOIDCClientID,
     });
 
@@ -89,6 +89,31 @@ export class ssmParamsConstruct extends Construct {
     new SSM.StringParameter(this, 'ssm_slack_1', {
       stringValue: '-',
       parameterName: Statics.ssmSlackWebhookUrl,
+    });
+
+    new SSM.StringParameter(this, 'ssm_irma_api_1', {
+      stringValue: 'gw-test.nijmegen.nl',
+      parameterName: Statics.ssmIrmaApiHost,
+    });
+
+    new SSM.StringParameter(this, 'ssm_irma_api_2', {
+      stringValue: 'true',
+      parameterName: Statics.ssmIrmaApiDemo,
+    });
+
+    new SecretsManager.Secret(this, 'secret_irma_api_1', {
+      secretName: Statics.secretIrmaApiAccessKeyId,
+      description: 'IRMA API Access Key ID (AWS sign)',
+    });
+
+    new SecretsManager.Secret(this, 'secret_irma_api_2', {
+      secretName: Statics.secretIrmaApiSecretKey,
+      description: 'IRMA API Secret Key (AWS sign)',
+    });
+
+    new SecretsManager.Secret(this, 'secret_irma_api_3', {
+      secretName: Statics.secretIrmaApiKey,
+      description: 'IRMA API key',
     });
   }
 }

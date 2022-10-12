@@ -81,11 +81,30 @@ export class DNSStack extends Stack {
       default:
         break;
     }
-    new Route53.DsRecord(this, 'ds-record', {
-      zone: this.accountRootZone,
-      recordName: 'irma-issue',
-      values: [dsValue],
-      ttl: Duration.seconds(600),
-    });
+
+    if (dsValue) {
+      new Route53.DsRecord(this, 'ds-record', {
+        zone: this.accountRootZone,
+        recordName: 'irma-issue',
+        values: [dsValue],
+        ttl: Duration.seconds(600),
+      });
+    }
   }
+
+
+  addValidationRecords() {
+    if (this.branch == 'development') {
+      new Route53.CnameRecord(this, 'cert-validation', {
+        zone: this.zone,
+        recordName: '_6eb18be87b93dbe7198d40b1b494cc77',
+        domainName: '_f66e3a74179a85d88a329a5bc2b91548.bcnrdwzwjt.acm-validations.aws',
+      });
+    } else if (this.branch == 'acceptance') {
+
+    } else if (this.branch == 'production') {
+
+    }
+  }
+
 }
