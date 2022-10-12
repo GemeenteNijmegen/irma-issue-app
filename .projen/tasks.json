@@ -88,10 +88,7 @@
       "description": "Create a JavaScript bundle from src/app/issue/issue.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
-        },
-        {
-          "exec": "npx projen install:issue"
+          "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text"
         }
       ]
     },
@@ -109,10 +106,7 @@
       "description": "Create a JavaScript bundle from src/app/login/login.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
-        },
-        {
-          "exec": "npx projen install:login"
+          "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text"
         }
       ]
     },
@@ -130,10 +124,7 @@
       "description": "Create a JavaScript bundle from src/app/logout/logout.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
-        },
-        {
-          "exec": "npx projen install:logout"
+          "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text"
         }
       ]
     },
@@ -272,30 +263,6 @@
       "steps": [
         {
           "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern src src/app/logout/tests /test /build-tools .projenrc.js"
-        }
-      ]
-    },
-    "install:issue": {
-      "name": "install:issue",
-      "steps": [
-        {
-          "exec": "copyfiles -f src/app/templates/* assets/app/issue/issue.lambda/templates && copyfiles -f src/app/templates/* src/app/issue/templates"
-        }
-      ]
-    },
-    "install:login": {
-      "name": "install:login",
-      "steps": [
-        {
-          "exec": "copyfiles -f src/app/templates/* assets/app/login/login.lambda/templates && copyfiles -f src/app/templates/* src/app/login/templates"
-        }
-      ]
-    },
-    "install:logout": {
-      "name": "install:logout",
-      "steps": [
-        {
-          "exec": "copyfiles -f src/app/templates/* assets/app/logout/logout.lambda/templates && copyfiles -f src/app/templates/* src/app/logout/templates"
         }
       ]
     },

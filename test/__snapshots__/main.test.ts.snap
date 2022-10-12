@@ -345,7 +345,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"62de24dc857ec91b1f3a051c9a282225e581cc1eebcd320dea7e25cc34cfbae3:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"27a553e0c72baa81273bd6a4428a114081dda76fac13ae1f408535027bca6809:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -404,7 +404,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"5b38d018bbf0ef84f695541cfdb6021749b345b4bd4a219b4a8116990e7f9535:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"4fe082dee17058137fea0f64ce002ae1d5f075f61350b7033608c7a586bfa31c:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -522,7 +522,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"dc83a713a81464ff43f39595709f4a2b30638adb9be5c11c972c1d7921847eb0:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"6d37db05f30b631fa6b28fc8ffdac314b0c3298fdedd785b47c76c580a913f3b:test-eu-west-1\\\\\\"\\"
       ]
     }
   }

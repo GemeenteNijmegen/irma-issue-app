@@ -3,7 +3,9 @@ import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Session } from '@gemeentenijmegen/session';
 import { IrmaApi } from '../code/IrmaApi';
 import render from '../code/Render';
+import * as template from '../templates/issue.mustache';
 import { BrpApi } from './BrpApi';
+
 
 function redirectResponse(location: string, code = 302) {
   return {
@@ -47,10 +49,7 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
   };
 
   // render page
-  const html = await render(data, __dirname + '/templates/issue.mustache', {
-    header: `${__dirname}/templates/header.mustache`,
-    footer: `${__dirname}/templates/footer.mustache`,
-  });
+  const html = await render(data, template.default);
 
   return {
     statusCode: 200,

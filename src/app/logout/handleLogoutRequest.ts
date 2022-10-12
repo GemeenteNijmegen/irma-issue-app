@@ -3,6 +3,8 @@ import { Session } from '@gemeentenijmegen/session';
 import * as cookie from 'cookie';
 import render from '../code/Render';
 
+import * as template from '../templates/logout.mustache';
+
 function htmlResponse(body: string, cookies: string[] = []) {
   const response = {
     statusCode: 200,
@@ -23,10 +25,7 @@ export async function handleLogoutRequest(cookies: string, dynamoDBClient: Dynam
     });
   }
 
-  const html = await render({ title: 'Uitgelogd' }, __dirname + '/templates/logout.mustache', {
-    header: `${__dirname}/templates/header.mustache`,
-    footer: `${__dirname}/templates/footer.mustache`,
-  });
+  const html = await render({ title: 'Uitgelogd' }, template.default);
   const emptyCookie = cookie.serialize('session', '', {
     httpOnly: true,
     secure: true,

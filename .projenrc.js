@@ -35,6 +35,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'copyfiles',
     '@playwright/test',
     'aws-sdk-client-mock',
+    'jest-raw-loader',
   ], /* Build dependencies for this module. */
   depsUpgradeOptions: {
     workflowOptions: {
@@ -47,14 +48,16 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   jestOptions: {
     jestConfig: {
       setupFiles: ['dotenv/config'],
+      moduleFileExtensions: [
+        'js', 'json', 'jsx', 'ts', 'tsx', 'node', 'mustache',
+      ],
+      transform: {
+        '\\.[jt]sx?$': 'ts-jest',
+        '^.+\\.mustache$': 'jest-raw-loader',
+      },
       testPathIgnorePatterns: ['/node_modules/', '/cdk.out', '/test/playwright'],
       roots: ['src', 'test'],
     },
-  },
-  scripts: {
-    'install:login': 'copyfiles -f src/app/templates/* assets/app/login/login.lambda/templates && copyfiles -f src/app/templates/* src/app/login/templates',
-    'install:issue': 'copyfiles -f src/app/templates/* assets/app/issue/issue.lambda/templates && copyfiles -f src/app/templates/* src/app/issue/templates',
-    'install:logout': 'copyfiles -f src/app/templates/* assets/app/logout/logout.lambda/templates && copyfiles -f src/app/templates/* src/app/logout/templates',
   },
   eslintOptions: {
     devdirs: ['src/app/logout/tests', '/test', '/build-tools'],
@@ -71,8 +74,11 @@ const project = new awscdk.AwsCdkTypeScriptApp({
 });
 
 // During bundling copy the templates to lambda deployment directories
-project.tasks.tryFind('bundle:app/issue/issue.lambda').exec('npx projen install:issue');
-project.tasks.tryFind('bundle:app/login/login.lambda').exec('npx projen install:login');
-project.tasks.tryFind('bundle:app/logout/logout.lambda').exec('npx projen install:logout');
+project.tasks.tryFind('bundle:app/issue/issue.lambda').reset();
+project.tasks.tryFind('bundle:app/login/login.lambda').reset();
+project.tasks.tryFind('bundle:app/logout/logout.lambda').reset();
+project.tasks.tryFind('bundle:app/issue/issue.lambda').exec('esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
+project.tasks.tryFind('bundle:app/login/login.lambda').exec('esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
+project.tasks.tryFind('bundle:app/logout/logout.lambda').exec('esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
 
 project.synth();

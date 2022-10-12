@@ -4638,6 +4638,11 @@ jest-pnp-resolver@^1.2.2:
   resolved "https://registry.npmjs.org/jest-pnp-resolver/-/jest-pnp-resolver-1.2.2.tgz"
   integrity sha512-olV41bKSMm8BdnuMsewT4jqlZ8+3TCARAXjZGT9jcoSnrfUnRCqnMoF9XEeoWjbzObpqF9dRhHQj0Xb9QdF6/w==
 
+jest-raw-loader@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/jest-raw-loader/-/jest-raw-loader-1.0.1.tgz#ce9f56d54650f157c4a7d16d224ba5d613bcd626"
+  integrity sha512-g9oaAjeC4/rIJk1Wd3RxVbOfMizowM7LSjEJqa4R9qDX0OjQNABXOhH+GaznUp+DjTGVPi2vPPbQXyX87DOnYg==
+
 jest-regex-util@^27.5.1:
   version "27.5.1"
   resolved "https://registry.npmjs.org/jest-regex-util/-/jest-regex-util-27.5.1.tgz"

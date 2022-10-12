@@ -67,6 +67,10 @@
       "type": "build"
     },
     {
+      "name": "jest-raw-loader",
+      "type": "build"
+    },
+    {
       "name": "json-schema",
       "type": "build"
     },
