@@ -24,13 +24,10 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'axios@^0.27.2', // TODO upgrade however aws4-axios is not yet compatible with v1
     'mustache',
     '@types/mustache',
-    //'aws4',
-    //'@types/aws4',
     'aws4-axios',
     'openid-client',
     '@types/cookie',
     'cookie',
-
 
   ], /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
@@ -55,10 +52,9 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     },
   },
   scripts: {
-    'install:login': 'copyfiles -f src/app/templates/* assets/app/login/login.lambda/templates && copyfiles -f src/app/templates/* src/app/login/templates ',
-    'install:issue': 'copyfiles -f src/app/templates/* assets/app/issue/issue.lambda/templates && copyfiles -f src/app/templates/* src/app/issue/templates ',
-    'install:logout': 'copyfiles -f src/app/templates/* assets/app/logout/logout.lambda/templates && copyfiles -f src/app/templates/* src/app/logout/templates ',
-    'postbuild': 'npx projen install:login && npx projen install:issue && npx projen install:logout',
+    'install:login': 'copyfiles -f src/app/templates/* assets/app/login/login.lambda/templates && copyfiles -f src/app/templates/* src/app/login/templates',
+    'install:issue': 'copyfiles -f src/app/templates/* assets/app/issue/issue.lambda/templates && copyfiles -f src/app/templates/* src/app/issue/templates',
+    'install:logout': 'copyfiles -f src/app/templates/* assets/app/logout/logout.lambda/templates && copyfiles -f src/app/templates/* src/app/logout/templates',
   },
   eslintOptions: {
     devdirs: ['src/app/logout/tests', '/test', '/build-tools'],
@@ -73,5 +69,10 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'test/playwright/screenshots',
   ],
 });
+
+// During bundling copy the templates to lambda deployment directories
+project.tasks.tryFind('bundle:app/issue/issue.lambda').exec('npx projen install:issue');
+project.tasks.tryFind('bundle:app/login/login.lambda').exec('npx projen install:login');
+project.tasks.tryFind('bundle:app/logout/logout.lambda').exec('npx projen install:logout');
 
 project.synth();

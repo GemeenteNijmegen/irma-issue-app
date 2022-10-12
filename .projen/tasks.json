@@ -89,6 +89,9 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+        },
+        {
+          "exec": "npx projen install:issue"
         }
       ]
     },
@@ -107,6 +110,9 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+        },
+        {
+          "exec": "npx projen install:login"
         }
       ]
     },
@@ -125,6 +131,9 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+        },
+        {
+          "exec": "npx projen install:logout"
         }
       ]
     },
@@ -270,7 +279,7 @@
       "name": "install:issue",
       "steps": [
         {
-          "exec": "copyfiles -f src/app/templates/* assets/app/issue/issue.lambda/templates && copyfiles -f src/app/templates/* src/app/issue/templates "
+          "exec": "copyfiles -f src/app/templates/* assets/app/issue/issue.lambda/templates && copyfiles -f src/app/templates/* src/app/issue/templates"
         }
       ]
     },
@@ -278,7 +287,7 @@
       "name": "install:login",
       "steps": [
         {
-          "exec": "copyfiles -f src/app/templates/* assets/app/login/login.lambda/templates && copyfiles -f src/app/templates/* src/app/login/templates "
+          "exec": "copyfiles -f src/app/templates/* assets/app/login/login.lambda/templates && copyfiles -f src/app/templates/* src/app/login/templates"
         }
       ]
     },
@@ -286,7 +295,7 @@
       "name": "install:logout",
       "steps": [
         {
-          "exec": "copyfiles -f src/app/templates/* assets/app/logout/logout.lambda/templates && copyfiles -f src/app/templates/* src/app/logout/templates "
+          "exec": "copyfiles -f src/app/templates/* assets/app/logout/logout.lambda/templates && copyfiles -f src/app/templates/* src/app/logout/templates"
         }
       ]
     },
@@ -306,14 +315,6 @@
     "post-upgrade": {
       "name": "post-upgrade",
       "description": "Runs after upgrading dependencies"
-    },
-    "postbuild": {
-      "name": "postbuild",
-      "steps": [
-        {
-          "exec": "npx projen install:login && npx projen install:issue && npx projen install:logout"
-        }
-      ]
     },
     "pre-compile": {
       "name": "pre-compile",
