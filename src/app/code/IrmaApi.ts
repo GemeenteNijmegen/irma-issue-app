@@ -15,15 +15,15 @@ export class IrmaApi {
   };
   private apiKey: string;
 
-  constructor(host?: string, demo: boolean=false, accessKey=undefined, secretKey=undefined, apiKey=undefined) {
+  constructor(host?: string) {
     this.host = host ? host : process.env.IRMA_API_HOST;
-    this.demo = demo ? demo : process.env.IRMA_API_DEMO;
+    this.demo = process.env.IRMA_API_DEMO == 'demo' ? true : false;
 
     this.credentials = {
-      accessKeyId: accessKey ? accessKey : '',
-      secretAccessKey: secretKey ? secretKey : '',
+      accessKeyId: '',
+      secretAccessKey: '',
     };
-    this.apiKey = apiKey ? apiKey : '';
+    this.apiKey = '';
   }
 
   async init() {
@@ -82,7 +82,8 @@ export class IrmaApi {
 
   async makeSignedRequest(request: axios.AxiosRequestConfig, errorMsg: string) {
     try {
-
+      console.log("Making signed request: ", request);
+      
       const interceptor = aws4Interceptor({
         region: 'eu-west-1',
         service: 'execute-api',

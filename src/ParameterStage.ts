@@ -97,7 +97,7 @@ export class ssmParamsConstruct extends Construct {
     });
 
     new SSM.StringParameter(this, 'ssm_irma_api_2', {
-      stringValue: 'true',
+      stringValue: 'demo',
       parameterName: Statics.ssmIrmaApiDemo,
     });
 
