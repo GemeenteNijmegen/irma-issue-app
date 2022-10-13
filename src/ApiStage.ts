@@ -40,7 +40,7 @@ export class ApiStage extends Stage {
 
     // Only deploy DNSSEC on accp and prod
     if (props.branch != 'development') {
-      const dnssecStack = new DNSSECStack(this, 'dnssec-stack', { branch: props.branch, env: { region: 'us-east-1' } });
+      const dnssecStack = new DNSSECStack(this, 'dnssec-stack', { env: { region: 'us-east-1' } });
       dnssecStack.addDependency(dnsStack);
     }
 

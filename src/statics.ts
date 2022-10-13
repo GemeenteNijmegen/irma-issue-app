@@ -79,9 +79,9 @@ export abstract class Statics {
    * Route53 Zone ID and name for the zone for IRMA issue app. decouples stacks to not pass
    * the actual zone between stacks. This param is set by DNSStack and should not be modified after.
    */
-  static readonly ssmZonePath: string = '/cdk/irma-issue-app/';
-  static readonly ssmZoneId: string = '/cdk/irma-issue-app/zone-id';
-  static readonly ssmZoneName: string = '/cdk/irma-issue-app/zone-name';
+  static readonly ssmZonePath: string = '/cdk/irma-issue-app/zone';
+  static readonly ssmZoneId: string = '/cdk/irma-issue-app/zone/id';
+  static readonly ssmZoneName: string = '/cdk/irma-issue-app/zone/name';
 
   static readonly certificatePath: string = '/cdk/irma-issue-app/certificates';
   static readonly certificateArn: string = '/cdk/irma-issue-app/certificates/certificate-arn';
