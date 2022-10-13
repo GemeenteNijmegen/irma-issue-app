@@ -6,6 +6,8 @@ export interface DNSStackProps extends StackProps {
   branch: string;
 }
 
+// CONTINUE HERE, prevent certificates from registering cname records, add cname records here!
+
 export class DNSStack extends Stack {
   zone: Route53.HostedZone;
   accountRootZone: Route53.IHostedZone;
@@ -73,10 +75,10 @@ export class DNSStack extends Stack {
     let dsValue = '';
     switch (this.branch) {
       case 'acceptance':
-        dsValue = '52561 13 2 90CF3C35FDDC30AF42FB4BCCDCCB1123500050D70F1D4886D6DE25502F3BC50A';
+        dsValue = '52561 13 2 EBD9ED03EC245E70D458F7B300606FB1DBB3C6D185E19EDB835FBC47B396530A';
         break;
       case 'production':
-        dsValue = '60066 13 2 932CD585B029E674E17C4C33DFE7DE2C84353ACD8C109760FD17A6CDBD0CF3FA';
+        dsValue = '60066 13 2 932CD585B029E674E17C4C33DFE7DE2C84353ACD8C109760FD17A6CDBD0CF3FA'; // TODO fix in prod
         break;
       default:
         break;
