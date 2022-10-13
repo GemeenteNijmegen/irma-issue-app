@@ -4,6 +4,7 @@ import {
 } from '@aws-sdk/client-secrets-manager';
 import { aws4Interceptor } from 'aws4-axios';
 import * as axios from 'axios';
+import { parse, differenceInYears } from 'date-fns';
 
 export class IrmaApi {
 
@@ -109,43 +110,57 @@ export class IrmaApi {
   }
 
   constructIrmaIssueRequest(brpData: any) {
-    console.log(brpData);
+
+    // Get persoonsgegevens
+    const gegevens = brpData.Persoon.Persoonsgegevens;
+
+    // Calculate age attributes
+    const birthDateStr: string = gegevens.Geboortedatum;
+    const birthDate = parse(birthDateStr, 'dd-MM-yyyy', new Date());
+    const age = differenceInYears(birthDate, new Date());
+    const over12 = age >= 12 ? 'yes' : 'no';
+    const over16 = age >= 16 ? 'yes' : 'no';
+    const over18 = age >= 18 ? 'yes' : 'no';
+    const over21 = age >= 21 ? 'yes' : 'no';
+    const over65 = age >= 65 ? 'yes' : 'no';
+
+    // Return the issue request
     return {
       type: 'issuing',
       credentials: [
         {
           credential: this.demo ? 'irma-demo.gemeente.address' : 'irma.gemeente.address',
-          validity: 1678455605,
+          validity: 1678455605, // TODO check if up to date
           attributes: {
-            street: 'Kortestraat',
-            houseNumber: '6',
-            zipcode: '6511PP',
-            municipality: 'Nijmegen',
-            city: 'Nijmegen',
+            street: brpData.Persoon.Adres.Straat,
+            houseNumber: brpData.Persoon.Adres.Huisnummer,
+            zipcode: brpData.Persoon.Adres.Postcode,
+            municipality: brpData.Persoon.Adres.Gemeente,
+            city: brpData.Persoon.Adres.Woonplaats,
           },
         },
         {
           credential: this.demo ? 'irma-demo.gemeente.personalData' : 'irma.gemeente.personalData',
-          validity: 1678455605,
+          validity: 1678455605, // TODO check if up to date
           attributes: {
-            initials: '',
-            firstnames: 'Test',
-            prefix: '',
-            familyname: 'Test',
-            fullname: 'Test Test',
-            dateofbirth: '20-10-1996',
-            gender: 'M',
-            nationality: 'yes',
-            surname: 'Test',
-            cityofbirth: 'Nijmegen',
-            countryofbirth: 'Nederland',
-            over12: 'yes',
-            over16: 'yes',
-            over18: 'yes',
-            over21: 'yes',
-            over65: 'no',
-            bsn: '1234',
-            digidlevel: '12',
+            initials: gegevens.Voorletters,
+            firstnames: gegevens.Voornamen,
+            prefix: gegevens.Voorvoegsel,
+            familyname: gegevens.Achternaam,
+            fullname: gegevens.Naam,
+            dateofbirth: gegevens.Geboortedatum,
+            gender: gegevens.Geslacht,
+            nationality: gegevens.NederlandseNationaliteit == 'Ja' ? 'yes' : 'no',
+            surname: gegevens.Achternaam,
+            cityofbirth: gegevens.Geboorteplaats,
+            countryofbirth: gegevens.Geboorteland,
+            over12: over12,
+            over16: over16,
+            over18: over18,
+            over21: over21,
+            over65: over65,
+            bsn: brpData.Persoon.BSN.BSN,
+            digidlevel: '12', // TODO check what this should be?
           },
         },
       ],

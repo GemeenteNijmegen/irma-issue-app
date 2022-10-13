@@ -24,9 +24,9 @@
 
 <script>
 
-    const session = {{{irmaSession}}};
-    const irmaServer = '{{irmaServer}}';
-    const sessionResultEndpoint = '{{sessionResultEndpoint}}';
+    const session = JSON.parse('{{{irmaSession}}}');
+    const irmaServer = '{{{irmaServer}}}';
+    const sessionResultEndpoint = '{{{sessionResultEndpoint}}}';
 
     const exampleWeb = irma.newWeb({
             debugging: true,
