@@ -6,8 +6,6 @@ export interface DNSStackProps extends StackProps {
   branch: string;
 }
 
-// CONTINUE HERE, prevent certificates from registering cname records, add cname records here!
-
 export class DNSStack extends Stack {
   zone: Route53.HostedZone;
   accountRootZone: Route53.IHostedZone;
@@ -103,9 +101,17 @@ export class DNSStack extends Stack {
         domainName: '_f66e3a74179a85d88a329a5bc2b91548.bcnrdwzwjt.acm-validations.aws',
       });
     } else if (this.branch == 'acceptance') {
-
+      new Route53.CnameRecord(this, 'cert-validation', {
+        zone: this.zone,
+        recordName: '_b1177264f99d12c8a536233355add646',
+        domainName: '_3f065e537a8e4c0cb070d5004c0388e2.bcnrdwzwjt.acm-validations.aws.',
+      });
     } else if (this.branch == 'production') {
-
+      new Route53.CnameRecord(this, 'cert-validation', { // TODO fill
+        zone: this.zone,
+        recordName: '',
+        domainName: '',
+      });
     }
   }
 

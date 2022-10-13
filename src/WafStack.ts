@@ -16,14 +16,14 @@ export class WafStack extends Stack {
       rateBasedStatementAction = { count: {} };
     }
 
-    const acl = new aws_wafv2.CfnWebACL(this, 'waf-mijnNijmegen', {
+    const acl = new aws_wafv2.CfnWebACL(this, 'waf-irmaIssueApp', {
       defaultAction: { allow: {} },
-      description: 'used for the mijnNijmegen apps',
-      name: 'mijnNijmegenWaf',
+      description: 'used for the irma issue app',
+      name: 'irmaIssueAppWaf',
       visibilityConfig: {
         sampledRequestsEnabled: true,
         cloudWatchMetricsEnabled: true,
-        metricName: 'mijnNijmegen-web-acl',
+        metricName: 'irmaIssueApp-web-acl',
       },
       rules: [
         {
@@ -149,7 +149,7 @@ export class WafStack extends Stack {
       scope: 'CLOUDFRONT',
     });
 
-    new SSM.StringParameter(this, 'mijn-acl-id', {
+    new SSM.StringParameter(this, 'irma-issue-acl-id', {
       stringValue: acl.attrArn,
       parameterName: Statics.ssmWafAclArn,
     });
@@ -173,7 +173,7 @@ export class WafStack extends Stack {
    */
   private logGroupArn() {
     const logGroup = new LogGroup(this, 'waf-logs', {
-      logGroupName: 'aws-waf-logs-mijn-nijmegen',
+      logGroupName: 'aws-waf-logs-irma-issue-app',
     });
 
     const logGroupArn = this.formatArn({

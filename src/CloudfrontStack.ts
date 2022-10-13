@@ -47,15 +47,15 @@ export class CloudfrontStack extends Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id);
 
-    const subdomain = Statics.subDomain(props.branch);
+    //const subdomain = Statics.subDomain(props.branch);
     const cspSubdomain = Statics.cspSubDomain(props.branch);
     const cspDomain = `${cspSubdomain}.csp-nijmegen.nl`;
-    const mainDomain = `${subdomain}.nijmegen.nl`;
+    //const mainDomain = `${subdomain}.nijmegen.nl`;
     var domains = [cspDomain];
 
-    if (props.branch != 'development') {
-      domains.push(mainDomain);
-    }
+    //if (props.branch != 'development') { // TODO enable when nijmegen.nl cnmae is ready
+    //  domains.push(mainDomain);
+    //}
 
     const certificateArn = this.certificateArn();
 
