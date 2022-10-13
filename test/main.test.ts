@@ -14,14 +14,24 @@ beforeAll(() => {
 
 test('Snapshot', () => {
   const app = new App();
-  const stack = new PipelineStackDevelopment(app, 'test', { env: { account: 'test', region: 'eu-west-1' }, branchName: 'development', deployToEnvironment: { account: 'test', region: 'eu-west-1' } });
+  const stack = new PipelineStackDevelopment(app, 'test', { 
+    env: { account: 'test', region: 'eu-west-1' }, 
+    branchName: 'development', 
+    deployToEnvironment: { account: 'test', region: 'eu-west-1' },
+    addNijmegenDomain: true,
+  });
   const template = Template.fromStack(stack);
   expect(template.toJSON()).toMatchSnapshot();
 });
 
 test('MainPipelineExists', () => {
   const app = new App();
-  const stack = new PipelineStackDevelopment(app, 'test', { env: { account: 'test', region: 'eu-west-1' }, branchName: 'development', deployToEnvironment: { account: 'test', region: 'eu-west-1' } });
+  const stack = new PipelineStackDevelopment(app, 'test', { 
+    env: { account: 'test', region: 'eu-west-1' }, 
+    branchName: 'development', 
+    deployToEnvironment: { account: 'test', region: 'eu-west-1' },
+    addNijmegenDomain: true,
+  });
   const template = Template.fromStack(stack);
   template.resourceCountIs('AWS::CodePipeline::Pipeline', 1);
 });
@@ -48,7 +58,11 @@ test('StackHasApiGateway', () => {
   const sessionsStack = new SessionsStack(app, 'test', { key: keyStack.key});
   new DNSStack(app, 'dns', { branch: 'dev'});
   // const zone = dnsStack.zone;
-  const stack = new ApiStack(app, 'api', { sessionsTable: sessionsStack.sessionsTable, branch: 'dev' });
+  const stack = new ApiStack(app, 'api', { 
+    sessionsTable: sessionsStack.sessionsTable, 
+    branch: 'dev',
+    addNijmegenDomain: true,
+  });
   const template = Template.fromStack(stack);
   template.resourceCountIs('AWS::ApiGatewayV2::Api', 1);
 });
@@ -60,9 +74,13 @@ test('StackHasLambdas', () => {
   const sessionsStack = new SessionsStack(app, 'test', { key: keyStack.key});
   new DNSStack(app, 'dns', { branch: 'dev'});
   // const zone = dnsStack.zone;
-  const stack = new ApiStack(app, 'api', { sessionsTable: sessionsStack.sessionsTable, branch: 'dev' });
+  const stack = new ApiStack(app, 'api', { 
+    sessionsTable: sessionsStack.sessionsTable, 
+    branch: 'dev',
+    addNijmegenDomain: true,
+  });
   const template = Template.fromStack(stack);
-  template.resourceCountIs('AWS::Lambda::Function', 7);
+  template.resourceCountIs('AWS::Lambda::Function', 6);
 });
 
 

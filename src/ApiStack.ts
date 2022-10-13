@@ -1,9 +1,8 @@
 import * as apigatewayv2 from '@aws-cdk/aws-apigatewayv2-alpha';
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
-import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM, aws_lambda as Lambda } from 'aws-cdk-lib';
+import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM } from 'aws-cdk-lib';
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
 import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
-import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
 import { AuthFunction } from './app/auth/auth-function';
@@ -12,13 +11,13 @@ import { LoginFunction } from './app/login/login-function';
 import { LogoutFunction } from './app/logout/logout-function';
 import { ResultFunction } from './app/result/result-function';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
-import { MonitoringFunction } from './monitoring/monitoring-function';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
 
 export interface ApiStackProps extends StackProps {
   sessionsTable: SessionsTable;
   branch: string;
+  addNijmegenDomain: boolean;
 }
 
 /**
@@ -43,43 +42,20 @@ export class ApiStack extends Stack {
       parameterName: Statics.ssmApiGatewayId,
     });
 
-    const subdomain = Statics.subDomain(props.branch);
-    const appDomain = `${subdomain}.nijmegen.nl`;
-    var baseUrl = `https://${appDomain}/`;
+    const cspSubdomain = Statics.cspSubDomain(props.branch);
+    const cspDomain = `${cspSubdomain}.csp-nijmegen.nl`;
+    var baseUrl = `https://${cspDomain}/`;
 
-    if (props.branch == 'development') {
-      const cspSubdomain = Statics.cspSubDomain(props.branch);
-      const cspDomain = `${cspSubdomain}.csp-nijmegen.nl`;
-      var baseUrl = `https://${cspDomain}/`;
+    if (props.addNijmegenDomain) {
+      const subdomain = Statics.subDomain(props.branch);
+      const appDomain = `${subdomain}.nijmegen.nl`;
+      var baseUrl = `https://${appDomain}/`;
     }
 
-    this.monitoringLambda();
+    // this.monitoringLambda();
     const readOnlyRole = this.readOnlyRole();
     this.setFunctions(baseUrl, readOnlyRole);
     this.allowReadAccessToTable(readOnlyRole, this.sessionsTable);
-  }
-
-
-  /**
-   * Create a lambda function to monitor cloudwatch logs
-   *
-   * @returns {Lambda.Function} a lambda responsible for monitoring cloudwatch logs
-   */
-  private monitoringLambda(): Lambda.Function {
-    let webhookUrl = SSM.StringParameter.valueForStringParameter(this, Statics.ssmSlackWebhookUrl);
-    const lambda = new MonitoringFunction(this, 'lambda', {
-      description: 'Monitor IRMA issue app cloudwatch logs',
-      logRetention: RetentionDays.ONE_MONTH,
-      environment: {
-        SLACK_WEBHOOK_URL: webhookUrl,
-      },
-    });
-
-    new SSM.StringParameter(this, 'ssm_slack_1', {
-      stringValue: lambda.functionArn,
-      parameterName: Statics.ssmMonitoringLambdaArn,
-    });
-    return lambda;
   }
 
   /**

@@ -36,6 +36,7 @@ if ('BRANCH_NAME' in process.env == false || process.env.BRANCH_NAME == 'develop
       env: deploymentEnvironment,
       branchName: 'development',
       deployToEnvironment: sandboxEnvironment,
+      addNijmegenDomain: false,
     },
   );
 } else if (process.env.BRANCH_NAME == 'acceptance') {
@@ -44,6 +45,7 @@ if ('BRANCH_NAME' in process.env == false || process.env.BRANCH_NAME == 'develop
       env: deploymentEnvironment,
       branchName: 'acceptance',
       deployToEnvironment: acceptanceEnvironment,
+      addNijmegenDomain: false,
     },
   );
 } else if (process.env.BRANCH_NAME == 'production') {
@@ -52,6 +54,7 @@ if ('BRANCH_NAME' in process.env == false || process.env.BRANCH_NAME == 'develop
       env: deploymentEnvironment,
       branchName: 'production',
       deployToEnvironment: productionEnvironment,
+      addNijmegenDomain: false,
     },
   );
 }

@@ -8,6 +8,7 @@ import { Statics } from './statics';
 export interface PipelineStackProps extends StackProps{
   branchName: string;
   deployToEnvironment: Environment;
+  addNijmegenDomain: boolean;
 }
 
 export class PipelineStack extends Stack {
@@ -23,7 +24,11 @@ export class PipelineStack extends Stack {
 
     pipeline.addStage(new ParameterStage(this, 'irma-issue-parameters', { env: props.deployToEnvironment }));
 
-    const apiStage = pipeline.addStage(new ApiStage(this, 'irma-issue-api', { env: props.deployToEnvironment, branch: this.branchName }));
+    const apiStage = pipeline.addStage(new ApiStage(this, 'irma-issue-api', {
+      env: props.deployToEnvironment,
+      branch: this.branchName,
+      addNijmegenDomain: props.addNijmegenDomain,
+    }));
     this.runValidationChecks(apiStage, source);
 
   }

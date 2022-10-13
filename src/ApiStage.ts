@@ -11,6 +11,7 @@ import { WafStack } from './WafStack';
 
 export interface ApiStageProps extends StageProps {
   branch: string;
+  addNijmegenDomain: boolean;
 }
 
 /**
@@ -30,7 +31,11 @@ export class ApiStage extends Stage {
     const sessionsStack = new SessionsStack(this, 'sessions-stack', { key: key });
     const dnsStack = new DNSStack(this, 'dns-stack', { branch: props.branch });
 
-    const usEastCertificateStack = new UsEastCertificateStack(this, 'us-cert-stack', { branch: props.branch, env: { region: 'us-east-1' } });
+    const usEastCertificateStack = new UsEastCertificateStack(this, 'us-cert-stack', {
+      branch: props.branch,
+      env: { region: 'us-east-1' },
+      addNijmegenDomain: props.addNijmegenDomain,
+    });
     usEastCertificateStack.addDependency(dnsStack);
 
     // Only deploy DNSSEC on accp and prod
@@ -42,10 +47,12 @@ export class ApiStage extends Stage {
     const apistack = new ApiStack(this, 'api-stack', {
       branch: props.branch,
       sessionsTable: sessionsStack.sessionsTable,
+      addNijmegenDomain: props.addNijmegenDomain,
     });
     const cloudfrontStack = new CloudfrontStack(this, 'cloudfront-stack', {
       branch: props.branch,
       hostDomain: apistack.domain(),
+      addNijmegenDomain: props.addNijmegenDomain,
     });
     cloudfrontStack.addDependency(usEastCertificateStack);
 

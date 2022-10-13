@@ -20,7 +20,6 @@
     "src/app/login/login-function.ts",
     "src/app/logout/logout-function.ts",
     "src/app/result/result-function.ts",
-    "src/monitoring/monitoring-function.ts",
     "tsconfig.dev.json",
     "tsconfig.json"
   ],

@@ -41,21 +41,27 @@ export interface CloudFrontStackProps extends StackProps {
      * current branch: Determines subdomain of csp-nijmegen.nl
      */
   branch: string;
+
+  /**
+   * Add *.nijmegen.nl domain to cloudfront distribution
+   */
+  addNijmegenDomain: boolean;
+
 }
 
 export class CloudfrontStack extends Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id);
 
-    //const subdomain = Statics.subDomain(props.branch);
     const cspSubdomain = Statics.cspSubDomain(props.branch);
     const cspDomain = `${cspSubdomain}.csp-nijmegen.nl`;
-    //const mainDomain = `${subdomain}.nijmegen.nl`;
     var domains = [cspDomain];
 
-    //if (props.branch != 'development') { // TODO enable when nijmegen.nl cnmae is ready
-    //  domains.push(mainDomain);
-    //}
+    if (props.addNijmegenDomain) {
+      const subdomain = Statics.subDomain(props.branch);
+      const mainDomain = `${subdomain}.nijmegen.nl`;
+      domains.push(mainDomain);
+    }
 
     const certificateArn = this.certificateArn();
 
