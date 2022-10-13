@@ -39,9 +39,9 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
   }
 
   // Start IRMA session
-  const irmaSession = irmaApi.startSession(brpData);
+  const irmaSession = await irmaApi.startSession(brpData);
 
-  console.info('Irma sesssion response', irmaSession)
+  console.info('Irma sesssion response', irmaSession);
 
   const data = {
     title: 'opladen',

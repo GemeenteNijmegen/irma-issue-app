@@ -76,7 +76,7 @@ export class IrmaApi {
       },
     };
 
-    return this.makeSignedRequest(irmaIssueRequest, 'De IRMA sessie kon niet worden gestart.');
+    return await this.makeSignedRequest(irmaIssueRequest, 'De IRMA sessie kon niet worden gestart.');
 
   }
 
@@ -90,7 +90,7 @@ export class IrmaApi {
       },
     };
 
-    return this.makeSignedRequest(sessionResultRequest, 'Kon de sessie resultaten niet ophalen.');
+    return await this.makeSignedRequest(sessionResultRequest, 'Kon de sessie resultaten niet ophalen.');
 
   }
 
@@ -105,8 +105,8 @@ export class IrmaApi {
       axios.default.interceptors.request.use(interceptor);
 
       let resp = await axios.default.request(request);
-      console.debug(resp);
       if (resp.data) {
+        console.debug('Session from IRMA server', resp.data);
         return resp.data;
       } else {
         throw Error(errorMsg);
