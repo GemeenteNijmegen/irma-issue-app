@@ -112,6 +112,7 @@ export class IrmaApi {
         throw Error(errorMsg);
       }
     } catch (error: any) {
+      console.error(error);
       const data = {
         error: error.message,
       };

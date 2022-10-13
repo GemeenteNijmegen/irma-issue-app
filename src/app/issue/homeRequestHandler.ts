@@ -41,8 +41,10 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
   // Start IRMA session
   const irmaSession = irmaApi.startSession(brpData);
 
+  console.info('Irma sesssion response', irmaSession)
+
   const data = {
-    title: 'overzicht',
+    title: 'opladen',
     shownav: true,
     volledigenaam: naam,
     irmaSession: JSON.stringify(irmaSession),
