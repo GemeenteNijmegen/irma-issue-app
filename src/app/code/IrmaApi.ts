@@ -87,7 +87,7 @@ export class IrmaApi {
 
   async makeSignedRequest(request: axios.AxiosRequestConfig, errorMsg: string) {
     try {
-      console.log('Making signed request: ', request);
+      console.debug('Making signed request: ', request);
 
       const interceptor = aws4Interceptor({
         region: 'eu-west-1',
@@ -96,14 +96,15 @@ export class IrmaApi {
       axios.default.interceptors.request.use(interceptor);
 
       let resp = await axios.default.request(request);
+      console.debug(resp);
       if (resp.data) {
         return resp.data;
       } else {
-        throw Error();
+        throw Error(errorMsg);
       }
-    } catch {
+    } catch(error: any) {
       const data = {
-        error: errorMsg,
+        error: error.message,
       };
       return data;
     }
