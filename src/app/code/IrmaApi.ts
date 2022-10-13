@@ -4,7 +4,7 @@ import {
 } from '@aws-sdk/client-secrets-manager';
 import { aws4Interceptor } from 'aws4-axios';
 import * as axios from 'axios';
-import { parse, differenceInYears } from 'date-fns';
+// import { parse, differenceInYears } from 'date-fns';
 
 export class IrmaApi {
 
@@ -16,10 +16,9 @@ export class IrmaApi {
   };
   private apiKey: string;
 
-  constructor(host?: string) {
-    this.host = host ? host : process.env.IRMA_API_HOST;
+  constructor() {
+    this.host = process.env.IRMA_API_HOST ? process.env.IRMA_API_HOST : '';
     this.demo = process.env.IRMA_API_DEMO == 'demo' ? true : false;
-
     this.credentials = {
       accessKeyId: '',
       secretAccessKey: '',
@@ -42,6 +41,16 @@ export class IrmaApi {
     };
   }
 
+  manualInit(host: string, demo: boolean, accesKey: string, secretKey: string, apiKey: string) {
+    this.host = host;
+    this.demo = demo;
+    this.apiKey = apiKey;
+    this.credentials = {
+      accessKeyId: accesKey,
+      secretAccessKey: secretKey,
+    };
+  }
+
   async getSecret(arn: string) {
     if (!arn) {
       throw new Error('No ARN provided');
@@ -59,7 +68,7 @@ export class IrmaApi {
 
     const irmaIssueRequest: axios.AxiosRequestConfig = {
       method: 'POST',
-      url: `https://${this.host}/irma/session`,
+      url: `https://${this.host}/session`,
       data: this.constructIrmaIssueRequest(brpData),
       headers: {
         'irma-authorization': this.apiKey,
@@ -75,13 +84,13 @@ export class IrmaApi {
 
     const sessionResultRequest: axios.AxiosRequestConfig = {
       method: 'GET',
-      url: `https://${this.host}/irma/session/${token}/result`,
+      url: `https://${this.host}/session/${token}/result`,
       headers: {
         'irma-authorization': this.apiKey,
       },
     };
 
-    return this.makeSignedRequest(sessionResultRequest, 'Could not get session result from IRMA server');
+    return this.makeSignedRequest(sessionResultRequest, 'Kon de sessie resultaten niet ophalen.');
 
   }
 
@@ -102,7 +111,7 @@ export class IrmaApi {
       } else {
         throw Error(errorMsg);
       }
-    } catch(error: any) {
+    } catch (error: any) {
       const data = {
         error: error.message,
       };
@@ -116,14 +125,14 @@ export class IrmaApi {
     const gegevens = brpData.Persoon.Persoonsgegevens;
 
     // Calculate age attributes
-    const birthDateStr: string = gegevens.Geboortedatum;
-    const birthDate = parse(birthDateStr, 'dd-MM-yyyy', new Date());
-    const age = differenceInYears(birthDate, new Date());
-    const over12 = age >= 12 ? 'yes' : 'no';
-    const over16 = age >= 16 ? 'yes' : 'no';
-    const over18 = age >= 18 ? 'yes' : 'no';
-    const over21 = age >= 21 ? 'yes' : 'no';
-    const over65 = age >= 65 ? 'yes' : 'no';
+    // const birthDateStr: string = gegevens.Geboortedatum;
+    // const birthDate = parse(birthDateStr, 'dd-MM-yyyy', new Date());
+    // const age = differenceInYears(birthDate, new Date());
+    // const over12 = age >= 12 ? 'yes' : 'no';
+    // const over16 = age >= 16 ? 'yes' : 'no';
+    // const over18 = age >= 18 ? 'yes' : 'no';
+    // const over21 = age >= 21 ? 'yes' : 'no';
+    // const over65 = age >= 65 ? 'yes' : 'no';
 
     // Return the issue request
     return {
@@ -155,13 +164,9 @@ export class IrmaApi {
             surname: gegevens.Achternaam,
             cityofbirth: gegevens.Geboorteplaats,
             countryofbirth: gegevens.Geboorteland,
-            over12: over12,
-            over16: over16,
-            over18: over18,
-            over21: over21,
-            over65: over65,
             bsn: brpData.Persoon.BSN.BSN,
             digidlevel: '12', // TODO check what this should be?
+            ...brpData.Persoon.ageLimits, // Set agelimits directly
           },
         },
       ],
