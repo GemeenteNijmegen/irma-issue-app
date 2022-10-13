@@ -26,6 +26,10 @@ export class IrmaApi {
     this.apiKey = '';
   }
 
+  getHost() {
+    return this.host;
+  }
+
   async init() {
     if (!process.env.IRMA_API_ACCESS_KEY_ID_ARN || !process.env.IRMA_API_SECRET_KEY_ARN || !process.env.IRMA_API_KEY_ARN) {
       throw Error('Clould not initialize IRMA API client');
@@ -82,8 +86,8 @@ export class IrmaApi {
 
   async makeSignedRequest(request: axios.AxiosRequestConfig, errorMsg: string) {
     try {
-      console.log("Making signed request: ", request);
-      
+      console.log('Making signed request: ', request);
+
       const interceptor = aws4Interceptor({
         region: 'eu-west-1',
         service: 'execute-api',
