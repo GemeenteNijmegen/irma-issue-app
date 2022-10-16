@@ -14,11 +14,7 @@ const irmaClient = irma.newWeb({
             sessionPtr: r => { return { "u": sessionPtrU, "irmaqr": sessionPtrQr } },
             sessionToken: r => { return sessionToken },
         },
-        result: false
-        //{
-        //    url: (o, {ptr, token}) => `${sessionResultEndpoint}?token=${token}`,
-        //    parseResponse: r => r.json()
-        //}
+        result: false,
     },
     state: {
         serverSentEvents: false,

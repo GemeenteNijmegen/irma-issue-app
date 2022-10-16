@@ -124,16 +124,6 @@ export class IrmaApi {
     // Get persoonsgegevens
     const gegevens = brpData.Persoon.Persoonsgegevens;
 
-    // Calculate age attributes
-    // const birthDateStr: string = gegevens.Geboortedatum;
-    // const birthDate = parse(birthDateStr, 'dd-MM-yyyy', new Date());
-    // const age = differenceInYears(birthDate, new Date());
-    // const over12 = age >= 12 ? 'yes' : 'no';
-    // const over16 = age >= 16 ? 'yes' : 'no';
-    // const over18 = age >= 18 ? 'yes' : 'no';
-    // const over21 = age >= 21 ? 'yes' : 'no';
-    // const over65 = age >= 65 ? 'yes' : 'no';
-
     // Return the issue request
     return {
       type: 'issuing',

@@ -9,7 +9,6 @@ import { AuthFunction } from './app/auth/auth-function';
 import { IssueFunction } from './app/issue/issue-function';
 import { LoginFunction } from './app/login/login-function';
 import { LogoutFunction } from './app/logout/logout-function';
-import { ResultFunction } from './app/result/result-function';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
@@ -126,25 +125,6 @@ export class ApiStack extends Stack {
     secretIrmaApiSecretKey.grantRead(issueFunction.lambda);
     secretIrmaApiKey.grantRead(issueFunction.lambda);
 
-    const resultFunction = new ApiFunction(this, 'irma-issue-result-function', {
-      description: 'Result endpoint voor de IRMA issue-applicatie.',
-      table: this.sessionsTable,
-      tablePermissions: 'ReadWrite',
-      applicationUrlBase: baseUrl,
-      readOnlyRole,
-      environment: {
-        IRMA_API_HOST: irmaApiHost,
-        IRMA_API_DEMO: irmaApiDemo,
-        IRMA_API_ACCESS_KEY_ID_ARN: secretIrmaApiAccessKeyId.secretArn,
-        IRMA_API_SECRET_KEY_ARN: secretIrmaApiSecretKey.secretArn,
-        IRMA_API_KEY_ARN: secretIrmaApiKey.secretArn,
-      },
-    }, ResultFunction);
-    secretIrmaApiAccessKeyId.grantRead(resultFunction.lambda);
-    secretIrmaApiSecretKey.grantRead(resultFunction.lambda);
-    secretIrmaApiKey.grantRead(resultFunction.lambda);
-
-
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('irma-issue-login', loginFunction.lambda),
       path: '/login',
@@ -160,12 +140,6 @@ export class ApiStack extends Stack {
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('irma-issue-auth', authFunction.lambda),
       path: '/auth',
-      methods: [apigatewayv2.HttpMethod.GET],
-    });
-
-    this.api.addRoutes({ // Endpoint for relaying signed request to IRMA issue server (secured with AWS credentials)
-      integration: new HttpLambdaIntegration('irma-issue-result', resultFunction.lambda),
-      path: '/result',
       methods: [apigatewayv2.HttpMethod.GET],
     });
 

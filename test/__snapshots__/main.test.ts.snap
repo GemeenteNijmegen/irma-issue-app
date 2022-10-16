@@ -49,66 +49,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"6ddcf10002539818a9256eff3fb2b22aa09298d8f946e26ba121c175a600c44e:test-eu-west-1\\\\\\"\\"
-      ]
-    }
-  }
-}",
-          "Type": "CODEPIPELINE",
-        },
-        "Tags": Array [
-          Object {
-            "Key": "cdkManaged",
-            "Value": "yes",
-          },
-          Object {
-            "Key": "Project",
-            "Value": "irma-issue-app",
-          },
-        ],
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
-    "irmaissueappdevelopmentAssetsFileAsset113E2733A1": Object {
-      "Properties": Object {
-        "Artifacts": Object {
-          "Type": "CODEPIPELINE",
-        },
-        "Cache": Object {
-          "Type": "NO_CACHE",
-        },
-        "Description": "Pipeline step test/Pipeline/Assets/FileAsset11",
-        "EncryptionKey": Object {
-          "Fn::GetAtt": Array [
-            "irmaissueappdevelopmentPipelineArtifactsBucketEncryptionKeyDEB5A7F7",
-            "Arn",
-          ],
-        },
-        "Environment": Object {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/standard:5.0",
-          "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": false,
-          "Type": "LINUX_CONTAINER",
-        },
-        "ServiceRole": Object {
-          "Fn::GetAtt": Array [
-            "irmaissueappdevelopmentAssetsFileRoleBFA85129",
-            "Arn",
-          ],
-        },
-        "Source": Object {
-          "BuildSpec": "{
-  \\"version\\": \\"0.2\\",
-  \\"phases\\": {
-    \\"install\\": {
-      \\"commands\\": [
-        \\"npm install -g cdk-assets@2\\"
-      ]
-    },
-    \\"build\\": {
-      \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"ddca52b20a6456be4751e51f1725158abece77136514ad409ec2a19adf20cd1f:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"f44e4667ce64c118c1f6e0b9541de91c0a24248a3cd886c459e0ec44f8d66179:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -167,7 +108,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"6cd95dd14b433ef655369cd0ef2486ebf83901104c85125740a69573137f0616:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"2d3c7b664aaec8a41ed781c92612261e6902bb2ad97dca4842a337f206bc85ef:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -285,7 +226,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"b97a0075b08e0d330577ac164f1c4f2b15c075728a1bdb705c7ad00951f7e59b:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"9e47f2beec74355123bcfe789df9534dcba5f3bd880c16c5e91059c84fb3a44d:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -403,7 +344,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"46dfcd625d4599303779f0b5fd63074570498712085abc6844877bc3e50ebb9a:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"1f5ab056aa1c4d6260702ddde4aa5f62d4cb035456817e69f39f87c13d4664e9:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -462,7 +403,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"9cd88401f1a389ea15870ab2d58ae0def70890cacf6ed6d40016f72227a75ce8:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"3803df2f6849acf50bb6577ee095a669940670e799f70a2be34893a399777bc3:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -521,7 +462,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"3803df2f6849acf50bb6577ee095a669940670e799f70a2be34893a399777bc3:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"e7c95e1a12d903d913ebdd526c735f1ac58b2024882a5562110221fe685ebe85:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -580,7 +521,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"e7c95e1a12d903d913ebdd526c735f1ac58b2024882a5562110221fe685ebe85:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"c409e6c5845f1f349df8cd84e160bf6f1c35d2b060b63e1f032f9bd39d4542cc:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -639,7 +580,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"c409e6c5845f1f349df8cd84e160bf6f1c35d2b060b63e1f032f9bd39d4542cc:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"6ddcf10002539818a9256eff3fb2b22aa09298d8f946e26ba121c175a600c44e:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -920,20 +861,6 @@ Object {
               "Resource": Object {
                 "Fn::GetAtt": Array [
                   "irmaissueappdevelopmentAssetsFileAsset10A04DC845",
-                  "Arn",
-                ],
-              },
-            },
-            Object {
-              "Action": Array [
-                "codebuild:BatchGetBuilds",
-                "codebuild:StartBuild",
-                "codebuild:StopBuild",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::GetAtt": Array [
-                  "irmaissueappdevelopmentAssetsFileAsset113E2733A1",
                   "Arn",
                 ],
               },
@@ -1716,32 +1643,6 @@ Object {
                   },
                 ],
                 "Name": "FileAsset10",
-                "RoleArn": Object {
-                  "Fn::GetAtt": Array [
-                    "irmaissueappdevelopmentCodeBuildActionRole3089A74E",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-              Object {
-                "ActionTypeId": Object {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": Object {
-                  "ProjectName": Object {
-                    "Ref": "irmaissueappdevelopmentAssetsFileAsset113E2733A1",
-                  },
-                },
-                "InputArtifacts": Array [
-                  Object {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "FileAsset11",
                 "RoleArn": Object {
                   "Fn::GetAtt": Array [
                     "irmaissueappdevelopmentCodeBuildActionRole3089A74E",

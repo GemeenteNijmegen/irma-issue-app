@@ -257,7 +257,7 @@ export class CloudfrontStack extends Stack {
    *
    * @returns string csp header values
    */
-  cspHeaderValue() {  // TODO make environment dependent (gw-test.nijmegen.nl vs prod)
+  cspHeaderValue() { // TODO make environment dependent (gw-test.nijmegen.nl vs prod)
     const cspValues = 'default-src \'self\';\
     frame-ancestors \'self\';\
     frame-src \'self\';\

@@ -56,9 +56,6 @@
         },
         {
           "spawn": "bundle:app/logout/logout.lambda"
-        },
-        {
-          "spawn": "bundle:app/result/result.lambda"
         }
       ]
     },
@@ -131,24 +128,6 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --watch"
-        }
-      ]
-    },
-    "bundle:app/result/result.lambda": {
-      "name": "bundle:app/result/result.lambda",
-      "description": "Create a JavaScript bundle from src/app/result/result.lambda.ts",
-      "steps": [
-        {
-          "exec": "esbuild --bundle src/app/result/result.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/result/result.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
-        }
-      ]
-    },
-    "bundle:app/result/result.lambda:watch": {
-      "name": "bundle:app/result/result.lambda:watch",
-      "description": "Continuously update the JavaScript bundle from src/app/result/result.lambda.ts",
-      "steps": [
-        {
-          "exec": "esbuild --bundle src/app/result/result.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/result/result.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --watch"
         }
       ]
     },

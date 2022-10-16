@@ -36,14 +36,14 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
   let brpFailed = naam == 'Onbekende gebruiker';
   let irmaFailed = false;
   let irmaSession = {
-    irmaSessionPtrU:  undefined,
+    irmaSessionPtrU: undefined,
     irmaSessionPtrQr: undefined,
-    irmaSessionToken: undefined, 
-  }
-  if(!brpFailed){
+    irmaSessionToken: undefined,
+  };
+  if (!brpFailed) {
     // Start IRMA session
     const irmaResponse = await irmaApi.startSession(brpData);
-    if(!irmaResponse || irmaResponse.error){
+    if (!irmaResponse || irmaResponse.error) {
       irmaFailed = true;
     } else {
       irmaSession.irmaSessionPtrQr = irmaResponse.sessionPtr.irmaqr;
