@@ -38,7 +38,6 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
   let irmaSession = {
     irmaSessionPtrU: undefined,
     irmaSessionPtrQr: undefined,
-    irmaSessionToken: undefined,
   };
   if (!brpFailed) {
     // Start IRMA session
@@ -48,7 +47,6 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
     } else {
       irmaSession.irmaSessionPtrQr = irmaResponse.sessionPtr.irmaqr;
       irmaSession.irmaSessionPtrU = irmaResponse.sessionPtr.u;
-      irmaSession.irmaSessionToken = irmaResponse.token;
     }
   }
 

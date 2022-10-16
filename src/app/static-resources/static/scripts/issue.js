@@ -1,4 +1,3 @@
-const sessionToken = document.getElementById("session-token").value;
 const sessionPtrU = document.getElementById("session-ptr-u").value;
 const sessionPtrQr = document.getElementById("session-ptr-qr").value;
 const irmaServer = document.getElementById("irmaServer").value;
@@ -9,12 +8,11 @@ const irmaClient = irma.newWeb({
     element: '#irma-web-form',
     session: {
         url: irmaServer,
-        start: false,
+        start: false, // No need to start session from the browser (done server-sied)
         mapping: {
             sessionPtr: r => { return { "u": sessionPtrU, "irmaqr": sessionPtrQr } },
-            sessionToken: r => { return sessionToken },
         },
-        result: false,
+        result: false, // No need to fetch session result (status success / failed is sufficient)
     },
     state: {
         serverSentEvents: false,
@@ -22,10 +20,11 @@ const irmaClient = irma.newWeb({
 });
 
 irmaClient.start() 
-    .then(() => {
+    .then(() => { // Hide QR show success message
         document.getElementById('irma-form').classList.add("hidden");
         document.getElementById('success').classList.remove("hidden");
     })
-    .catch(() => {
+    .catch(() => { // Hide QR show error message
+        document.getElementById('irma-form').classList.add("hidden");
         document.getElementById('failed-irma').classList.remove("hidden");
     });
