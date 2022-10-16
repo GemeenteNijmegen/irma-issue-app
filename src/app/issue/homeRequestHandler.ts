@@ -33,25 +33,34 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
   const brpData = await brpApi.getBrpData(bsn);
   const naam = brpData?.Persoon?.Persoonsgegevens?.Naam ? brpData.Persoon.Persoonsgegevens.Naam : 'Onbekende gebruiker';
 
-  if (naam == 'Onbekende gebruiker') {
-    // TODO fout afhandelen geen BRP data om uit te geven...
-    throw Error('Kon BRP data niet ophalen...');
+  let brpFailed = naam == 'Onbekende gebruiker';
+  let irmaFailed = false;
+  let irmaSession = {
+    irmaSessionPtrU:  undefined,
+    irmaSessionPtrQr: undefined,
+    irmaSessionToken: undefined, 
   }
-
-  // Start IRMA session
-  const irmaSession = await irmaApi.startSession(brpData);
-
-  console.info('Irma sesssion response', irmaSession);
+  if(!brpFailed){
+    // Start IRMA session
+    const irmaResponse = await irmaApi.startSession(brpData);
+    if(!irmaResponse || irmaResponse.error){
+      irmaFailed = true;
+    } else {
+      irmaSession.irmaSessionPtrQr = irmaResponse.sessionPtr.irmaqr;
+      irmaSession.irmaSessionPtrU = irmaResponse.sessionPtr.u;
+      irmaSession.irmaSessionToken = irmaResponse.token;
+    }
+  }
 
   const data = {
     title: 'opladen',
     shownav: true,
     volledigenaam: naam,
-    irmaSessionPtrU:  irmaSession.sessionPtr.u,
-    irmaSessionPtrQr: irmaSession.sessionPtr.irmaqr,
-    irmaSessionToken: irmaSession.token,
     irmaServer: `https://${irmaApi.getHost()}`,
     sessionResultEndpoint: `${process.env.APPLICATION_URL_BASE}result`,
+    brpfailed: brpFailed,
+    irmaFailed: irmaFailed,
+    ...irmaSession,
   };
 
   // render page

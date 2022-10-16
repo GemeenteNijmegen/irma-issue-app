@@ -14,16 +14,22 @@ const irmaClient = irma.newWeb({
             sessionPtr: r => { return { "u": sessionPtrU, "irmaqr": sessionPtrQr } },
             sessionToken: r => { return sessionToken },
         },
-        result: {
-            url: (o, {ptr, token}) => `${sessionResultEndpoint}?token=${token}`,
-            parseResponse: r => r.json()
-        }
+        result: false
+        //{
+        //    url: (o, {ptr, token}) => `${sessionResultEndpoint}?token=${token}`,
+        //    parseResponse: r => r.json()
+        //}
     },
     state: {
         serverSentEvents: false,
     }
 });
 
-irmaClient.start()
-    .then(result => console.log("Successful disclosure! 🎉", result))
-    .catch(error => console.error("Couldn't do what you asked 😢", error));
+irmaClient.start() 
+    .then(() => {
+        document.getElementById('irma-form').classList.add("hidden");
+        document.getElementById('success').classList.remove("hidden");
+    })
+    .catch(() => {
+        document.getElementById('failed-irma').classList.remove("hidden");
+    });
