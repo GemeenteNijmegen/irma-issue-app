@@ -1,5 +1,7 @@
 {{>header}}
 
+<style src="static/styles/irma.min.css"></style>
+
 <main>
     <!-- START: template component(s) -->
     <div class="container" id="section-1">
@@ -20,39 +22,11 @@
 </main>
 
 
+<input id="session" type="hidden" value="{{{irmaSession}}}" />
+<input id="irmaServer" type="hidden" value="{{{irmaServer}}}" />
+<input id="sessionResultEndpoint" type="hidden" value="{{{sessionResultEndpoint}}}" />
+
 <script src="static/scripts/irma.js"></script>
-
-<script>
-
-    const session = JSON.parse('{{{irmaSession}}}');
-    const irmaServer = '{{{irmaServer}}}';
-    const sessionResultEndpoint = '{{{sessionResultEndpoint}}}';
-
-    const exampleWeb = irma.newWeb({
-            debugging: true,
-            element: '#irma-web-form',
-            session: {
-                url: irmaServer,
-                start: false,
-                mapping: {
-                    sessionPtr: r => { return session.sessionPtr },
-                    sessionToken: r => { return session.token },
-                },
-                result: {
-                    url:           (o, {sessionPtr, sessionToken}) => `${sessionResultEndpoint}?token=${sessionToken}`,
-                    parseResponse: r => r.json()
-                }
-            },
-            state: {
-                serverSentEvents: false,
-            }
-
-        });
-
-        exampleWeb.start()
-            .then(result => console.log("Successful disclosure! 🎉", result))
-            .catch(error => console.error("Couldn't do what you asked 😢", error));
-
-</script>
+<script src="static/scripts/issue.js"></script>
 
 {{>footer}}

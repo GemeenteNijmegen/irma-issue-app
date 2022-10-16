@@ -4,7 +4,6 @@ import {
 } from '@aws-sdk/client-secrets-manager';
 import { aws4Interceptor } from 'aws4-axios';
 import * as axios from 'axios';
-// import { parse, differenceInYears } from 'date-fns';
 
 export class IrmaApi {
 
@@ -76,7 +75,7 @@ export class IrmaApi {
       },
     };
 
-    return await this.makeSignedRequest(irmaIssueRequest, 'De IRMA sessie kon niet worden gestart.');
+    return this.makeSignedRequest(irmaIssueRequest, 'De IRMA sessie kon niet worden gestart.');
 
   }
 
@@ -90,7 +89,7 @@ export class IrmaApi {
       },
     };
 
-    return await this.makeSignedRequest(sessionResultRequest, 'Kon de sessie resultaten niet ophalen.');
+    return this.makeSignedRequest(sessionResultRequest, 'Kon de sessie resultaten niet ophalen.');
 
   }
 

@@ -28,7 +28,6 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'openid-client',
     '@types/cookie',
     'cookie',
-    'date-fns',
 
   ], /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
