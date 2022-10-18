@@ -55,7 +55,6 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
     shownav: true,
     volledigenaam: naam,
     irmaServer: `https://${irmaApi.getHost()}`,
-    sessionResultEndpoint: `${process.env.APPLICATION_URL_BASE}result`,
     brpfailed: brpFailed,
     irmaFailed: irmaFailed,
     ...irmaSession,

@@ -1,7 +1,6 @@
 const sessionPtrU = document.getElementById("session-ptr-u").getAttribute('data');
 const sessionPtrQr = document.getElementById("session-ptr-qr").getAttribute('data');
 const irmaServer = document.getElementById("irmaServer").getAttribute('data');
-const sessionResultEndpoint = document.getElementById("sessionResultEndpoint").getAttribute('data');
 
 const irmaClient = irma.newWeb({
     debugging: true,
