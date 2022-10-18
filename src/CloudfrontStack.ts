@@ -171,6 +171,7 @@ export class CloudfrontStack extends Stack {
       logBucket: this.logBucket(),
       minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2021,
       defaultRootObject: 'issue',
+      comment: 'IRMA issue app',
     });
     return distribution;
   }
