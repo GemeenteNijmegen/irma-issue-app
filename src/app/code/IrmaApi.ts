@@ -125,8 +125,8 @@ export class IrmaApi {
     const gegevens = brpData.Persoon.Persoonsgegevens;
 
     const currentYear = new Date().getFullYear();
-    const date5ytd = new Date().setFullYear(currentYear + 5);
-    const date1ytd = new Date().setFullYear(currentYear + 1);
+    const date5ytd = Math.floor(new Date().setFullYear(currentYear + 5) / 1000);
+    const date1ytd = Math.floor(new Date().setFullYear(currentYear + 1) / 1000);
     console.info("YTD", date1ytd, "5 YTD", date5ytd);
 
     // Return the issue request
