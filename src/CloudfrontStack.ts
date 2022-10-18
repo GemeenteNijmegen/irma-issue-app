@@ -269,7 +269,7 @@ export class CloudfrontStack extends Stack {
       'font-src \'self\' https://componenten.nijmegen.nl https://fonts.gstatic.com;',
       'img-src \'self\' https://componenten.nijmegen.nl data: https://*.siteimproveanalytics.io;',
       'object-src \'none\';',
-    ].join();
+    ].join(' ');
     return cspValues.replace(/[ ]+/g, ' ').trim();
   }
 
