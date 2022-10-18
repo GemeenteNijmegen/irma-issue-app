@@ -87,7 +87,7 @@ export class CloudfrontStack extends Stack {
    * Get the certificate ARN from parameter store in us-east-1
    * @returns string Certificate ARN
    */
-  // private wafAclId() {
+  // private wafAclId() { // TODO couple CF en WAF
   //   const parameters = new RemoteParameters(this, 'waf-params', {
   //     path: `${Statics.wafPath}/`,
   //     region: 'us-east-1',
@@ -257,18 +257,19 @@ export class CloudfrontStack extends Stack {
    *
    * @returns string csp header values
    */
-  cspHeaderValue() { // TODO make environment dependent (gw-test.nijmegen.nl vs prod)
-    const cspValues = 'default-src \'self\';\
-    frame-ancestors \'self\';\
-    frame-src \'self\';\
-    connect-src \'self\' https://componenten.nijmegen.nl https://gw-test.nijmegen.nl;\
-    style-src \'self\' https://componenten.nijmegen.nl https://fonts.googleapis.com https://fonts.gstatic.com \
-    \'sha256-hS1LM/30PjUBJK3kBX9Vm9eOAhQNCiNhf/SCDnUqu14=\' \'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=\' \'sha256-OTeu7NEHDo6qutIWo0F2TmYrDhsKWCzrUgGoxxHGJ8o=\';\
-    script-src \'self\' https://componenten.nijmegen.nl https://siteimproveanalytics.com;\
-    font-src \'self\' https://componenten.nijmegen.nl https://fonts.gstatic.com;\
-    img-src \'self\' https://componenten.nijmegen.nl data: https://*.siteimproveanalytics.io;\
-    object-src \'none\';\
-    ';
+  cspHeaderValue() {
+    const irmaHost = SSM.StringParameter.valueForStringParameter(this, Statics.ssmIrmaApiHost);
+    const cspValues = [
+      'default-src \'self\';',
+      'frame-ancestors \'self\';',
+      'frame-src \'self\';',
+      `connect-src \'self\' https://componenten.nijmegen.nl https://${irmaHost};`,
+      'style-src \'self\' https://componenten.nijmegen.nl https://fonts.googleapis.com https://fonts.gstatic.com \'sha256-hS1LM/30PjUBJK3kBX9Vm9eOAhQNCiNhf/SCDnUqu14=\' \'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=\' \'sha256-OTeu7NEHDo6qutIWo0F2TmYrDhsKWCzrUgGoxxHGJ8o=\';',
+      'script-src \'self\' https://componenten.nijmegen.nl https://siteimproveanalytics.com;',
+      'font-src \'self\' https://componenten.nijmegen.nl https://fonts.gstatic.com;',
+      'img-src \'self\' https://componenten.nijmegen.nl data: https://*.siteimproveanalytics.io;',
+      'object-src \'none\';',
+    ].join();
     return cspValues.replace(/[ ]+/g, ' ').trim();
   }
 

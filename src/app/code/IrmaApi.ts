@@ -127,6 +127,7 @@ export class IrmaApi {
     const currentYear = new Date().getFullYear();
     const date5ytd = new Date().setFullYear(currentYear + 5);
     const date1ytd = new Date().setFullYear(currentYear + 1);
+    console.info("YTD", date1ytd, "5 YTD", date5ytd);
 
     // Return the issue request
     return {
