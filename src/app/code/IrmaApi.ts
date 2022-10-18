@@ -124,13 +124,17 @@ export class IrmaApi {
     // Get persoonsgegevens
     const gegevens = brpData.Persoon.Persoonsgegevens;
 
+    const currentYear = new Date().getFullYear();
+    const date5ytd = new Date().setFullYear(currentYear + 5);
+    const date1ytd = new Date().setFullYear(currentYear + 1);
+
     // Return the issue request
     return {
       type: 'issuing',
       credentials: [
         {
           credential: this.demo ? 'irma-demo.gemeente.address' : 'irma.gemeente.address',
-          validity: 1678455605, // TODO check if up to date
+          validity: date1ytd,
           attributes: {
             street: brpData.Persoon.Adres.Straat,
             houseNumber: brpData.Persoon.Adres.Huisnummer,
@@ -141,7 +145,7 @@ export class IrmaApi {
         },
         {
           credential: this.demo ? 'irma-demo.gemeente.personalData' : 'irma.gemeente.personalData',
-          validity: 1678455605, // TODO check if up to date
+          validity: date5ytd,
           attributes: {
             initials: gegevens.Voorletters,
             firstnames: gegevens.Voornamen,
