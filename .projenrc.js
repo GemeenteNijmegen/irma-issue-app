@@ -70,14 +70,11 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'test/playwright/report',
     'test/playwright/screenshots',
   ],
+  bundlerOptions: {
+    loaders: {
+      mustache: 'text',
+    },
+  },
 });
-
-// During bundling copy the templates to lambda deployment directories
-project.tasks.tryFind('bundle:app/issue/issue.lambda').reset();
-project.tasks.tryFind('bundle:app/login/login.lambda').reset();
-project.tasks.tryFind('bundle:app/logout/logout.lambda').reset();
-project.tasks.tryFind('bundle:app/issue/issue.lambda').exec('esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
-project.tasks.tryFind('bundle:app/login/login.lambda').exec('esbuild --bundle src/app/login/login.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
-project.tasks.tryFind('bundle:app/logout/logout.lambda').exec('esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text');
 
 project.synth();
