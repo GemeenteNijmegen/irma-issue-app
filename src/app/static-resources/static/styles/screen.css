@@ -80,6 +80,10 @@ main {
     min-height: 50vh;
 }
 
+.navbar {
+    background: #009aff;
+}
+
 .card-number {
     display: flex;
     flex-direction: row;
