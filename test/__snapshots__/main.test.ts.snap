@@ -344,7 +344,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"5edea00fcaf6ec28b82178ad43db3213da3db10ef352d89a2131e5ed70815129:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"8b736e6acce5fb2e4513d278d2c56e0dc01f05c49bdc4298d538d3e3d2d37818:test-eu-west-1\\\\\\"\\"
       ]
     }
   }

@@ -3,7 +3,7 @@ import {
   GetSecretValueCommand,
 } from '@aws-sdk/client-secrets-manager';
 import { aws4Interceptor } from 'aws4-axios';
-import * as axios from 'axios';
+import axios, { Axios, AxiosRequestConfig } from 'axios';
 
 export class IrmaApi {
 
@@ -65,7 +65,7 @@ export class IrmaApi {
 
   async startSession(brpData: any) {
 
-    const irmaIssueRequest: axios.AxiosRequestConfig = {
+    const irmaIssueRequest: AxiosRequestConfig = {
       method: 'POST',
       url: `https://${this.host}/session`,
       data: this.constructIrmaIssueRequest(brpData),
@@ -79,43 +79,47 @@ export class IrmaApi {
 
   }
 
-  async getSessionResult(token: string) {
-
-    const sessionResultRequest: axios.AxiosRequestConfig = {
-      method: 'GET',
-      url: `https://${this.host}/session/${token}/result`,
-      headers: {
-        'irma-authorization': this.apiKey,
-      },
-    };
-
-    return this.makeSignedRequest(sessionResultRequest, 'Kon de sessie resultaten niet ophalen.');
-
+  private getSigningClient(): Axios {
+    const interceptor = aws4Interceptor({
+      region: 'eu-west-1',
+      service: 'execute-api',
+    }, this.credentials);
+    const client = new Axios();
+    client.interceptors.request.use(interceptor);
+    return client;
   }
 
-  async makeSignedRequest(request: axios.AxiosRequestConfig, errorMsg: string) {
+  private async makeSignedRequest(request: AxiosRequestConfig, errorMsg: string) {
+    console.debug('Starting signed request:', request);
+
     try {
-      console.debug('Making signed request: ', request);
+      const client = this.getSigningClient();
+      let resp = await client.request(request);
 
-      const interceptor = aws4Interceptor({
-        region: 'eu-west-1',
-        service: 'execute-api',
-      }, this.credentials);
-      axios.default.interceptors.request.use(interceptor);
-
-      let resp = await axios.default.request(request);
       if (resp.data) {
-        console.debug('Session from IRMA server', resp.data);
+        console.debug('Response data:', resp.data);
         return resp.data;
-      } else {
-        throw Error(errorMsg);
       }
+      throw Error(errorMsg);
     } catch (error: any) {
-      console.error(error);
-      const data = {
-        error: error.message,
-      };
-      return data;
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(`http status for ${request.url}: ${error.response?.status}`);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.error(error === null || error === void 0 ? void 0 : error.code);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error(error.message);
+        }
+      } else {
+        console.error(error.message);
+      }
+      return { error: errorMsg };
     }
   }
 

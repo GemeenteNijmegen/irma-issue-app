@@ -11,20 +11,22 @@ export class BrpApi {
     this.client = client ? client : new ApiClient();
   }
 
+  /**
+   * Bevraag de IRMA-BRP API
+   * @param bsn the bsn to get data for
+   * @returns the API response data of {error: ""}
+   */
   async getBrpData(bsn: string) {
     try {
       const aBsn = new Bsn(bsn);
       let data = await this.client.requestData(this.endpoint, { bsn: aBsn.bsn }, { 'Content-type': 'application/json' });
       if (data?.Persoon) {
         return data;
-      } else {
-        throw new Error('Er konden geen persoonsgegevens opgehaald worden.');
       }
+      throw new Error('Het ophalen van persoonsgegevens is misgegaan.');
     } catch (error: any) {
-      const data = {
-        error: error.message,
-      };
-      return data;
+      console.log('BRP API:', error.message);
+      return { error: error.message };
     }
   }
 }
