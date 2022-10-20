@@ -80,6 +80,9 @@ export class IrmaApi {
   }
 
   private getSigningClient(): Axios {
+    if(!this.credentials.accessKeyId || !this.credentials.secretAccessKey){
+      throw new Error("API client is not configured propperly, missing AWS signature credentials");
+    }
     const interceptor = aws4Interceptor({
       region: 'eu-west-1',
       service: 'execute-api',
@@ -90,7 +93,7 @@ export class IrmaApi {
   }
 
   private async makeSignedRequest(request: AxiosRequestConfig, errorMsg: string) {
-    console.debug('Starting signed request:', request);
+    console.debug('Starting signed request:', JSON.stringify(request, null, 4));
 
     try {
       const client = this.getSigningClient();
@@ -128,10 +131,10 @@ export class IrmaApi {
     // Get persoonsgegevens
     const gegevens = brpData.Persoon.Persoonsgegevens;
 
+    // Calculate validity
     const currentYear = new Date().getFullYear();
     const date5ytd = Math.floor(new Date().setFullYear(currentYear + 5) / 1000);
     const date1ytd = Math.floor(new Date().setFullYear(currentYear + 1) / 1000);
-    console.info('YTD', date1ytd, '5 YTD', date5ytd);
 
     // Return the issue request
     return {
