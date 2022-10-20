@@ -2,8 +2,8 @@ import { writeFile } from 'fs';
 import * as path from 'path';
 import { DynamoDBClient, GetItemCommandOutput, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
-import { handler } from '../src/app/login/login.lambda';
-import { handleLoginRequest } from '../src/app/login/loginRequestHandler';
+import { handler } from '../../src/app/login/login.lambda';
+import { handleLoginRequest } from '../../src/app/login/loginRequestHandler';
 
 const ddbMock = mockClient(DynamoDBClient);
 

@@ -1,6 +1,6 @@
 import Mustache from 'mustache';
-import * as footer from '../templates/footer.mustache';
-import * as header from '../templates/header.mustache';
+import * as footer from './footer.mustache';
+import * as header from './header.mustache';
 
 /**
  * Render data in a mustache template

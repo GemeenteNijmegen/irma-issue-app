@@ -1,7 +1,7 @@
 import { writeFile } from 'fs';
 import * as path from 'path';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { handleLogoutRequest } from '../src/app/logout/handleLogoutRequest';
+import { handleLogoutRequest } from '../../src/app/logout/handleLogoutRequest';
 
 const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
 

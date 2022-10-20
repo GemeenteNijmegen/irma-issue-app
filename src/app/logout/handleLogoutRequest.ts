@@ -3,7 +3,7 @@ import { Session } from '@gemeentenijmegen/session';
 import * as cookie from 'cookie';
 import render from '../code/Render';
 
-import * as template from '../templates/logout.mustache';
+import * as template from './logout.mustache';
 
 function htmlResponse(body: string, cookies: string[] = []) {
   const response = {

@@ -1,7 +1,7 @@
 import { DynamoDBClient, GetItemCommand, GetItemCommandOutput } from '@aws-sdk/client-dynamodb';
 import { SecretsManagerClient, GetSecretValueCommandOutput, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import { mockClient } from 'aws-sdk-client-mock';
-import { handleRequest } from '../src/app/auth/handleRequest';
+import { handleRequest } from '../../src/app/auth/handleRequest';
 
 beforeAll(() => {
 

@@ -3,7 +3,7 @@ import { Session } from '@gemeentenijmegen/session';
 import { OpenIDConnect } from '../code/OpenIDConnect';
 import render from '../code/Render';
 
-import * as template from '../templates/login.mustache';
+import * as template from './login.mustache';
 
 function redirectResponse(location: string, status = 302) {
   const response = {

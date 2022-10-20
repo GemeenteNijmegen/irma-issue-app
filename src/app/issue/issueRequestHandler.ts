@@ -3,8 +3,8 @@ import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Session } from '@gemeentenijmegen/session';
 import { IrmaApi } from '../code/IrmaApi';
 import render from '../code/Render';
-import * as template from '../templates/issue.mustache';
 import { BrpApi } from './BrpApi';
+import * as template from './issue.mustache';
 
 
 function redirectResponse(location: string, code = 302) {
@@ -33,20 +33,24 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
   const brpData = await brpApi.getBrpData(bsn);
   const naam = brpData?.Persoon?.Persoonsgegevens?.Naam ? brpData.Persoon.Persoonsgegevens.Naam : 'Onbekende gebruiker';
 
-  let brpFailed = naam == 'Onbekende gebruiker';
-  let irmaFailed = false;
+  let error = undefined;
+  if (brpData.error) {
+    error = 'Het ophalen van uw persoonsgegevens is mis gegaan.';
+  }
+
   let irmaSession = {
     irmaSessionPtrU: undefined,
     irmaSessionPtrQr: undefined,
   };
-  if (!brpFailed) {
+
+  if (!error) {
     // Start IRMA session
     const irmaResponse = await irmaApi.startSession(brpData);
-    if (!irmaResponse || irmaResponse.error) {
-      irmaFailed = true;
-    } else {
+    if (!irmaResponse.error) {
       irmaSession.irmaSessionPtrQr = irmaResponse.sessionPtr.irmaqr;
       irmaSession.irmaSessionPtrU = irmaResponse.sessionPtr.u;
+    } else {
+      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in IRMA.';
     }
   }
 
@@ -55,8 +59,7 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
     shownav: true,
     volledigenaam: naam,
     irmaServer: `https://${irmaApi.getHost()}`,
-    brpfailed: brpFailed,
-    irmaFailed: irmaFailed,
+    error: error,
     ...irmaSession,
   };
 
