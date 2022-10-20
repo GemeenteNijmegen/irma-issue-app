@@ -17,7 +17,7 @@ function redirectResponse(location: string, code = 302) {
   };
 }
 
-export async function homeRequestHandler(cookies: string, brpClient: ApiClient, irmaApi: IrmaApi, dynamoDBClient: DynamoDBClient) {
+export async function issueRequestHandler(cookies: string, brpClient: ApiClient, irmaApi: IrmaApi, dynamoDBClient: DynamoDBClient) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() == true) {

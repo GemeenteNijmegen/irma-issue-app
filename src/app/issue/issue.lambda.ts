@@ -1,7 +1,7 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { IrmaApi } from '../code/IrmaApi';
-import { homeRequestHandler } from './homeRequestHandler';
+import { issueRequestHandler } from './issueRequestHandler';
 
 const dynamoDBClient = new DynamoDBClient({});
 
@@ -30,7 +30,7 @@ exports.handler = async (event: any) => {
     const params = parseEvent(event);
     await initPromise;
 
-    return await homeRequestHandler(params.cookies, brpClient, irmaApi, dynamoDBClient);
+    return await issueRequestHandler(params.cookies, brpClient, irmaApi, dynamoDBClient);
 
   } catch (err) {
     console.error(err);
