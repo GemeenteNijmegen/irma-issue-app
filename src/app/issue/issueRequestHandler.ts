@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Session } from '@gemeentenijmegen/session';
@@ -54,6 +55,10 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
     }
   }
 
+  if (!error) { // Only log the issue event when successfully issued
+    registerIssueEvent(brpData);
+  }
+
   const data = {
     title: 'opladen',
     shownav: true,
@@ -78,3 +83,17 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
   };
 }
 
+function registerIssueEvent(brpData: any) {
+  const hashedBsn = crypto.createHash('sha256').update(brpData.Persoon.BSN.BSN).digest('hex');
+  const event = {
+    timestamp: Date.now(),
+    gemeente: brpData.Persoon.Adres.Gemeente,
+    subject: hashedBsn,
+  };
+  // Normally log to stdout
+  console.log(event);
+  // Directly write to stdout for easy parsing in cloudwatch
+  const serializedEvent = JSON.stringify(event);
+  const line = `ISSUE_EVENT ${serializedEvent}\n`;
+  process.stdout.write(line);
+}
