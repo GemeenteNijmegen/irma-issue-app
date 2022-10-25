@@ -1,21 +1,9 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import * as cookie from 'cookie';
 import render from '../code/Render';
-
 import * as template from './logout.mustache';
-
-function htmlResponse(body: string, cookies: string[] = []) {
-  const response = {
-    statusCode: 200,
-    body: body,
-    headers: {
-      'Content-type': 'text/html',
-    },
-    cookies: cookies,
-  };
-  return response;
-}
 
 export async function handleLogoutRequest(cookies: string, dynamoDBClient: DynamoDBClient) {
   let session = new Session(cookies, dynamoDBClient);
@@ -30,5 +18,6 @@ export async function handleLogoutRequest(cookies: string, dynamoDBClient: Dynam
     httpOnly: true,
     secure: true,
   });
-  return htmlResponse(html, [emptyCookie]);
+
+  return Response.html(html, 200, emptyCookie);
 }

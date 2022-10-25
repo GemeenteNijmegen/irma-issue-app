@@ -69,6 +69,7 @@
     "@aws-sdk/client-ssm": "^3.190.0",
     "@aws-solutions-constructs/aws-lambda-dynamodb": "2.26.0",
     "@gemeentenijmegen/apiclient": "^0.0.0",
+    "@gemeentenijmegen/apigateway-http": "^0.0.1",
     "@gemeentenijmegen/session": "^0.0.5",
     "@gemeentenijmegen/utils": "^0.0.0",
     "@privacybydesign/irma-frontend": "^0.4.3",

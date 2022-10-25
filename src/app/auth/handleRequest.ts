@@ -1,23 +1,13 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import { OpenIDConnect } from '../code/OpenIDConnect';
-
-function redirectResponse(location: string, code = 302, cookies: string[] = []) {
-  return {
-    statusCode: code,
-    body: '',
-    headers: {
-      Location: location,
-    },
-    cookies: cookies,
-  };
-}
 
 export async function handleRequest(cookies: string, queryStringParamCode: string, queryStringParamState: string, dynamoDBClient: DynamoDBClient) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.sessionId === false) {
-    return redirectResponse('/login');
+    return Response.redirect('/login');
   }
   const state = session.getValue('state');
   const OIDC = new OpenIDConnect();
@@ -29,11 +19,11 @@ export async function handleRequest(cookies: string, queryStringParamCode: strin
         bsn: { S: claims.sub },
       });
     } else {
-      return redirectResponse('/login');
+      return Response.redirect('/login');
     }
   } catch (error: any) {
     console.error(error.message);
-    return redirectResponse('/login');
+    return Response.redirect('/login');
   }
-  return redirectResponse('/', 302, [session.getCookie()]);
+  return Response.redirect('/', 302, session.getCookie());
 }

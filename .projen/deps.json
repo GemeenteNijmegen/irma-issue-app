@@ -147,6 +147,10 @@
       "type": "runtime"
     },
     {
+      "name": "@gemeentenijmegen/apigateway-http",
+      "type": "runtime"
+    },
+    {
       "name": "@gemeentenijmegen/session",
       "type": "runtime"
     },

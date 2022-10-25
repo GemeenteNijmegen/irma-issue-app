@@ -46,7 +46,7 @@ test('Return login page with correct link', async () => {
   expect(result.body).toMatch(`${process.env.AUTH_URL_BASE}/broker/sp/oidc/authenticate`);
   expect(result.body).toMatch(encodeURIComponent(`${process.env.APPLICATION_URL_BASE}auth`));
   expect(result.statusCode).toBe(200);
-  writeFile(path.join(__dirname, 'output', 'test.html'), result.body, () => { });
+  writeFile(path.join(__dirname, 'output', 'test.html'), result.body ?? '', () => { });
 });
 
 test('No redirect if session cookie doesn\'t exist', async () => {
@@ -81,11 +81,11 @@ test('Redirect to home if already logged in', async () => {
   const sessionId = '12345';
   const result = await handleLoginRequest(`session=${sessionId}`, dynamoDBClient);
   expect(result.statusCode).toBe(302);
-  if(!('Location' in result.headers)){
-    expect('Location' in result.headers).toBe(true);
+  if(!('Location' in (result.headers ?? {}))){
+    expect('Location' in (result.headers ?? {})).toBe(true);
     return;
   }
-  expect(result.headers.Location).toBe('/');
+  expect(result.headers?.Location).toBe('/');
 });
 
 test('Unknown session returns login page', async () => {

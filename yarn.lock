@@ -1112,6 +1112,13 @@
     "@aws-sdk/client-ssm" "^3.105.0"
     axios "^0.27.2"
 
+"@gemeentenijmegen/apigateway-http@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@gemeentenijmegen/apigateway-http/-/apigateway-http-0.0.1.tgz#3563031bff3d1d706c3aea1f4344c7309895ce1e"
+  integrity sha512-tx/30nE8pvrGAGevvv4ZpG2qQ9NjRfcdeb68iD5fiZDPPx4JuDwdk71Y+r03Spg0j+rj7X3QGUgc9aeV32epqQ==
+  dependencies:
+    "@types/aws-lambda" "^8.10.108"
+
 "@gemeentenijmegen/session@^0.0.5":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@gemeentenijmegen/session/-/session-0.0.5.tgz#b83dff39293af26484502c5f92735cd6a251fcb1"

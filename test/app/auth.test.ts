@@ -81,7 +81,7 @@ test('Successful auth redirects to home', async () => {
 
   const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient);
   expect(result.statusCode).toBe(302);
-  expect(result.headers.Location).toBe('/');
+  expect(result.headers?.Location).toBe('/');
 });
 
 
@@ -103,7 +103,7 @@ test('Successful auth creates new session', async () => {
 
   const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient);
   expect(result.statusCode).toBe(302);
-  expect(result.headers.Location).toBe('/');
+  expect(result.headers?.Location).toBe('/');
   expect(result.cookies).toContainEqual(expect.stringContaining('session='));
 });
 
@@ -111,7 +111,7 @@ test('No session redirects to login', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
   const result = await handleRequest('', 'state', 'state', dynamoDBClient);
   expect(result.statusCode).toBe(302);
-  expect(result.headers.Location).toBe('/login');
+  expect(result.headers?.Location).toBe('/login');
 });
 
 
@@ -132,6 +132,6 @@ test('Incorrect state errors', async () => {
   const logSpy = jest.spyOn(console, 'error');
   const result = await handleRequest(`session=${sessionId}`, '12345', 'returnedstate', dynamoDBClient);
   expect(result.statusCode).toBe(302);
-  expect(result.headers.Location).toBe('/login');
+  expect(result.headers?.Location).toBe('/login');
   expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('state does not match session state'));
 });

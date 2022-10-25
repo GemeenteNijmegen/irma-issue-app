@@ -20,6 +20,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '@gemeentenijmegen/apiclient',
     '@gemeentenijmegen/session',
     '@gemeentenijmegen/utils',
+    '@gemeentenijmegen/apigateway-http',
     '@privacybydesign/irma-frontend',
     'axios@^0.27.2', // TODO upgrade however aws4-axios is not yet compatible with v1
     'mustache',

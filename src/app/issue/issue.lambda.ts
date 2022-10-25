@@ -1,5 +1,6 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ApiClient } from '@gemeentenijmegen/apiclient';
+import { Response } from '@gemeentenijmegen/apigateway-http';
 import { IrmaApi } from '../code/IrmaApi';
 import { issueRequestHandler } from './issueRequestHandler';
 
@@ -34,8 +35,6 @@ exports.handler = async (event: any) => {
 
   } catch (err) {
     console.error(err);
-    return {
-      statusCode: 500,
-    };
+    return Response.error();
   }
 };

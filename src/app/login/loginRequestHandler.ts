@@ -1,37 +1,16 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import { OpenIDConnect } from '../code/OpenIDConnect';
 import render from '../code/Render';
-
 import * as template from './login.mustache';
-
-function redirectResponse(location: string, status = 302) {
-  const response = {
-    statusCode: status,
-    headers: {
-      Location: location,
-    },
-  };
-  return response;
-}
-function htmlResponse(body: string, cookies: string[]=[]) {
-  const response = {
-    statusCode: 200,
-    body: body,
-    headers: {
-      'Content-type': 'text/html',
-    },
-    cookies: cookies,
-  };
-  return response;
-}
 
 export async function handleLoginRequest(cookies: string, dynamoDBClient: DynamoDBClient) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() === true) {
     console.debug('redirect to home');
-    return redirectResponse('/');
+    return Response.redirect('/');
   }
   let OIDC = new OpenIDConnect();
   const state = OIDC.generateState();
@@ -47,5 +26,5 @@ export async function handleLoginRequest(cookies: string, dynamoDBClient: Dynamo
   };
   const html = await render(data, template.default);
   const newCookies = [session.getCookie()];
-  return htmlResponse(html, newCookies);
+  return Response.html(html, 200, newCookies);
 }
