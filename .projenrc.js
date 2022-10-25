@@ -28,6 +28,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'openid-client',
     '@types/cookie',
     'cookie',
+    '@types/aws-lambda',
 
   ], /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
@@ -36,6 +37,8 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '@playwright/test',
     'aws-sdk-client-mock',
     'jest-raw-loader',
+    'axios-mock-adapter',
+    'jest-aws-client-mock',
   ], /* Build dependencies for this module. */
   depsUpgradeOptions: {
     workflowOptions: {

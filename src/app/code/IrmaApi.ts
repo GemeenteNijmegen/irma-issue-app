@@ -1,9 +1,6 @@
-import {
-  SecretsManagerClient,
-  GetSecretValueCommand,
-} from '@aws-sdk/client-secrets-manager';
 import { aws4Interceptor } from 'aws4-axios';
-import axios, { Axios, AxiosRequestConfig } from 'axios';
+import axios, { Axios } from 'axios';
+import { AwsUtil } from './AwsUtil';
 
 export class IrmaApi {
 
@@ -33,10 +30,11 @@ export class IrmaApi {
     if (!process.env.IRMA_API_ACCESS_KEY_ID_ARN || !process.env.IRMA_API_SECRET_KEY_ARN || !process.env.IRMA_API_KEY_ARN) {
       throw Error('Clould not initialize IRMA API client');
     }
-    this.apiKey = await this.getSecret(process.env.IRMA_API_KEY_ARN);
+    const util = new AwsUtil();
+    this.apiKey = await util.getSecret(process.env.IRMA_API_KEY_ARN);
     this.credentials = {
-      accessKeyId: await this.getSecret(process.env.IRMA_API_ACCESS_KEY_ID_ARN),
-      secretAccessKey: await this.getSecret(process.env.IRMA_API_SECRET_KEY_ARN),
+      accessKeyId: await util.getSecret(process.env.IRMA_API_ACCESS_KEY_ID_ARN),
+      secretAccessKey: await util.getSecret(process.env.IRMA_API_SECRET_KEY_ARN),
     };
   }
 
@@ -50,55 +48,38 @@ export class IrmaApi {
     };
   }
 
-  async getSecret(arn: string) {
-    if (!arn) {
-      throw new Error('No ARN provided');
-    }
-    const secretsManagerClient = new SecretsManagerClient({});
-    const command = new GetSecretValueCommand({ SecretId: arn });
-    const data = await secretsManagerClient.send(command);
-    if (data?.SecretString) {
-      return data.SecretString;
-    }
-    throw new Error('No secret value found');
-  }
 
   async startSession(brpData: any) {
-
-    const irmaIssueRequest: AxiosRequestConfig = {
-      method: 'POST',
-      url: `https://${this.host}/session`,
-      data: this.constructIrmaIssueRequest(brpData),
-      headers: {
-        'irma-authorization': this.apiKey,
-        'Content-type': 'application/json',
-      },
-    };
-
-    return this.makeSignedRequest(irmaIssueRequest, 'De IRMA sessie kon niet worden gestart.');
-
+    const irmaIssueRequest = this.constructIrmaIssueRequest(brpData);
+    return this.doSignedPostRequest('session', irmaIssueRequest, 'De IRMA sessie kon niet worden gestart.');
   }
 
   private getSigningClient(): Axios {
-    if(!this.credentials.accessKeyId || !this.credentials.secretAccessKey){
-      throw new Error("API client is not configured propperly, missing AWS signature credentials");
+    if (!this.credentials.accessKeyId || !this.credentials.secretAccessKey) {
+      throw new Error('API client is not configured propperly, missing AWS signature credentials');
     }
     const interceptor = aws4Interceptor({
       region: 'eu-west-1',
       service: 'execute-api',
     }, this.credentials);
-    const client = new Axios();
+    const client = axios.create({
+      baseURL: `https://${this.host}`,
+      timeout: 2000,
+      headers: {
+        'irma-authorization': this.apiKey,
+        'Content-type': 'application/json',
+      },
+    });
     client.interceptors.request.use(interceptor);
     return client;
   }
 
-  private async makeSignedRequest(request: AxiosRequestConfig, errorMsg: string) {
-    console.debug('Starting signed request:', JSON.stringify(request, null, 4));
+  private async doSignedPostRequest(path: string, data: any, errorMsg: string) {
+    console.debug('Starting signed POST request:', path);
 
     try {
       const client = this.getSigningClient();
-      let resp = await client.request(request);
-
+      const resp = await client.post(path, data);
       if (resp.data) {
         console.debug('Response data:', resp.data);
         return resp.data;
@@ -109,7 +90,8 @@ export class IrmaApi {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          console.log(`http status for ${request.url}: ${error.response?.status}`);
+          console.log(`http status for ${path}: ${error.response?.status}`);
+          console.debug(error.response.data);
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -120,13 +102,13 @@ export class IrmaApi {
           console.error(error.message);
         }
       } else {
-        console.error(error.message);
+        console.error('Non axios error occured:', error);
       }
       return { error: errorMsg };
     }
   }
 
-  constructIrmaIssueRequest(brpData: any) {
+  private constructIrmaIssueRequest(brpData: any) {
 
     // Get persoonsgegevens
     const gegevens = brpData.Persoon.Persoonsgegevens;

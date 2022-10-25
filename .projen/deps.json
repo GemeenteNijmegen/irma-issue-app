@@ -33,6 +33,10 @@
       "type": "build"
     },
     {
+      "name": "axios-mock-adapter",
+      "type": "build"
+    },
+    {
       "name": "copyfiles",
       "type": "build"
     },
@@ -59,6 +63,10 @@
     },
     {
       "name": "jest",
+      "type": "build"
+    },
+    {
+      "name": "jest-aws-client-mock",
       "type": "build"
     },
     {
@@ -148,6 +156,10 @@
     },
     {
       "name": "@privacybydesign/irma-frontend",
+      "type": "runtime"
+    },
+    {
+      "name": "@types/aws-lambda",
       "type": "runtime"
     },
     {

@@ -49,7 +49,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"82f13799fa89337e813b102f346f9b3c362635f1f1033282e8b76f7b1acf56f3:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"6a9342a1f3dae6eabcacd14edb4f42d43164026414460dbd7911fe751e01f50f:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
