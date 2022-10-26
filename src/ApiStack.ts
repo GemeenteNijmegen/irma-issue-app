@@ -12,9 +12,11 @@ import { LogoutFunction } from './app/logout/logout-function';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
+import { StatisticsTable } from './StatisticsTable';
 
 export interface ApiStackProps extends StackProps {
   sessionsTable: SessionsTable;
+  statisticsTable: StatisticsTable;
   branch: string;
   addNijmegenDomain: boolean;
 }
@@ -26,11 +28,13 @@ export interface ApiStackProps extends StackProps {
  */
 export class ApiStack extends Stack {
   private sessionsTable: Table;
+  private statisticsTable: Table;
   api: apigatewayv2.HttpApi;
 
   constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id);
     this.sessionsTable = props.sessionsTable.table;
+    this.statisticsTable = props.statisticsTable.table;
     this.api = new apigatewayv2.HttpApi(this, 'irma-issue-api', {
       description: 'IRMA issue webapplicatie',
     });
@@ -124,6 +128,7 @@ export class ApiStack extends Stack {
     secretIrmaApiAccessKeyId.grantRead(issueFunction.lambda);
     secretIrmaApiSecretKey.grantRead(issueFunction.lambda);
     secretIrmaApiKey.grantRead(issueFunction.lambda);
+    this.statisticsTable.grantReadWriteData(issueFunction.lambda.grantPrincipal);
 
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('irma-issue-login', loginFunction.lambda),
