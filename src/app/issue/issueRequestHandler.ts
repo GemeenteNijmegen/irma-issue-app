@@ -80,20 +80,19 @@ function registerIssueEvent(brpData: any, dynamoDBClient: DynamoDBClient) {
   const subject = crypto.createHash('sha256').update(brpData.Persoon.BSN.BSN).digest('hex');
   const timestamp = Date.now();
   const gemeente = brpData.Persoon.Adres.Gemeente;
-  
+
   const log = new PutItemCommand({
     Item: {
-      'subject': { S: subject},
-      'timestamp': { N: timestamp.toString() },
-      'gemeente': { S: gemeente },
+      subject: { S: subject },
+      timestamp: { N: timestamp.toString() },
+      gemeente: { S: gemeente },
     },
     TableName: process.env.STATISTICS_TABLE,
   });
-  
-  dynamoDBClient.send(log)
-  .catch(error => {
-    console.error("Error in logging issue event", error);
-  }).then(() => {
-    console.debug("Succesfully logged issue event!");
+
+  dynamoDBClient.send(log).then(() => {
+    console.debug('Succesfully logged issue event!');
+  }).catch(error => {
+    console.error('Error in logging issue event', error);
   });
 }

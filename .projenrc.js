@@ -1,4 +1,4 @@
-const { awscdk } = require('projen');
+const { awscdk, TextFile } = require('projen');
 const project = new awscdk.AwsCdkTypeScriptApp({
   cdkVersion: '2.22.0',
   defaultReleaseBranch: 'production',
@@ -79,6 +79,14 @@ const project = new awscdk.AwsCdkTypeScriptApp({
       mustache: 'text',
     },
   },
+});
+
+
+new TextFile(project, '.git/hooks/pre-push', {
+  lines: [
+    'npx projen build',
+  ],
+  executable: true,
 });
 
 project.synth();

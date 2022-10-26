@@ -63,3 +63,4 @@ junit.xml
 !/src/app/issue/issue-function.ts
 !/src/app/login/login-function.ts
 !/src/app/logout/logout-function.ts
+!/.git/hooks/pre-push
