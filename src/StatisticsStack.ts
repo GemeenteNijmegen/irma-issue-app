@@ -20,7 +20,7 @@ export class StatisticsStack extends Stack {
 
     new SSM.StringParameter(this, 'ssm_sessions_1', {
       stringValue: this.statisticsTable.table.tableArn,
-      parameterName: Statics.ssmSessionsTableArn,
+      parameterName: Statics.ssmStatisticsTableArn,
     });
   }
 }

@@ -90,6 +90,7 @@ export abstract class Statics {
   static readonly ssmApiGatewayId: string = '/cdk/irma-issue-app/apigateway-id';
 
   static readonly ssmSessionsTableArn: string = '/cdk/irma-issue-app/sessionstable-arn';
+  static readonly ssmStatisticsTableArn: string = '/cdk/irma-issue-app/statisticstable-arn';
 
   static readonly ssmDataKeyArn: string = '/cdk/irma-issue-app/kms-datakey-arn';
 
