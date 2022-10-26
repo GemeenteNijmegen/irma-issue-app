@@ -84,7 +84,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
 
 new TextFile(project, '.git/hooks/pre-push', {
   lines: [
-    'npx projen build',
+    'npx projen build && git add . && git diff --staged --patched --exit-code',
   ],
   executable: true,
 });
