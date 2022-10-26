@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
@@ -15,7 +15,7 @@ export async function issueRequestHandler(cookies: string, brpClient: ApiClient,
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() == true) {
-    return handleLoggedinRequest(session, brpClient, irmaApi);
+    return handleLoggedinRequest(session, brpClient, irmaApi, dynamoDBClient);
   }
   return Response.redirect('/login');
 }
@@ -28,7 +28,7 @@ export async function issueRequestHandler(cookies: string, brpClient: ApiClient,
  * @param irmaApi
  * @returns
  */
-async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irmaApi: IrmaApi) {
+async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irmaApi: IrmaApi, dynamoDBClient: DynamoDBClient) {
   // BRP request
   const bsn = session.getValue('bsn');
   const brpApi = new BrpApi(brpClient);
@@ -56,7 +56,7 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
 
   // Log the issue event
   if (!error) {
-    registerIssueEvent(brpData);
+    registerIssueEvent(brpData, dynamoDBClient);
   }
 
   // Render the page
@@ -76,12 +76,24 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
  * Logs the issue event for collecting statistics one usage of the irma-issue-app
  * @param brpData the BRP-IRMA api response
  */
-function registerIssueEvent(brpData: any) {
-  const hashedBsn = crypto.createHash('sha256').update(brpData.Persoon.BSN.BSN).digest('hex');
-  const event = {
-    timestamp: Date.now(),
-    gemeente: brpData.Persoon.Adres.Gemeente,
-    subject: hashedBsn,
-  };
-  console.log(event);
+function registerIssueEvent(brpData: any, dynamoDBClient: DynamoDBClient) {
+  const subject = crypto.createHash('sha256').update(brpData.Persoon.BSN.BSN).digest('hex');
+  const timestamp = Date.now();
+  const gemeente = brpData.Persoon.Adres.Gemeente;
+  
+  const log = new PutItemCommand({
+    Item: {
+      'subject': { S: subject},
+      'timestamp': { N: timestamp.toString() },
+      'gemeente': { S: gemeente },
+    },
+    TableName: process.env.STATISTICS_TABLE,
+  });
+  
+  dynamoDBClient.send(log)
+  .catch(error => {
+    console.error("Error in logging issue event", error);
+  }).then(() => {
+    console.debug("Succesfully logged issue event!");
+  });
 }
