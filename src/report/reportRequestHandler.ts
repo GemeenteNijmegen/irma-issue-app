@@ -1,9 +1,9 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import Mustache from 'mustache';
 import template from './report.mustache';
 
-export async function handleReporting(sesClient: SESClient, dynamoDBClient: DynamoDBClient, recipients: string[]){
+export async function handleReporting(sesClient: SESClient, dynamoDBClient: DynamoDBClient, recipients: string[]) {
 
   console.log(dynamoDBClient.config.apiVersion);
   // Do dynamodb query (yesterday)
@@ -29,21 +29,21 @@ async function sendReportViaMail(client: SESClient, body: string, recipients: st
     Destination: {
       ToAddresses: recipients,
     },
-    Message: { 
-      Subject:  {
+    Message: {
+      Subject: {
         Charset: 'UTF-8',
         Data: 'IRMA Issue Statistics',
       },
-      Body: { 
+      Body: {
         Html: {
-          Charset: "UTF-8",
-          Data: body
+          Charset: 'UTF-8',
+          Data: body,
         },
       },
     },
-    Source: 'gemeente@accp.csp-nijmegen.nl'
+    Source: 'gemeente@accp.csp-nijmegen.nl',
   });
 
-  await client.send(sendEmail)
+  await client.send(sendEmail);
 
 }

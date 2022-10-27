@@ -31,10 +31,10 @@ export class AwsUtil {
    * @param {string} parameter Name of the ssm param
    * @returns param value
    */
-  async getParameter(parameter: string){
+  async getParameter(parameter: string) {
     const client = new SSMClient({});
     const command = new GetParameterCommand({ Name: parameter });
-    const response = await client.send(command); 
+    const response = await client.send(command);
     return response.Parameter?.Value;
   }
 
