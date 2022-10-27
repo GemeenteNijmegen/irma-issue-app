@@ -56,7 +56,7 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
 
   // Log the issue event
   if (!error) {
-    registerIssueEvent(brpData, dynamoDBClient);
+    await registerIssueEvent(brpData, dynamoDBClient);
   }
 
   // Render the page
@@ -76,23 +76,25 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
  * Logs the issue event for collecting statistics one usage of the irma-issue-app
  * @param brpData the BRP-IRMA api response
  */
-function registerIssueEvent(brpData: any, dynamoDBClient: DynamoDBClient) {
+async function registerIssueEvent(brpData: any, dynamoDBClient: DynamoDBClient) {
   const subject = crypto.createHash('sha256').update(brpData.Persoon.BSN.BSN).digest('hex');
   const timestamp = Date.now();
   const gemeente = brpData.Persoon.Adres.Gemeente;
+  const ttl = new Date().setFullYear(new Date().getFullYear()+1).toString();
 
-  const log = new PutItemCommand({
-    Item: {
-      subject: { S: subject },
-      timestamp: { N: timestamp.toString() },
-      gemeente: { S: gemeente },
-    },
-    TableName: process.env.STATISTICS_TABLE,
-  });
+  try {
+    const log = new PutItemCommand({
+      Item: {
+        subject: { S: subject },
+        timestamp: { N: timestamp.toString() },
+        gemeente: { S: gemeente },
+        ttl: { N: ttl },
+      },
+      TableName: process.env.STATISTICS_TABLE,
+    });
 
-  dynamoDBClient.send(log).then(() => {
-    console.debug('Succesfully logged issue event!');
-  }).catch(error => {
-    console.error('Error in logging issue event', error);
-  });
+    await dynamoDBClient.send(log);
+  } catch (err) {
+    console.log('Could not add issue statistics', err);
+  }
 }

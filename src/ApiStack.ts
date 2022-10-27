@@ -120,6 +120,7 @@ export class ApiStack extends Stack {
         IRMA_API_ACCESS_KEY_ID_ARN: secretIrmaApiAccessKeyId.secretArn,
         IRMA_API_SECRET_KEY_ARN: secretIrmaApiSecretKey.secretArn,
         IRMA_API_KEY_ARN: secretIrmaApiKey.secretArn,
+        STATISTICS_TABLE: this.statisticsTable.tableName,
       },
     }, IssueFunction);
     secretMTLSPrivateKey.grantRead(issueFunction.lambda);
