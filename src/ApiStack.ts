@@ -6,10 +6,10 @@ import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
 import { AuthFunction } from './app/auth/auth-function';
+import { CallbackFunction } from './app/callback/callback-function';
 import { IssueFunction } from './app/issue/issue-function';
 import { LoginFunction } from './app/login/login-function';
 import { LogoutFunction } from './app/logout/logout-function';
-import { SuccessFunction } from './app/success/success-function';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
@@ -132,17 +132,17 @@ export class ApiStack extends Stack {
     secretIrmaApiKey.grantRead(issueFunction.lambda);
 
 
-    const successFunction = new ApiFunction(this, 'irma-issue-success-function', {
+    const callbackFunction = new ApiFunction(this, 'irma-issue-callback-function', {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
-      description: 'Success Callback-lambda voor de IRMA issue-applicatie.',
+      description: 'Callback-lambda voor de IRMA issue-applicatie.',
       environment: {
         STATISTICS_TABLE: this.statisticsTable.tableName,
       },
-    }, SuccessFunction);
-    this.statisticsTable.grantReadWriteData(successFunction.lambda.grantPrincipal);
+    }, CallbackFunction);
+    this.statisticsTable.grantReadWriteData(callbackFunction.lambda.grantPrincipal);
 
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('irma-issue-login', loginFunction.lambda),
@@ -169,8 +169,8 @@ export class ApiStack extends Stack {
     });
 
     this.api.addRoutes({
-      integration: new HttpLambdaIntegration('irma-issue-success', successFunction.lambda),
-      path: '/success',
+      integration: new HttpLambdaIntegration('irma-issue-success', callbackFunction.lambda),
+      path: '/callback',
       methods: [apigatewayv2.HttpMethod.GET],
     });
   }

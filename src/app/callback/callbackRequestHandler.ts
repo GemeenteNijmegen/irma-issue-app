@@ -6,11 +6,11 @@ import { Session } from '@gemeentenijmegen/session';
 /**
  * Check login and handle request
  */
-export async function successRequestHandler(cookies: string, dynamoDBClient: DynamoDBClient) {
+export async function callbackRequestHandler(cookies: string, result: string, dynamoDBClient: DynamoDBClient) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() == true) {
-    return handleLoggedinRequest(session, dynamoDBClient);
+    return handleLoggedinRequest(session, result, dynamoDBClient);
   }
   return Response.error(403);
 }
@@ -22,15 +22,16 @@ export async function successRequestHandler(cookies: string, dynamoDBClient: Dyn
  * @param dynamoDBClient
  * @returns
  */
-async function handleLoggedinRequest(session: Session, dynamoDBClient: DynamoDBClient) {
+async function handleLoggedinRequest(session: Session, result: string, dynamoDBClient: DynamoDBClient) {
 
   const subject = session.getValue('bsn', 'S');
   const gemeente = session.getValue('gemeente', 'S');
   const timestamp = Date.now();
   const ttl = new Date().setFullYear(new Date().getFullYear()+1).toString();
+  const success = result == 'success';
 
   // Log the issue event
-  await registerIssueEvent(dynamoDBClient, subject, gemeente, timestamp, ttl);
+  await registerIssueEvent(dynamoDBClient, subject, gemeente, success, timestamp, ttl);
 
   return Response.json({ message: 'success' });
 }
@@ -43,7 +44,7 @@ async function handleLoggedinRequest(session: Session, dynamoDBClient: DynamoDBC
  * @param timestamp event time
  * @param ttl time to live in DynamoDB table
  */
-async function registerIssueEvent(dynamoDBClient: DynamoDBClient, bsn: string, gemeente:string, timestamp:number, ttl:string) {
+async function registerIssueEvent(dynamoDBClient: DynamoDBClient, bsn: string, gemeente:string, success: boolean, timestamp:number, ttl:string) {
 
   const subject = crypto.createHash('sha256').update(bsn).digest('hex');
   try {
@@ -52,6 +53,7 @@ async function registerIssueEvent(dynamoDBClient: DynamoDBClient, bsn: string, g
         subject: { S: subject },
         timestamp: { N: timestamp.toString() },
         gemeente: { S: gemeente },
+        success: { BOOL: success },
         ttl: { N: ttl },
       },
       TableName: process.env.STATISTICS_TABLE,
