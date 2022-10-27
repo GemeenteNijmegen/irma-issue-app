@@ -6,11 +6,11 @@ import { Session } from '@gemeentenijmegen/session';
 /**
  * Check login and handle request
  */
-export async function callbackRequestHandler(cookies: string, result: string, dynamoDBClient: DynamoDBClient) {
-  let session = new Session(cookies, dynamoDBClient);
+export async function callbackRequestHandler(params: any, dynamoDBClient: DynamoDBClient) {
+  let session = new Session(params.cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() == true) {
-    return handleLoggedinRequest(session, result, dynamoDBClient);
+    return handleLoggedinRequest(session, params, dynamoDBClient);
   }
   return Response.error(403);
 }
@@ -22,18 +22,19 @@ export async function callbackRequestHandler(cookies: string, result: string, dy
  * @param dynamoDBClient
  * @returns
  */
-async function handleLoggedinRequest(session: Session, result: string, dynamoDBClient: DynamoDBClient) {
+async function handleLoggedinRequest(session: Session, params: any, dynamoDBClient: DynamoDBClient) {
 
   const subject = session.getValue('bsn', 'S');
   const gemeente = session.getValue('gemeente', 'S');
   const timestamp = Date.now();
-  const ttl = new Date().setFullYear(new Date().getFullYear()+1).toString();
-  const success = result == 'success';
+  const ttl = new Date().setFullYear(new Date().getFullYear() + 1).toString();
+  const success = params.result == 'success';
+  const error = params.error;
 
   // Log the issue event
-  await registerIssueEvent(dynamoDBClient, subject, gemeente, success, timestamp, ttl);
-
+  await registerIssueEvent(dynamoDBClient, subject, gemeente, success, timestamp, ttl, error);
   return Response.json({ message: 'success' });
+
 }
 
 /**
@@ -43,10 +44,28 @@ async function handleLoggedinRequest(session: Session, result: string, dynamoDBC
  * @param gemeente municipality from session
  * @param timestamp event time
  * @param ttl time to live in DynamoDB table
+ * @param errorMessage optional error message from frontend
  */
-async function registerIssueEvent(dynamoDBClient: DynamoDBClient, bsn: string, gemeente:string, success: boolean, timestamp:number, ttl:string) {
-
+async function registerIssueEvent(
+  dynamoDBClient: DynamoDBClient,
+  bsn: string,
+  gemeente: string,
+  success: boolean,
+  timestamp: number,
+  ttl: string,
+  errorMessage?: string,
+) {
   const subject = crypto.createHash('sha256').update(bsn).digest('hex');
+
+  let error = undefined;
+  if (errorMessage) { // Trim errorMessage if needed
+    const msg =
+      errorMessage.length > 200
+        ? errorMessage.substring(0, 200)
+        : errorMessage;
+    error = { error: { S: msg } };
+  }
+
   try {
     const log = new PutItemCommand({
       Item: {
@@ -55,10 +74,10 @@ async function registerIssueEvent(dynamoDBClient: DynamoDBClient, bsn: string, g
         gemeente: { S: gemeente },
         success: { BOOL: success },
         ttl: { N: ttl },
+        ...error,
       },
       TableName: process.env.STATISTICS_TABLE,
     });
-
     await dynamoDBClient.send(log);
   } catch (err) {
     console.log('Could not add issue statistics', err);

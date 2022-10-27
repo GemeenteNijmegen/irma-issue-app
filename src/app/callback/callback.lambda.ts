@@ -8,8 +8,9 @@ const dynamoDBClient = new DynamoDBClient({});
 
 function parseEvent(event: APIGatewayProxyEventV2) {
   return {
-    cookies: event?.cookies?.join(';') ?? '',
-    result: event?.queryStringParameters?.result ?? 'success',
+    cookies: event?.cookies?.join(';'),
+    result: event?.queryStringParameters?.result,
+    error: event.queryStringParameters?.error ? decodeURI(event.queryStringParameters?.error) : undefined,
   };
 }
 
@@ -17,7 +18,7 @@ exports.handler = async (event: APIGatewayProxyEventV2) => {
   try {
     const params = parseEvent(event);
 
-    return await callbackRequestHandler(params.cookies, params.result, dynamoDBClient);
+    return await callbackRequestHandler(params, dynamoDBClient);
 
   } catch (err) {
     console.error(err);
