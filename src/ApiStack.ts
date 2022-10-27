@@ -9,6 +9,7 @@ import { AuthFunction } from './app/auth/auth-function';
 import { IssueFunction } from './app/issue/issue-function';
 import { LoginFunction } from './app/login/login-function';
 import { LogoutFunction } from './app/logout/logout-function';
+import { SuccessFunction } from './app/success/success-function';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
@@ -129,7 +130,19 @@ export class ApiStack extends Stack {
     secretIrmaApiAccessKeyId.grantRead(issueFunction.lambda);
     secretIrmaApiSecretKey.grantRead(issueFunction.lambda);
     secretIrmaApiKey.grantRead(issueFunction.lambda);
-    this.statisticsTable.grantReadWriteData(issueFunction.lambda.grantPrincipal);
+
+
+    const successFunction = new ApiFunction(this, 'irma-issue-success-function', {
+      table: this.sessionsTable,
+      tablePermissions: 'ReadWrite',
+      applicationUrlBase: baseUrl,
+      readOnlyRole,
+      description: 'Success Callback-lambda voor de IRMA issue-applicatie.',
+      environment: {
+        STATISTICS_TABLE: this.statisticsTable.tableName,
+      },
+    }, SuccessFunction);
+    this.statisticsTable.grantReadWriteData(successFunction.lambda.grantPrincipal);
 
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('irma-issue-login', loginFunction.lambda),
@@ -152,6 +165,12 @@ export class ApiStack extends Stack {
     this.api.addRoutes({ // Also availabel at / due to CloudFront defaultRootObject
       integration: new HttpLambdaIntegration('irma-issue-issue', issueFunction.lambda),
       path: '/issue',
+      methods: [apigatewayv2.HttpMethod.GET],
+    });
+
+    this.api.addRoutes({
+      integration: new HttpLambdaIntegration('irma-issue-success', successFunction.lambda),
+      path: '/success',
       methods: [apigatewayv2.HttpMethod.GET],
     });
   }

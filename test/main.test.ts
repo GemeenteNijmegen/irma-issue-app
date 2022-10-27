@@ -85,7 +85,7 @@ test('StackHasLambdas', () => {
     addNijmegenDomain: true,
   });
   const template = Template.fromStack(stack);
-  template.resourceCountIs('AWS::Lambda::Function', 5);
+  template.resourceCountIs('AWS::Lambda::Function', 6);
 });
 
 
