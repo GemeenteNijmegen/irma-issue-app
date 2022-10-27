@@ -115,5 +115,10 @@ export class ssmParamsConstruct extends Construct {
       secretName: Statics.secretIrmaApiKey,
       description: 'IRMA API key',
     });
+
+    new SSM.StringParameter(this, 'ssm_irma_statistics_1', {
+      stringValue: '-',
+      parameterName: Statics.ssmIrmaStatisticsRecipients,
+    });
   }
 }

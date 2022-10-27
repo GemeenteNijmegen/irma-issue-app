@@ -109,6 +109,8 @@ export abstract class Statics {
   static readonly secretIrmaApiSecretKey: string = '/cdk/irma-issue-app/irma-api-secret-key';
   static readonly secretIrmaApiKey: string = '/cdk/irma-issue-app/irma-api-key';
 
+  static readonly ssmIrmaStatisticsRecipients: string = '/cdk/irma-issue-app/irma-statistics/recipients';
+
   static readonly codeStarConnectionArn: string = 'arn:aws:codestar-connections:eu-west-1:418648875085:connection/4f647929-c982-4f30-94f4-24ff7dbf9766';
 
 

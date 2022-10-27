@@ -17,6 +17,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '@aws-sdk/client-dynamodb',
     '@aws-sdk/client-secrets-manager',
     '@aws-sdk/client-ssm',
+    '@aws-sdk/client-ses',
     '@gemeentenijmegen/apiclient',
     '@gemeentenijmegen/session',
     '@gemeentenijmegen/utils',
