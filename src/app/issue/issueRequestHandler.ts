@@ -78,13 +78,14 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
  */
 async function storeIssueEventInSession(brpData: any, session: Session) {
   const gemeente = brpData.Persoon.Adres.Gemeente;
+  const loggedin = session.getValue('loggedin', 'BOOL') ?? false;
 
   try {
     await session.updateSession({
+      loggedin: { BOOL: loggedin },
       bsn: { S: brpData.Persoon.BSN.BSN },
       gemeente: { S: gemeente },
     });
-
   } catch (err) {
     console.log('Could not add issue statistics to session', err);
   }
