@@ -20,6 +20,7 @@
     "src/app/issue/issue-function.ts",
     "src/app/login/login-function.ts",
     "src/app/logout/logout-function.ts",
+    "src/app/success/success-function.ts",
     "tsconfig.dev.json",
     "tsconfig.json"
   ],

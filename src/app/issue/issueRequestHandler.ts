@@ -1,5 +1,4 @@
-import * as crypto from 'crypto';
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
@@ -15,7 +14,7 @@ export async function issueRequestHandler(cookies: string, brpClient: ApiClient,
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() == true) {
-    return handleLoggedinRequest(session, brpClient, irmaApi, dynamoDBClient);
+    return handleLoggedinRequest(session, brpClient, irmaApi);
   }
   return Response.redirect('/login');
 }
@@ -28,7 +27,7 @@ export async function issueRequestHandler(cookies: string, brpClient: ApiClient,
  * @param irmaApi
  * @returns
  */
-async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irmaApi: IrmaApi, dynamoDBClient: DynamoDBClient) {
+async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irmaApi: IrmaApi) {
   // BRP request
   const bsn = session.getValue('bsn');
   const brpApi = new BrpApi(brpClient);
@@ -56,7 +55,7 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
 
   // Log the issue event
   if (!error) {
-    await registerIssueEvent(brpData, dynamoDBClient);
+    await storeIssueEventInSession(brpData, session);
   }
 
   // Render the page
@@ -75,26 +74,18 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
 /**
  * Logs the issue event for collecting statistics one usage of the irma-issue-app
  * @param brpData the BRP-IRMA api response
+ * @param session the uses session to store data in
  */
-async function registerIssueEvent(brpData: any, dynamoDBClient: DynamoDBClient) {
-  const subject = crypto.createHash('sha256').update(brpData.Persoon.BSN.BSN).digest('hex');
-  const timestamp = Date.now();
+async function storeIssueEventInSession(brpData: any, session: Session) {
   const gemeente = brpData.Persoon.Adres.Gemeente;
-  const ttl = new Date().setFullYear(new Date().getFullYear()+1).toString();
 
   try {
-    const log = new PutItemCommand({
-      Item: {
-        subject: { S: subject },
-        timestamp: { N: timestamp.toString() },
-        gemeente: { S: gemeente },
-        ttl: { N: ttl },
-      },
-      TableName: process.env.STATISTICS_TABLE,
+    await session.updateSession({
+      bsn: { S: brpData.Persoon.BSN.BSN },
+      gemeente: { S: gemeente },
     });
 
-    await dynamoDBClient.send(log);
   } catch (err) {
-    console.log('Could not add issue statistics', err);
+    console.log('Could not add issue statistics to session', err);
   }
 }

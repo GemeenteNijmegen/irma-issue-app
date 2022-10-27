@@ -23,6 +23,7 @@
 /src/app/issue/issue-function.ts linguist-generated
 /src/app/login/login-function.ts linguist-generated
 /src/app/logout/logout-function.ts linguist-generated
+/src/app/success/success-function.ts linguist-generated
 /tsconfig.dev.json linguist-generated
 /tsconfig.json linguist-generated
 /yarn.lock linguist-generated
