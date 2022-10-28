@@ -24,7 +24,11 @@ export async function callbackRequestHandler(params: any, dynamoDBClient: Dynamo
  */
 async function handleLoggedinRequest(session: Session, params: any, dynamoDBClient: DynamoDBClient) {
 
-  const subject = session.getValue('bsn', 'S');
+  if(session.getValue('issued', 'BOOL')){
+    return;
+  }
+
+  const bsn = session.getValue('bsn', 'S');
   const gemeente = session.getValue('gemeente', 'S');
   const timestamp = Date.now();
   const ttl = new Date().setFullYear(new Date().getFullYear() + 1).toString();
@@ -32,7 +36,8 @@ async function handleLoggedinRequest(session: Session, params: any, dynamoDBClie
   const error = params.error;
 
   // Log the issue event
-  await registerIssueEvent(dynamoDBClient, subject, gemeente, success, timestamp, ttl, error);
+  await registerIssueEvent(dynamoDBClient, bsn, gemeente, success, timestamp, ttl, error);
+  await updateSessionStatus(session, bsn);
   return Response.json({ message: 'success' });
 
 }
@@ -81,5 +86,21 @@ async function registerIssueEvent(
     await dynamoDBClient.send(log);
   } catch (err) {
     console.log('Could not add issue statistics', err);
+  }
+}
+
+/**
+ * Clean the date for this issue request from the session after logging it
+ * @param session Session object
+ * @param bsn BSN from session
+ */
+async function updateSessionStatus(session: Session, bsn: string) {
+  try {
+    await session.updateSession({
+      bsn: { S: bsn },
+      issued: { BOOL: true },
+    });
+  } catch (err) {
+    console.log('Could not update session', err);
   }
 }
