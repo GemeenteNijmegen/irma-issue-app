@@ -24,7 +24,7 @@ export async function callbackRequestHandler(params: any, dynamoDBClient: Dynamo
  */
 async function handleLoggedinRequest(session: Session, params: any, dynamoDBClient: DynamoDBClient) {
 
-  if(session.getValue('issued', 'BOOL')){
+  if (session.getValue('issued', 'BOOL')) {
     return;
   }
 
