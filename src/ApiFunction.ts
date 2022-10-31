@@ -15,6 +15,7 @@ export interface ApiFunctionProps {
   monitorFilterPattern?: IFilterPattern;
   readOnlyRole: Role;
   logRetention?: RetentionDays;
+  ssmLogGroup?: string;
 }
 
 export class ApiFunction<T extends Lambda.Function> extends Construct {
@@ -50,6 +51,13 @@ export class ApiFunction<T extends Lambda.Function> extends Construct {
     });
 
     props.table.grantReadWriteData(this.lambda.grantPrincipal);
+
+    if (props.ssmLogGroup) { // Export the loggroup to an ssm parameter
+      new SSM.StringParameter(this, 'log-group-ssm', {
+        parameterName: props.ssmLogGroup,
+        stringValue: this.lambda.logGroup.logGroupName,
+      });
+    }
 
     this.monitor(props.monitorFilterPattern);
     this.allowAccessToReadOnlyRole(props.readOnlyRole);

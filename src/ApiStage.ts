@@ -7,7 +7,6 @@ import { DNSSECStack } from './DNSSECStack';
 import { DNSStack } from './DNSStack';
 import { KeyStack } from './keystack';
 import { SessionsStack } from './SessionsStack';
-import { StatisticsStack } from './StatisticsStack';
 import { UsEastCertificateStack } from './UsEastCertificateStack';
 import { WafStack } from './WafStack';
 
@@ -31,7 +30,6 @@ export class ApiStage extends Stage {
     }
 
     const sessionsStack = new SessionsStack(this, 'sessions-stack', { key: key });
-    const statisticsStack = new StatisticsStack(this, 'statistics-stack', {});
     const dnsStack = new DNSStack(this, 'dns-stack', { branch: props.branch });
 
     const usEastCertificateStack = new UsEastCertificateStack(this, 'us-cert-stack', {
@@ -50,7 +48,6 @@ export class ApiStage extends Stage {
     const apistack = new ApiStack(this, 'api-stack', {
       branch: props.branch,
       sessionsTable: sessionsStack.sessionsTable,
-      statisticsTable: statisticsStack.statisticsTable,
       addNijmegenDomain: props.addNijmegenDomain,
     });
     const cloudfrontStack = new CloudfrontStack(this, 'cloudfront-stack', {

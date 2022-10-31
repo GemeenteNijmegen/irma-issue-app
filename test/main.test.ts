@@ -7,7 +7,6 @@ import { PipelineStackDevelopment } from '../src/PipelineStackDevelopment';
 import { SessionsStack } from '../src/SessionsStack';
 import { DNSStack } from '../src/DNSStack';
 import { KeyStack } from '../src/keystack';
-import { StatisticsStack } from '../src/StatisticsStack';
 
 beforeAll(() => {
   Dotenv.config();
@@ -57,11 +56,9 @@ test('StackHasApiGateway', () => {
   const app = new App();
   const keyStack = new KeyStack(app, 'keystack');
   const sessionsStack = new SessionsStack(app, 'test', { key: keyStack.key});
-  const statisticsStack = new StatisticsStack(app, 'test-statistics', { key: keyStack.key});
   new DNSStack(app, 'dns', { branch: 'dev'});
   // const zone = dnsStack.zone;
   const stack = new ApiStack(app, 'api', { 
-    statisticsTable: statisticsStack.statisticsTable,
     sessionsTable: sessionsStack.sessionsTable, 
     branch: 'dev',
     addNijmegenDomain: true,
@@ -75,11 +72,9 @@ test('StackHasLambdas', () => {
   const app = new App();
   const keyStack = new KeyStack(app, 'keystack');
   const sessionsStack = new SessionsStack(app, 'test', { key: keyStack.key});
-  const statisticsStack = new StatisticsStack(app, 'test-statistics', { key: keyStack.key});
   new DNSStack(app, 'dns', { branch: 'dev'});
   // const zone = dnsStack.zone;
   const stack = new ApiStack(app, 'api', { 
-    statisticsTable: statisticsStack.statisticsTable,
     sessionsTable: sessionsStack.sessionsTable, 
     branch: 'dev',
     addNijmegenDomain: true,

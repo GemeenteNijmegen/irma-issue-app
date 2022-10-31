@@ -14,11 +14,9 @@ import { LogoutFunction } from './app/logout/logout-function';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
-import { StatisticsTable } from './StatisticsTable';
 
 export interface ApiStackProps extends StackProps {
   sessionsTable: SessionsTable;
-  statisticsTable: StatisticsTable;
   branch: string;
   addNijmegenDomain: boolean;
 }
@@ -30,13 +28,11 @@ export interface ApiStackProps extends StackProps {
  */
 export class ApiStack extends Stack {
   private sessionsTable: Table;
-  private statisticsTable: Table;
   api: apigatewayv2.HttpApi;
 
   constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id);
     this.sessionsTable = props.sessionsTable.table;
-    this.statisticsTable = props.statisticsTable.table;
     this.api = new apigatewayv2.HttpApi(this, 'irma-issue-api', {
       description: 'IRMA issue webapplicatie',
     });
@@ -122,7 +118,6 @@ export class ApiStack extends Stack {
         IRMA_API_ACCESS_KEY_ID_ARN: secretIrmaApiAccessKeyId.secretArn,
         IRMA_API_SECRET_KEY_ARN: secretIrmaApiSecretKey.secretArn,
         IRMA_API_KEY_ARN: secretIrmaApiKey.secretArn,
-        STATISTICS_TABLE: this.statisticsTable.tableName,
       },
     }, IssueFunction);
     secretMTLSPrivateKey.grantRead(issueFunction.lambda);
@@ -138,17 +133,9 @@ export class ApiStack extends Stack {
       applicationUrlBase: baseUrl,
       readOnlyRole,
       description: 'Callback-lambda voor de IRMA issue-applicatie.',
-      environment: {
-        STATISTICS_TABLE: this.statisticsTable.tableName,
-      },
       logRetention: RetentionDays.ONE_YEAR,
+      ssmLogGroup: Statics.ssmStatisticsLogGroup,
     }, CallbackFunction);
-    this.statisticsTable.grantReadWriteData(callbackFunction.lambda.grantPrincipal);
-
-    new SSM.StringParameter(this, 'statistics-log-group-ssm', {
-      parameterName: Statics.ssmStatisticsLogGroup,
-      stringValue: callbackFunction.lambda.logGroup.logGroupName,
-    });
 
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('irma-issue-login', loginFunction.lambda),

@@ -151,8 +151,7 @@
           "src/app/callback/callback.lambda.ts",
           "src/app/issue/issue.lambda.ts",
           "src/app/login/login.lambda.ts",
-          "src/app/logout/logout.lambda.ts",
-          "src/report/report.lambda.ts"
+          "src/app/logout/logout.lambda.ts"
         ],
         "optionalDependencies": false,
         "peerDependencies": true

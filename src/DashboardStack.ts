@@ -22,16 +22,40 @@ export class DashboardStack extends Stack {
     const piePerGemeente = this.createIssuePerGemeente(logGroup, Visualization.PIE);
     const tablePerGemeente = this.createIssuePerGemeente(logGroup, Visualization.TABLE);
     const tableDuplicateIssues = this.createDuplicateIssueWidget(logGroup);
+    const errorOccurences = this.createErrorOccurencesWidget(logGroup);
 
     // Create the layout
     const layout = [
       [timeLine],
       [piePerGemeente, tablePerGemeente, tableDuplicateIssues],
+      [errorOccurences],
     ];
 
     // Create the dashboard
     this.createDashboard(layout);
 
+  }
+
+  /**
+   * Note: this includes front-end error (from irma.js) that are send
+   * using the callback function only. Other lambdas have their own logging
+   * and are not included in this widget.
+   * @param logGroup
+   * @returns
+   */
+  createErrorOccurencesWidget(logGroup: string) {
+    return new cloudwatch.LogQueryWidget({
+      title: 'Errors and occurences',
+      width: 8,
+      height: 12,
+      logGroupNames: [logGroup],
+      view: Visualization.TABLE,
+      queryLines: [
+        'fields error, nr_of_occurences',
+        'stats count(error) as nr_of_occurences by error',
+        'filter not isempty(subject) and not isempty(error) and error not like "undefined"',
+      ],
+    });
   }
 
   createDuplicateIssueWidget(logGroup: string) {

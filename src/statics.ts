@@ -4,7 +4,7 @@ export abstract class Statics {
 
   // Statistics
   static readonly statisticsTableName: string = 'irma-issue-statistics';
-  static readonly ssmStatisticsLogGroup: string = '/cdk/irma-issue-app/statistics/log-group';
+  static readonly ssmStatisticsLogGroup: string = '/cdk/irma-issue-app/statistics/log-group-name';
 
   /**
    * Repo information

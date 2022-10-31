@@ -14,8 +14,6 @@
     "bundle:app/login/login.lambda:watch": "npx projen bundle:app/login/login.lambda:watch",
     "bundle:app/logout/logout.lambda": "npx projen bundle:app/logout/logout.lambda",
     "bundle:app/logout/logout.lambda:watch": "npx projen bundle:app/logout/logout.lambda:watch",
-    "bundle:report/report.lambda": "npx projen bundle:report/report.lambda",
-    "bundle:report/report.lambda:watch": "npx projen bundle:report/report.lambda:watch",
     "clobber": "npx projen clobber",
     "compile": "npx projen compile",
     "default": "npx projen default",
