@@ -4,6 +4,7 @@ import {
   aws_cloudwatch as cloudwatch,
   aws_ssm as ssm,
 } from 'aws-cdk-lib';
+import { LogQueryVisualizationType as Visualization } from 'aws-cdk-lib/aws-cloudwatch';
 import { Construct } from 'constructs';
 import { Statics } from './statics';
 
@@ -17,11 +18,14 @@ export class DashboardStack extends Stack {
     const logGroup = ssm.StringParameter.valueForStringParameter(this, Statics.ssmStatisticsLogGroup);
 
     // Create the widgets
-    const piePerGemeente = this.createPieChartPerGemeente(logGroup);
+    const timeLine = this.createTimeLineWidget(logGroup);
+    const piePerGemeente = this.createIssuePerGemeente(logGroup, Visualization.PIE);
+    const tablePerGemeente = this.createIssuePerGemeente(logGroup, Visualization.TABLE);
 
     // Create the layout
     const layout = [
-      [piePerGemeente],
+      [timeLine],
+      [piePerGemeente, tablePerGemeente],
     ];
 
     // Create the dashboard
@@ -29,14 +33,32 @@ export class DashboardStack extends Stack {
 
   }
 
-  createPieChartPerGemeente(logGroup: string) {
+  createTimeLineWidget(logGroup: string) {
     return new cloudwatch.LogQueryWidget({
+      title: 'Issue events per hour',
+      width: 24,
+      height: 6,
       logGroupNames: [logGroup],
-      view: cloudwatch.LogQueryVisualizationType.PIE,
+      view: Visualization.LINE,
+      queryLines: [
+        'fields success =  1 as r1, success = 0 as r2',
+        'filter not isempty(subject)',
+        'stats sum(r1) as successful, sum(r2) as failed by bin(1h)',
+      ],
+    });
+  }
+
+  createIssuePerGemeente(logGroup: string, view: cloudwatch.LogQueryVisualizationType) {
+    return new cloudwatch.LogQueryWidget({
+      title: 'Issue events per gemeente',
+      width: 12,
+      height: 12,
+      logGroupNames: [logGroup],
+      view,
       queryLines: [
         'fields subject, gemeente',
         'filter not isempty(subject)',
-        'stats count(subject) by gemeente',
+        'stats count(subject) as counts by gemeente',
       ],
     });
   }

@@ -3,6 +3,7 @@ import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-al
 import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM } from 'aws-cdk-lib';
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
 import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
+import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
 import { AuthFunction } from './app/auth/auth-function';
@@ -131,7 +132,6 @@ export class ApiStack extends Stack {
     secretIrmaApiSecretKey.grantRead(issueFunction.lambda);
     secretIrmaApiKey.grantRead(issueFunction.lambda);
 
-
     const callbackFunction = new ApiFunction(this, 'irma-issue-callback-function', {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
@@ -141,8 +141,10 @@ export class ApiStack extends Stack {
       environment: {
         STATISTICS_TABLE: this.statisticsTable.tableName,
       },
+      logRetention: RetentionDays.ONE_YEAR,
     }, CallbackFunction);
     this.statisticsTable.grantReadWriteData(callbackFunction.lambda.grantPrincipal);
+
     new SSM.StringParameter(this, 'statistics-log-group-ssm', {
       parameterName: Statics.ssmStatisticsLogGroup,
       stringValue: callbackFunction.lambda.logGroup.logGroupName,
