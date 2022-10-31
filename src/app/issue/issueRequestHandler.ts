@@ -28,15 +28,24 @@ export async function issueRequestHandler(cookies: string, brpClient: ApiClient,
  * @returns
  */
 async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irmaApi: IrmaApi) {
-  // BRP request
-  const bsn = session.getValue('bsn');
-  const brpApi = new BrpApi(brpClient);
-  const brpData = await brpApi.getBrpData(bsn);
-  const naam = brpData?.Persoon?.Persoonsgegevens?.Naam ? brpData.Persoon.Persoonsgegevens.Naam : 'Onbekende gebruiker';
-
   let error = undefined;
-  if (brpData.error) {
-    error = 'Het ophalen van uw persoonsgegevens is mis gegaan.';
+
+  // If issuing already is completed
+  if (session.getValue('issued', 'BOOL')) {
+    error = 'Om uw gegevens nog een keer in te laden dient u eerst uit te loggen';
+  }
+
+  // BRP request
+  let naam = 'Onbekende gebruiker';
+  let brpData = undefined;
+  if (!error) {
+    const bsn = session.getValue('bsn');
+    const brpApi = new BrpApi(brpClient);
+    brpData = await brpApi.getBrpData(bsn);
+    naam = brpData?.Persoon?.Persoonsgegevens?.Naam ?? naam;
+    if (brpData.error) {
+      error = 'Het ophalen van uw persoonsgegevens is mis gegaan.';
+    }
   }
 
   // Start IRMA session
