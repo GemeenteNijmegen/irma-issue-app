@@ -72,6 +72,7 @@ async function registerIssueEvent(
   }
 
   try {
+    console.log({ subject, timestamp, gemeente, success, error: error?.error.S }); // Also log to cloudwatch for testing
     const log = new PutItemCommand({
       Item: {
         subject: { S: subject },
