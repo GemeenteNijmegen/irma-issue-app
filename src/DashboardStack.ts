@@ -21,16 +21,32 @@ export class DashboardStack extends Stack {
     const timeLine = this.createTimeLineWidget(logGroup);
     const piePerGemeente = this.createIssuePerGemeente(logGroup, Visualization.PIE);
     const tablePerGemeente = this.createIssuePerGemeente(logGroup, Visualization.TABLE);
+    const tableDuplicateIssues = this.createDuplicateIssueWidget(logGroup);
 
     // Create the layout
     const layout = [
       [timeLine],
-      [piePerGemeente, tablePerGemeente],
+      [piePerGemeente, tablePerGemeente, tableDuplicateIssues],
     ];
 
     // Create the dashboard
     this.createDashboard(layout);
 
+  }
+
+  createDuplicateIssueWidget(logGroup: string) {
+    return new cloudwatch.LogQueryWidget({
+      title: 'Multiple issue subjects',
+      width: 8,
+      height: 12,
+      logGroupNames: [logGroup],
+      view: Visualization.LINE,
+      queryLines: [ // TODO not the best way to list this (however we are running into limitations of cloudwatch here)
+        'fields gemeente',
+        'filter not isempty(subject) and nr_of_issues_per_subject > 1',
+        'stats count(subject) as nr_of_issues_per_subject by gemeente, subject',
+      ],
+    });
   }
 
   createTimeLineWidget(logGroup: string) {
@@ -51,7 +67,7 @@ export class DashboardStack extends Stack {
   createIssuePerGemeente(logGroup: string, view: cloudwatch.LogQueryVisualizationType) {
     return new cloudwatch.LogQueryWidget({
       title: 'Issue events per gemeente',
-      width: 12,
+      width: 8,
       height: 12,
       logGroupNames: [logGroup],
       view,
