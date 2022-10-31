@@ -1,7 +1,10 @@
 export abstract class Statics {
   static readonly projectName: string = 'irma-issue-app';
   static readonly sessionTableName: string = 'irma-issue-sessions';
+
+  // Statistics
   static readonly statisticsTableName: string = 'irma-issue-statistics';
+  static readonly ssmStatisticsLogGroup: string = '/cdk/irma-issue-app/statistics/log-group';
 
   /**
    * Repo information

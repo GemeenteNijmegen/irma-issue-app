@@ -143,6 +143,10 @@ export class ApiStack extends Stack {
       },
     }, CallbackFunction);
     this.statisticsTable.grantReadWriteData(callbackFunction.lambda.grantPrincipal);
+    new SSM.StringParameter(this, 'statistics-log-group-ssm', {
+      parameterName: Statics.ssmStatisticsLogGroup,
+      stringValue: callbackFunction.lambda.logGroup.logGroupName,
+    });
 
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('irma-issue-login', loginFunction.lambda),

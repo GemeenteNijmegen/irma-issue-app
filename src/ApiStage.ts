@@ -2,6 +2,7 @@ import { Stage, StageProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { ApiStack } from './ApiStack';
 import { CloudfrontStack } from './CloudfrontStack';
+import { DashboardStack } from './DashboardStack';
 import { DNSSECStack } from './DNSSECStack';
 import { DNSStack } from './DNSStack';
 import { KeyStack } from './keystack';
@@ -58,6 +59,9 @@ export class ApiStage extends Stage {
       addNijmegenDomain: props.addNijmegenDomain,
     });
     cloudfrontStack.addDependency(usEastCertificateStack);
+
+    const dashboardStack = new DashboardStack(this, 'dashboard-stack');
+    dashboardStack.addDependency(apistack, 'Uses a log group form a lambda in the apiStack');
 
     // Only deploy WAF on accp and prod
     if (props.branch != 'development') {
