@@ -103,6 +103,8 @@ export abstract class Statics {
   static readonly ssmMonitoringLambdaArn: string = '/cdk/irma-issue-app/monitoring-lambda-arn';
   static readonly ssmSlackWebhookUrl: string = '/cdk/irma-issue-app/slack-webhook-url';
 
+  static readonly ssmSubjectHashDiversifier: string = '/cdk/irma-issue-app/subject/diversifier';
+
   /**
    * Access to the irma issue server
    */

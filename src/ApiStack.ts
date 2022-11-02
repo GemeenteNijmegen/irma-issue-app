@@ -127,14 +127,18 @@ export class ApiStack extends Stack {
     secretIrmaApiSecretKey.grantRead(issueFunction.lambda);
     secretIrmaApiKey.grantRead(issueFunction.lambda);
 
+    const diversifiyer = SSM.StringParameter.valueForStringParameter(this, Statics.ssmSubjectHashDiversifier);
     const callbackFunction = new ApiFunction(this, 'irma-issue-callback-function', {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
       description: 'Callback-lambda voor de IRMA issue-applicatie.',
-      logRetention: RetentionDays.ONE_YEAR,
+      logRetention: RetentionDays.ONE_YEAR, // Keep track of statistics for 1 year
       ssmLogGroup: Statics.ssmStatisticsLogGroup,
+      environment: {
+        DIVERSIFYER: diversifiyer,
+      },
     }, CallbackFunction);
 
     this.api.addRoutes({

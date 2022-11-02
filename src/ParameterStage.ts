@@ -120,5 +120,10 @@ export class ssmParamsConstruct extends Construct {
       stringValue: '-',
       parameterName: Statics.ssmIrmaStatisticsRecipients,
     });
+
+    new SSM.StringParameter(this, 'ssm_irma_statistics_2', {
+      stringValue: '-',
+      parameterName: Statics.ssmSubjectHashDiversifier,
+    });
   }
 }

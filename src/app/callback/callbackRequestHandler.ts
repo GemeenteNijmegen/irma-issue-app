@@ -60,7 +60,10 @@ async function registerIssueEvent(
   ttl: string,
   errorMessage?: string,
 ) {
-  const subject = crypto.createHash('sha256').update(bsn).digest('hex');
+
+  // Combine with gemeente and key value to make more unique
+  const diversify = `${bsn}/${gemeente}/${process.env.DIVERSIFYER}`;
+  const subject = crypto.createHash('sha256').update(diversify).digest('hex');
 
   let error = undefined;
   if (errorMessage) { // Trim errorMessage if needed

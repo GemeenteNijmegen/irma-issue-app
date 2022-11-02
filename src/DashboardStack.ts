@@ -99,7 +99,7 @@ export class DashboardStack extends Stack {
         'fields subject, gemeente',
         'filter not isempty(subject)',
         'stats count(subject) as counts by gemeente',
-        'sort gemeente'
+        'sort gemeente',
       ],
     });
   }
