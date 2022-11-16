@@ -17,7 +17,11 @@ export default async (data: any, template: string, partials?: {[key: string]: st
     ...partials,
   };
 
-  data.name = 'IRMA'; // TODO later veranderen bij naam switch
+  data = {
+    name: 'IRMA', // TODO later veranderen bij naam switch
+    logos: false,
+    ...data,
+  };
 
   return Mustache.render(template, data, fullPartials);
 };

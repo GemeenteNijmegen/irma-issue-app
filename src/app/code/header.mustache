@@ -1,88 +1,36 @@
-<!doctype html>
-<html lang="nl">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
-    
-    <!-- Preload fonts and external styles -->
-    <link rel="preload" 
-          as="style"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700&display=swap">
-    <link rel="preconnect" 
-          href="https://fonts.gstatic.com/" 
-          crossorigin="anonymous">
-    
-    <link rel="preload" 
-          as="font" 
-          href="/static/fonts/oranda_bold_bt.04c85cb2.woff2" 
-          type="font/woff2"
-          crossorigin="anonymous">
-    <link rel="preload" 
-          as="font" 
-          href="/static/fonts/oranda_bold_bt.8e266873.woff" 
-          type="font/woff"
-          crossorigin="anonymous">
-    <link rel="preload" 
-          as="font" 
-          href="/static/fonts/oranda_bt.bde3d05f.woff2" 
-          type="font/woff2"
-          crossorigin="anonymous">
-    <link rel="preload" 
-          as="font" 
-          href="/static/fonts/oranda_bt.05235f9a.woff" 
-          type="font/woff"
-          crossorigin="anonymous">
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-    <!-- Start: Core styling -->
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" 
-          href="https://componenten.nijmegen.nl/v6.1.0/css/bootstrap.min.css"
-          integrity="sha512-bnCn1haQjQGPoq90nqpOWUiu9i60sex8WQI639yU2yElzx0pfG0hpaJrKuJTJD3bZ3lEUw+HRGEHrWm6TGsKSg=="
-          crossorigin="anonymous">
-    <!-- Material Design Bootstrap combined with custom Nijmegen styles -->
-    <link rel="stylesheet" 
-          href="https://componenten.nijmegen.nl/v6.1.0/nijmegen.css"
-          integrity="sha512-blgrU3wXs0CIV9iars0ZyneHar1CFTEojkN3O9sGQrkvwT4PZX5wXD6dv7Gde+mUGPhgrr9ej92UCuzDkmk7cQ=="
-          crossorigin="anonymous">
-    <!-- End: Core styling -->
-    <link rel="stylesheet" href="/static/styles/screen.css">
-    <title>{{name}}{{#title}} - {{.}} {{/title}}</title>
+        <title>Gegevens toevoegen aan IRMA</title>
+
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="stylesheet" href="/static/style/theme.css"/>
+        <link rel="stylesheet" href="/static/style/main.css"/>
+
     </head>
-<body>
-<nav class="navbar fixed-top navbar-expand-lg scrolling-navbar navbar-primary">
-    <ul class="navbar-skiplinks">
-        <li>
-            <a href="#section-1 ">Direct naar inhoud</a>
-        </li>
-    </ul>
-    <div class="container">
-        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false">
-            <span class="sr-only">Menu</span>
-            <span class="navbar-toggler-icon" aria-hidden="true"></span>
-        </button>
-        <a class="navbar-brand" href="https://nijmegen.nl">
-            <span class="sr-only">Hoofdpagina</span>
-            <div class="navbar-brand-container">
-                <img src="/static/logo.png" class="logo-labeled" alt="Logo IRMA">
+    <body>
+        <div id="app">
+            <div class="fixedHeaderContainer">
+                <div class="headerWrapper wrapper">
+                    <header>
+                        <a href="/irma/gemeente/start" style="height: 50px;">
+                            <img class="logo" src="/static/img/irmaLogo.png" alt="IRMA Laden">
+                        </a>
+                        <div class="navigationWrapper navigationSlider">
+                            <nav class="slidingNav"></nav>
+                        </div>
+                    </header>
+                </div>
             </div>
-        </a>
-        {{#shownav}}
-        <div class="collapse navbar-collapse" id="navbar-collapse">
-            <ul class="navbar-nav mr-auto nijmegen-smooth-scroll">
-                <li class="nav-item">
-                    <a href="#" class="nav-link active">IRMA opladen</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link nav-no-link" href="/logout">{{volledigenaam}}
-                        <svg title="uitloggen" class="mdi mdi-logout"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 24 24"><path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" /></svg>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        {{/shownav}}
-    </div>
-</nav>
+            <div class="navPusher">
+                <div>
+                    <div class="homeContainer">
+                        <div class="homeSplashFade">
+                            <div class="wrapper homeWrapper">
+                           
