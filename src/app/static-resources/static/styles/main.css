@@ -50,3 +50,24 @@ body {
   top: -15px;
   left: 15px;
 }
+
+
+.logo-size-50 {
+  width: 50px;
+}
+
+.logo-size-72 {
+  width: 72px;
+}
+
+.opacity-1 {
+  opacity: 1;
+}
+
+.logo-wrapper {
+  padding-top:20px;
+}
+
+.mainContainer {
+  padding-bottom: 0px;
+}
