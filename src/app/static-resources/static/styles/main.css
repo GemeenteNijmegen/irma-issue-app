@@ -71,3 +71,9 @@ body {
 .mainContainer {
   padding-bottom: 0px;
 }
+
+
+.logout a svg {
+  width: 24px;
+  height: 24px;
+}
