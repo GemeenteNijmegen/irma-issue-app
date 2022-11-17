@@ -13,7 +13,7 @@ beforeAll(() => {
   }
 
   // Set env variables
-  process.env.SESSION_TABLE = 'mijnuitkering-sessions';
+  process.env.SESSION_TABLE = 'irma-issue-sessions';
   process.env.AUTH_URL_BASE = 'https://authenticatie-accp.nijmegen.nl';
   process.env.APPLICATION_URL_BASE = 'https://testing.example.com/';
   process.env.OIDC_SECRET_ARN = '123';
@@ -27,7 +27,7 @@ beforeEach(() => {
 
 test('Return logout page', async () => {
   const result = await handleLogoutRequest('', dynamoDBClient);
-  expect(result.body).toMatch('Uitgelogd');
+  expect(result.body).toContain('Uitgelogd');
   expect(result.statusCode).toBe(200);
   writeFile(path.join(__dirname, 'output', 'test.html'), result.body ?? '', () => {});
 });

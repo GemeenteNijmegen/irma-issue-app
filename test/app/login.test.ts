@@ -16,7 +16,7 @@ beforeAll(() => {
   }
 
   // Set env variables
-  process.env.SESSION_TABLE = 'mijnuitkering-sessions';
+  process.env.SESSION_TABLE = 'irma-issue-sessions';
   process.env.AUTH_URL_BASE = 'https://authenticatie-accp.nijmegen.nl';
   process.env.APPLICATION_URL_BASE = 'https://testing.example.com/';
   process.env.OIDC_SECRET_ARN = '123';
@@ -43,8 +43,8 @@ test('Return login page with correct link', async () => {
     expect('body' in result).toBe(true);
     return;
   }
-  expect(result.body).toMatch(`${process.env.AUTH_URL_BASE}/broker/sp/oidc/authenticate`);
-  expect(result.body).toMatch(encodeURIComponent(`${process.env.APPLICATION_URL_BASE}auth`));
+  expect(result.body).toContain(`${process.env.AUTH_URL_BASE}/broker/sp/oidc/authenticate`);
+  expect(result.body).toContain(encodeURIComponent(`${process.env.APPLICATION_URL_BASE}auth`));
   expect(result.statusCode).toBe(200);
   writeFile(path.join(__dirname, 'output', 'test.html'), result.body ?? '', () => { });
 });
