@@ -26,7 +26,7 @@ export class ApiFunction<T extends Lambda.Function> extends Construct {
     scope: Construct,
     id: string,
     props: ApiFunctionProps,
-    apiFunction: {new(scope: Construct, id:string, props?: Lambda.FunctionProps): T},
+    apiFunction: {new(scope2: Construct, id2:string, props2?: Lambda.FunctionProps): T},
   ) {
     super(scope, id);
     const retention = props.logRetention ? props.logRetention : RetentionDays.ONE_MONTH;
