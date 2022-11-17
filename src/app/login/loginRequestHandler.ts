@@ -23,6 +23,7 @@ export async function handleLoginRequest(cookies: string, dynamoDBClient: Dynamo
   const data = {
     title: 'Inloggen',
     authUrl: authUrl,
+    logos: true,
   };
   const html = await render(data, template.default);
   const newCookies = [session.getCookie()];
