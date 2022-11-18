@@ -403,7 +403,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"a4a9fa6dcd11a8535a2f724a10b6df98fcb6dd7483bad0d8fea555d519dc7a89:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"6f6c903ab790909a8cdbaa78567375233976dd135449e82bfb150aab45b5d027:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
