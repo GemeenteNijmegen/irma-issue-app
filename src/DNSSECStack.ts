@@ -1,6 +1,7 @@
 import { aws_route53 as Route53, Stack, StackProps, aws_ssm as SSM } from 'aws-cdk-lib';
 import { RemoteParameters } from 'cdk-remote-stack';
 import { Construct } from 'constructs';
+import { DnssecRecordStruct } from './dnssec-record/dnssec-record-struct';
 import { Statics } from './statics';
 
 export class DNSSECStack extends Stack {
@@ -16,30 +17,54 @@ export class DNSSECStack extends Stack {
      */
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
-    this.setDNSSEC();
-  }
 
-  setDNSSEC() {
+    // Import account root hosted zone
+    const rootZoneParams = new RemoteParameters(this, 'root-zone-params', {
+      path: Statics.accountRootHostedZonePath,
+      region: 'eu-west-1',
+    });
+    const accountRootZone = Route53.HostedZone.fromHostedZoneAttributes(this, 'account-root-zone', {
+      hostedZoneId: rootZoneParams.get(Statics.accountRootHostedZoneId),
+      zoneName: rootZoneParams.get(Statics.accountRootHostedZoneName),
+    });
 
-    const parameters = new RemoteParameters(this, 'params', {
+    // Import project hosted zone
+    const zoneParams = new RemoteParameters(this, 'zone-params', {
       path: Statics.ssmZonePath,
       region: 'eu-west-1',
     });
-    const zoneId = parameters.get(Statics.ssmZoneId);
-
-    const dnssec = new Route53.CfnDNSSEC(this, 'dnssec', {
-      hostedZoneId: zoneId,
+    const zone = Route53.HostedZone.fromHostedZoneAttributes(this, 'zone', {
+      hostedZoneId: zoneParams.get(Statics.ssmZoneId),
+      zoneName: zoneParams.get(Statics.ssmZoneName),
     });
+
+    // Setup DNSSEC
+    this.setDNSSEC(zone, accountRootZone);
+  }
+
+  setDNSSEC(hostedZone: Route53.IHostedZone, accountRootZone: Route53.IHostedZone) {
 
     // KSK
     const accountDnssecKmsKeyArn = SSM.StringParameter.valueForStringParameter(this, Statics.ssmAccountDnsSecKmsKey);
     const dnssecKeySigning = new Route53.CfnKeySigningKey(this, 'dnssec-keysigning-key', {
       name: 'irma_issue_ksk',
       status: 'ACTIVE',
-      hostedZoneId: zoneId,
+      hostedZoneId: hostedZone.hostedZoneId,
       keyManagementServiceArn: accountDnssecKmsKeyArn,
     });
+
+    // Enable DNSSEC
+    const dnssec = new Route53.CfnDNSSEC(this, 'dnssec', {
+      hostedZoneId: hostedZone.hostedZoneId,
+    });
     dnssec.node.addDependency(dnssecKeySigning);
+
+    // DS record
+    const dnssecRecord = new DnssecRecordStruct(this, 'dnssec-record', {
+      hostedZone: hostedZone,
+      parentHostedZone: accountRootZone,
+    });
+    dnssecRecord.node.addDependency(dnssec);
 
   }
 

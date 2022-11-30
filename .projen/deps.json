@@ -121,6 +121,10 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-sdk/client-route-53",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-sdk/client-secrets-manager",
       "type": "runtime"
     },

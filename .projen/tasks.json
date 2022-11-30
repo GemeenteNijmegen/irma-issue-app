@@ -59,6 +59,9 @@
         },
         {
           "spawn": "bundle:app/logout/logout.lambda"
+        },
+        {
+          "spawn": "bundle:dnssec-record/dnssec-record.lambda"
         }
       ]
     },
@@ -149,6 +152,24 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text --watch"
+        }
+      ]
+    },
+    "bundle:dnssec-record/dnssec-record.lambda": {
+      "name": "bundle:dnssec-record/dnssec-record.lambda",
+      "description": "Create a JavaScript bundle from src/dnssec-record/dnssec-record.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/dnssec-record/dnssec-record.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/dnssec-record/dnssec-record.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text"
+        }
+      ]
+    },
+    "bundle:dnssec-record/dnssec-record.lambda:watch": {
+      "name": "bundle:dnssec-record/dnssec-record.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/dnssec-record/dnssec-record.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/dnssec-record/dnssec-record.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/dnssec-record/dnssec-record.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --loader:.mustache=text --watch"
         }
       ]
     },
