@@ -25,12 +25,21 @@ export class DnssecRecordStruct extends Construct {
       timeout: Duration.seconds(60),
     });
 
+    // Allow to request the state of a change in route53
     lambda.addToRolePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
-        'route53:GetDNSSEC', // Get KSK using DNSSEC
-        'route53:ChangeResourceRecordSets', // Create / delete records
-        'route53:GetChange', // Wait for change
+        'route53:GetChange',
+      ],
+      resources: ['*'],
+    }));
+
+    // Allow obtaining info of DNSSEC and UPSERTING records
+    lambda.addToRolePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'route53:GetDNSSEC',
+        'route53:ChangeResourceRecordSets',
       ],
       resources: [
         props.hostedZone.hostedZoneArn,
