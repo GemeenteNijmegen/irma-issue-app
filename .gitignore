@@ -65,4 +65,3 @@ junit.xml
 !/src/app/login/login-function.ts
 !/src/app/logout/logout-function.ts
 !/src/dnssec-record/dnssec-record-function.ts
-!/.git/hooks/pre-push
