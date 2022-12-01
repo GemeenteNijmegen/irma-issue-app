@@ -121,10 +121,6 @@
       "type": "runtime"
     },
     {
-      "name": "@aws-sdk/client-route-53",
-      "type": "runtime"
-    },
-    {
       "name": "@aws-sdk/client-secrets-manager",
       "type": "runtime"
     },
@@ -146,6 +142,10 @@
     },
     {
       "name": "@gemeentenijmegen/apigateway-http",
+      "type": "runtime"
+    },
+    {
+      "name": "@gemeentenijmegen/dnssec-record",
       "type": "runtime"
     },
     {
