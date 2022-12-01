@@ -61,6 +61,7 @@ export class DNSSECStack extends Stack {
 
     // DS record
     const dnssecRecord = new DnssecRecordStruct(this, 'dnssec-record', {
+      keySigningKey: dnssecKeySigning,
       hostedZone: hostedZone,
       parentHostedZone: accountRootZone,
     });

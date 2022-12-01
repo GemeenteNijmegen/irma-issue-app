@@ -11,6 +11,7 @@ import { DnssecRecordFunction } from './dnssec-record-function';
 
 
 export interface DnssecRecordStructProps {
+  keySigningKey: route53.CfnKeySigningKey;
   hostedZone: route53.IHostedZone;
   parentHostedZone: route53.IHostedZone;
 }
@@ -55,6 +56,7 @@ export class DnssecRecordStruct extends Construct {
     new CustomResource(this, 'custom-resource', {
       serviceToken: customResourceProvider.serviceToken,
       properties: {
+        keySigningKeyName: props.keySigningKey.name,
         hostedZoneId: props.hostedZone.hostedZoneId,
         hostedZoneName: props.hostedZone.zoneName,
         parentHostedZoneId: props.parentHostedZone.hostedZoneId,

@@ -21,18 +21,18 @@ export class DnssecRecordUtil {
    * @param hostedZoneId
    * @returns
    */
-  async getDsRecordValue(hostedZoneId: string) {
+  async getDsRecordValue(hostedZoneId: string, keySigningKeyName: string) {
     // Obtain DNSSEC status from hosted zone
     const dnssecCommand = new GetDNSSECCommand({
       HostedZoneId: hostedZoneId,
     });
     const dnssecInfo = await this.route53Client.send(dnssecCommand);
 
-    // Find a valid key signing key
-    const keySigningKey = dnssecInfo.KeySigningKeys?.find(k => k.Status == 'ACTIVE');
+    // Find the key signing key by name
+    const keySigningKey = dnssecInfo.KeySigningKeys?.find(k => k.Name == keySigningKeyName && k.Status == 'ACTIVE');
     if (!keySigningKey) {
-      console.error('Could not find an (active) KSK: ', JSON.stringify(dnssecInfo.KeySigningKeys));
-      throw Error('Could not find an (active) KeySignigKey (see logging for more details)');
+      console.error('Could not find active KSK', keySigningKeyName, JSON.stringify(dnssecInfo.KeySigningKeys));
+      throw Error(`Could not find an (active) KeySignigKey with name ${keySigningKeyName} (see logging for more details)`);
     }
 
     // Get the record value
@@ -46,27 +46,26 @@ export class DnssecRecordUtil {
 
 
   /**
-   * Tries to delete the DS record in the paren hosted zone
-   * Note: chances are that this does not work as all values must be the same...
+   * Tries to create the DS record in the parent hosted zone
    * @param parentHostedZoneId
    * @param dsRecordName
    * @param dsRecordValue
    */
   async createDsRecord(parentHostedZoneId: string, dsRecordName: string, dsRecordValue: string) {
     const createRecordCommand = new ChangeResourceRecordSetsCommand({
-      HostedZoneId: parentHostedZoneId, // Parent hosted zone!
+      HostedZoneId: parentHostedZoneId, // DS is in parent hosted zone!
       ChangeBatch: {
-        Comment: 'Create DS record in hosted zone',
+        Comment: 'Create DS record in parent hosted zone',
         Changes: [
           {
             Action: 'UPSERT', // Create if not exist update otherwise
             ResourceRecordSet: {
-              Name: dsRecordName, // this should be hosted zone name (in the parent)
+              Name: dsRecordName,
               Type: 'DS',
               ResourceRecords: [
                 { Value: dsRecordValue },
               ],
-              TTL: 3600, // Can be increased probably
+              TTL: 3600,
             },
           },
         ],

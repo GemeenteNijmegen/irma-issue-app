@@ -23,17 +23,21 @@ async function onCreateUpdate(
 ): Promise<CloudFormationCustomResourceResponse> {
 
   // Get parameters for custom resource
+  const keySigningKeyName = event.ResourceProperties.keySigningKeyName;
   const hostedZoneId = event.ResourceProperties.hostedZoneId;
   const hostedZoneName = event.ResourceProperties.hostedZoneName;
   const parentHostedZoneId = event.ResourceProperties.parentHostedZoneId;
 
-  console.info('HZ ID:', hostedZoneId, 'HZ NAME:', hostedZoneName, 'Parent HZ ID:', parentHostedZoneId);
+  console.info('KeySigningKey name:', keySigningKeyName);
+  console.info('Hosted zone ID:', hostedZoneId);
+  console.info('Hosted zone name:', hostedZoneName);
+  console.info('Parent hosted zone ID:', parentHostedZoneId);
 
   const util = new DnssecRecordUtil(route53Client);
 
   try {
 
-    const dsRecordValue = await util.getDsRecordValue(hostedZoneId);
+    const dsRecordValue = await util.getDsRecordValue(hostedZoneId, keySigningKeyName);
     const changeId = await util.createDsRecord(parentHostedZoneId, hostedZoneName, dsRecordValue);
     const successful = await util.waitForChange(changeId, 2, 3000);
 
