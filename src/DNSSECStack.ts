@@ -1,7 +1,7 @@
+import { DnssecRecordStruct } from '@gemeentenijmegen/dnssec-record';
 import { aws_route53 as Route53, Stack, StackProps, aws_ssm as SSM } from 'aws-cdk-lib';
 import { RemoteParameters } from 'cdk-remote-stack';
 import { Construct } from 'constructs';
-import { DnssecRecordStruct } from '@gemeentenijmegen/dnssec-record';
 import { Statics } from './statics';
 
 export class DNSSECStack extends Stack {

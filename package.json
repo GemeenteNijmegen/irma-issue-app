@@ -14,8 +14,6 @@
     "bundle:app/login/login.lambda:watch": "npx projen bundle:app/login/login.lambda:watch",
     "bundle:app/logout/logout.lambda": "npx projen bundle:app/logout/logout.lambda",
     "bundle:app/logout/logout.lambda:watch": "npx projen bundle:app/logout/logout.lambda:watch",
-    "bundle:dnssec-record/dnssec-record.lambda": "npx projen bundle:dnssec-record/dnssec-record.lambda",
-    "bundle:dnssec-record/dnssec-record.lambda:watch": "npx projen bundle:dnssec-record/dnssec-record.lambda:watch",
     "clobber": "npx projen clobber",
     "compile": "npx projen compile",
     "default": "npx projen default",
