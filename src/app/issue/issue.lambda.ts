@@ -1,8 +1,8 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Response } from '@gemeentenijmegen/apigateway-http';
-import { IrmaApi } from '../code/IrmaApi';
 import { issueRequestHandler } from './issueRequestHandler';
+import { IrmaApi } from '../code/IrmaApi';
 
 const dynamoDBClient = new DynamoDBClient({});
 
