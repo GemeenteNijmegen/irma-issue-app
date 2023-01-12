@@ -65,12 +65,17 @@ export class ApiStack extends Stack {
    * @param {string} baseUrl the application url
    */
   setFunctions(baseUrl: string, readOnlyRole: Role) {
+
+    // See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html
+    const insightsArn = `arn:aws:lambda:${this.region}:580247275435:layer:LambdaInsightsExtension:16`;
+
     const loginFunction = new ApiFunction(this, 'irma-issue-login-function', {
       description: 'Login-pagina voor de IRMA issue-applicatie.',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
+      lambdaInsightsExtensionArn: insightsArn,
     }, LoginFunction);
 
     const logoutFunction = new ApiFunction(this, 'irma-issue-logout-function', {
@@ -79,6 +84,7 @@ export class ApiStack extends Stack {
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
+      lambdaInsightsExtensionArn: insightsArn,
     }, LogoutFunction);
 
     const oidcSecret = aws_secretsmanager.Secret.fromSecretNameV2(this, 'oidc-secret', Statics.secretOIDCClientSecret);
@@ -91,6 +97,7 @@ export class ApiStack extends Stack {
       environment: {
         CLIENT_SECRET_ARN: oidcSecret.secretArn,
       },
+      lambdaInsightsExtensionArn: insightsArn,
     }, AuthFunction);
     oidcSecret.grantRead(authFunction.lambda);
 
@@ -119,6 +126,7 @@ export class ApiStack extends Stack {
         IRMA_API_SECRET_KEY_ARN: secretIrmaApiSecretKey.secretArn,
         IRMA_API_KEY_ARN: secretIrmaApiKey.secretArn,
       },
+      lambdaInsightsExtensionArn: insightsArn,
     }, IssueFunction);
     secretMTLSPrivateKey.grantRead(issueFunction.lambda);
     tlskeyParam.grantRead(issueFunction.lambda);
@@ -139,6 +147,7 @@ export class ApiStack extends Stack {
       environment: {
         DIVERSIFYER: diversifiyer,
       },
+      lambdaInsightsExtensionArn: insightsArn,
     }, CallbackFunction);
 
     this.api.addRoutes({
