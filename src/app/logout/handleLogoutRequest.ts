@@ -2,8 +2,8 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import * as cookie from 'cookie';
-import render from '../code/Render';
 import * as template from './logout.mustache';
+import render from '../code/Render';
 
 export async function handleLogoutRequest(cookies: string, dynamoDBClient: DynamoDBClient) {
   let session = new Session(cookies, dynamoDBClient);

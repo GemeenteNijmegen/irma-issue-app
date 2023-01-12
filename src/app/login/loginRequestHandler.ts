@@ -1,9 +1,9 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
+import * as template from './login.mustache';
 import { OpenIDConnect } from '../code/OpenIDConnect';
 import render from '../code/Render';
-import * as template from './login.mustache';
 
 export async function handleLoginRequest(cookies: string, dynamoDBClient: DynamoDBClient) {
   let session = new Session(cookies, dynamoDBClient);

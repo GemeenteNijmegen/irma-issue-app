@@ -49,7 +49,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"6ddcf10002539818a9256eff3fb2b22aa09298d8f946e26ba121c175a600c44e:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"2bc265c5e0569aeb24a6349c15bd54e76e845892376515e036627ab0cc70bb64:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -108,7 +108,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"ed38f419a030b19287b12a9554adff8858b999e8627f093ccaecfd8d76a39521:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"fb8e4a116de2333ab5eba09bf463f9c5288dc1eb799dbeb2b406ac0e45bb2fc9:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -167,7 +167,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"80e7efa6d022cd690066ff36715eb40fd8bafaf944d90d956ef9c7f36fbeb53f:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"bd8181c8f51323814bd07c84b2b80b802f9d199b2e47fd027fc4f0f16b01b553:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -285,7 +285,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"7020b9a40bd3dac6632a73c9bcee2d85e9aace42cbb8c4f93764cb9a360660da:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"25b801d36f937be1d91523cd9fa6cfb0fb5d47f413d086d044910909d3861c24:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -344,7 +344,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"241774e6e97ab8c4fea4bedd24ef90740c1228145118b5554c65162fc7a4c6ea:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"41c9cca0546e1a301995a2de090e26279c2577cf00d25bdbc4372d634d6ed3bc:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -403,7 +403,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"08522c90bec2f79587f578eac4f70288c3fa6fd1716a221e3282f59d4278f6b3:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"92a3964a1f73da3726bd89af34333021ed8f59a3055e27258350064ae0ddf7fb:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -462,7 +462,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"53429e560bdd68210f6db017919e99f94a4ddcd5438aaae9248c6acbe44f073d:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapiapistack38F434B4.assets.json\\\\\\" --verbose publish \\\\\\"fa7fa4e7df764856ab205ccd2de19e133aa80576c89fd3a194a851c342f5e67c:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -580,7 +580,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"6ff23d2800aac27308e31c227529dc13854507c3b2598d2433fcf82604fa054d:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"2157f4ab8972014e220d70707296b292b3b7301f163f7cd641ccda0ee663530f:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -639,7 +639,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"c409e6c5845f1f349df8cd84e160bf6f1c35d2b060b63e1f032f9bd39d4542cc:test-eu-west-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"5d8d1d0aacea23824c62f362e1e3c14b7dd14a31c71b53bfae4d14a6373c5510:test-eu-west-1\\\\\\"\\"
       ]
     }
   }
@@ -1046,20 +1046,6 @@ Object {
               "Resource": Object {
                 "Fn::GetAtt": Array [
                   "irmaissueappdevelopmentAssetsFileAsset929EBD861",
-                  "Arn",
-                ],
-              },
-            },
-            Object {
-              "Action": Array [
-                "codebuild:BatchGetBuilds",
-                "codebuild:StartBuild",
-                "codebuild:StopBuild",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::GetAtt": Array [
-                  "irmaissueappdevelopmentPipelineirmaissueapivalidate447268AF",
                   "Arn",
                 ],
               },
@@ -2496,32 +2482,6 @@ Object {
                 },
                 "RunOrder": 6,
               },
-              Object {
-                "ActionTypeId": Object {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": Object {
-                  "ProjectName": Object {
-                    "Ref": "irmaissueappdevelopmentPipelineirmaissueapivalidate447268AF",
-                  },
-                },
-                "InputArtifacts": Array [
-                  Object {
-                    "Name": "GemeenteNijmegen_irma_issue_app_Source",
-                  },
-                ],
-                "Name": "validate",
-                "RoleArn": Object {
-                  "Fn::GetAtt": Array [
-                    "irmaissueappdevelopmentCodeBuildActionRole3089A74E",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 7,
-              },
             ],
             "Name": "irma-issue-api",
           },
@@ -2867,243 +2827,6 @@ Object {
         "Roles": Array [
           Object {
             "Ref": "irmaissueappdevelopmentPipelineSourceGemeenteNijmegenirmaissueappCodePipelineActionRoleD6365904",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "irmaissueappdevelopmentPipelineirmaissueapivalidate447268AF": Object {
-      "Properties": Object {
-        "Artifacts": Object {
-          "Type": "CODEPIPELINE",
-        },
-        "Cache": Object {
-          "Type": "NO_CACHE",
-        },
-        "Description": "Pipeline step test/Pipeline/irma-issue-api/validate",
-        "EncryptionKey": Object {
-          "Fn::GetAtt": Array [
-            "irmaissueappdevelopmentPipelineArtifactsBucketEncryptionKeyDEB5A7F7",
-            "Arn",
-          ],
-        },
-        "Environment": Object {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "EnvironmentVariables": Array [
-            Object {
-              "Name": "CI",
-              "Type": "PLAINTEXT",
-              "Value": "true",
-            },
-            Object {
-              "Name": "ENVIRONMENT",
-              "Type": "PLAINTEXT",
-              "Value": "development",
-            },
-          ],
-          "Image": "aws/codebuild/standard:5.0",
-          "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": false,
-          "Type": "LINUX_CONTAINER",
-        },
-        "ServiceRole": Object {
-          "Fn::GetAtt": Array [
-            "irmaissueappdevelopmentPipelineirmaissueapivalidateRoleD776DDEC",
-            "Arn",
-          ],
-        },
-        "Source": Object {
-          "BuildSpec": "{
-  \\"version\\": \\"0.2\\",
-  \\"phases\\": {
-    \\"build\\": {
-      \\"commands\\": [
-        \\"yarn install --frozen-lockfile\\",
-        \\"npx playwright install\\",
-        \\"npx playwright install-deps\\",
-        \\"npx playwright test\\"
-      ]
-    }
-  }
-}",
-          "Type": "CODEPIPELINE",
-        },
-        "Tags": Array [
-          Object {
-            "Key": "cdkManaged",
-            "Value": "yes",
-          },
-          Object {
-            "Key": "Project",
-            "Value": "irma-issue-app",
-          },
-        ],
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
-    "irmaissueappdevelopmentPipelineirmaissueapivalidateRoleD776DDEC": Object {
-      "Properties": Object {
-        "AssumeRolePolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": Object {
-                "Service": "codebuild.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "Tags": Array [
-          Object {
-            "Key": "cdkManaged",
-            "Value": "yes",
-          },
-          Object {
-            "Key": "Project",
-            "Value": "irma-issue-app",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "irmaissueappdevelopmentPipelineirmaissueapivalidateRoleDefaultPolicy95F29F59": Object {
-      "Properties": Object {
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": Array [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": Array [
-                Object {
-                  "Fn::Join": Array [
-                    "",
-                    Array [
-                      "arn:",
-                      Object {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:eu-west-1:test:log-group:/aws/codebuild/",
-                      Object {
-                        "Ref": "irmaissueappdevelopmentPipelineirmaissueapivalidate447268AF",
-                      },
-                    ],
-                  ],
-                },
-                Object {
-                  "Fn::Join": Array [
-                    "",
-                    Array [
-                      "arn:",
-                      Object {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:eu-west-1:test:log-group:/aws/codebuild/",
-                      Object {
-                        "Ref": "irmaissueappdevelopmentPipelineirmaissueapivalidate447268AF",
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            Object {
-              "Action": Array [
-                "codebuild:CreateReportGroup",
-                "codebuild:CreateReport",
-                "codebuild:UpdateReport",
-                "codebuild:BatchPutTestCases",
-                "codebuild:BatchPutCodeCoverages",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::Join": Array [
-                  "",
-                  Array [
-                    "arn:",
-                    Object {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":codebuild:eu-west-1:test:report-group/",
-                    Object {
-                      "Ref": "irmaissueappdevelopmentPipelineirmaissueapivalidate447268AF",
-                    },
-                    "-*",
-                  ],
-                ],
-              },
-            },
-            Object {
-              "Action": Array [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-              ],
-              "Effect": "Allow",
-              "Resource": Array [
-                Object {
-                  "Fn::GetAtt": Array [
-                    "irmaissueappdevelopmentPipelineArtifactsBucketBC451F52",
-                    "Arn",
-                  ],
-                },
-                Object {
-                  "Fn::Join": Array [
-                    "",
-                    Array [
-                      Object {
-                        "Fn::GetAtt": Array [
-                          "irmaissueappdevelopmentPipelineArtifactsBucketBC451F52",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            Object {
-              "Action": Array [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::GetAtt": Array [
-                  "irmaissueappdevelopmentPipelineArtifactsBucketEncryptionKeyDEB5A7F7",
-                  "Arn",
-                ],
-              },
-            },
-            Object {
-              "Action": Array [
-                "kms:Decrypt",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": Object {
-                "Fn::GetAtt": Array [
-                  "irmaissueappdevelopmentPipelineArtifactsBucketEncryptionKeyDEB5A7F7",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "irmaissueappdevelopmentPipelineirmaissueapivalidateRoleDefaultPolicy95F29F59",
-        "Roles": Array [
-          Object {
-            "Ref": "irmaissueappdevelopmentPipelineirmaissueapivalidateRoleD776DDEC",
           },
         ],
       },

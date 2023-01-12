@@ -2,10 +2,10 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
-import { IrmaApi } from '../code/IrmaApi';
-import render from '../code/Render';
 import { BrpApi } from './BrpApi';
 import * as template from './issue.mustache';
+import { IrmaApi } from '../code/IrmaApi';
+import render from '../code/Render';
 
 /**
  * Check login and handle request

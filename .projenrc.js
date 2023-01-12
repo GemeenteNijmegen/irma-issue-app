@@ -1,11 +1,10 @@
-const { awscdk, TextFile } = require('projen');
-const project = new awscdk.AwsCdkTypeScriptApp({
+const { GemeenteNijmegenCdkApp } = require('@gemeentenijmegen/projen-project-type');
+
+const project = new GemeenteNijmegenCdkApp({
   cdkVersion: '2.22.0',
   defaultReleaseBranch: 'production',
-  release: true,
   majorVersion: 1,
   name: 'irma-issue-app',
-  license: 'EUPL-1.2',
   deps: [
     'dotenv',
     '@aws-cdk/aws-apigatewayv2-alpha',
@@ -24,7 +23,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '@gemeentenijmegen/utils',
     '@gemeentenijmegen/apigateway-http',
     '@privacybydesign/irma-frontend',
-    'axios@^0.27.2', // TODO upgrade however aws4-axios is not yet compatible with v1
+    'axios@^0.27.2', // TODO upgrade however https://github.com/jamesmbourne/aws4-axios/issues/701
     'mustache',
     '@types/mustache',
     'aws4-axios',
@@ -32,10 +31,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '@types/cookie',
     'cookie',
     '@types/aws-lambda',
-
-
-  ], /* Runtime dependencies of this module. */
-  // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
+  ],
   devDeps: [
     'copyfiles',
     '@playwright/test',
@@ -43,15 +39,8 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'jest-raw-loader',
     'axios-mock-adapter',
     'jest-aws-client-mock',
-  ], /* Build dependencies for this module. */
-  depsUpgradeOptions: {
-    workflowOptions: {
-      branches: ['development'],
-    },
-  },
-  // packageName: undefined,  /* The "name" in package.json. */
-  // release: undefined,      /* Add release management to this project. */
-  mutableBuild: true,
+    '@gemeentenijmegen/projen-project-type',
+  ],
   jestOptions: {
     jestConfig: {
       setupFiles: ['dotenv/config'],
@@ -70,10 +59,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     devdirs: ['src/app/logout/tests', '/test', '/build-tools'],
   },
   gitignore: [
-    '.env',
-    '.vscode',
     'src/app/**/tests/output',
-    '.DS_Store',
     'test/playwright/report',
     'test/playwright/screenshots',
   ],
