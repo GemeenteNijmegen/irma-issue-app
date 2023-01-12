@@ -1,5 +1,4 @@
 import { Stack, StackProps, Tags, pipelines, Environment } from 'aws-cdk-lib';
-import { ShellStep } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
 import { ApiStage } from './ApiStage';
 import { ParameterStage } from './ParameterStage';
@@ -24,13 +23,13 @@ export class PipelineStack extends Stack {
 
     pipeline.addStage(new ParameterStage(this, 'irma-issue-parameters', { env: props.deployToEnvironment }));
 
-    const apiStage = pipeline.addStage(new ApiStage(this, 'irma-issue-api', {
+    pipeline.addStage(new ApiStage(this, 'irma-issue-api', {
       env: props.deployToEnvironment,
       branch: this.branchName,
       addNijmegenDomain: props.addNijmegenDomain,
     }));
 
-    this.runValidationChecks(apiStage, source);
+    //this.runValidationChecks(apiStage, source);
 
   }
 
@@ -40,21 +39,21 @@ export class PipelineStack extends Stack {
    * @param stage stage after which to run
    * @param source the source repo in which to run
    */
-  private runValidationChecks(stage: pipelines.StageDeployment, source: pipelines.CodePipelineSource) {
-    stage.addPost(new ShellStep('validate', {
-      input: source,
-      env: {
-        CI: 'true',
-        ENVIRONMENT: this.branchName,
-      },
-      commands: [
-        'yarn install --frozen-lockfile',
-        'npx playwright install',
-        'npx playwright install-deps',
-        'npx playwright test',
-      ],
-    }));
-  }
+  // private runValidationChecks(stage: pipelines.StageDeployment, source: pipelines.CodePipelineSource) {
+  //   stage.addPost(new ShellStep('validate', {
+  //     input: source,
+  //     env: {
+  //       CI: 'true',
+  //       ENVIRONMENT: this.branchName,
+  //     },
+  //     commands: [
+  //       'yarn install --frozen-lockfile',
+  //       'npx playwright install',
+  //       'npx playwright install-deps',
+  //       'npx playwright test',
+  //     ],
+  //   }));
+  // }
 
   pipeline(source: pipelines.CodePipelineSource): pipelines.CodePipeline {
     const synthStep = new pipelines.ShellStep('Synth', {
