@@ -68,7 +68,7 @@ export class WafStack extends Stack {
                       byteMatchStatement: {
                         fieldToMatch: {
                           singleHeader: {
-                            name: 'user-agent',
+                            Name: 'user-agent',
                           },
                         },
                         positionalConstraint: 'EXACTLY',

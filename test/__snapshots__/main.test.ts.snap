@@ -5814,7 +5814,7 @@ Object {
                         "ByteMatchStatement": Object {
                           "FieldToMatch": Object {
                             "SingleHeader": Object {
-                              "name": "user-agent",
+                              "Name": "user-agent",
                             },
                           },
                           "PositionalConstraint": "EXACTLY",
