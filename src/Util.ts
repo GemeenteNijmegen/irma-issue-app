@@ -31,15 +31,11 @@ export class AppDomainUtil {
    * @param zoneName the project hosted zone name
    */
   static getDomainNames(configuration: Configuration, zoneName: string) {
-    const cspName = AppDomainUtil.getCspDomainName(zoneName);
+    const cspName = zoneName;
     const nijmegenDomain = AppDomainUtil.getNijmegenDomainName(configuration);
     const domainNames = [cspName];
     if (nijmegenDomain) { domainNames.push(nijmegenDomain); }
     return domainNames;
-  }
-
-  static getMainDomainName(zoneName: string) {
-    return AppDomainUtil.getCspDomainName(zoneName);
   }
 
   static getAlternativeDomainNames(configuration: Configuration) {
@@ -61,10 +57,6 @@ export class AppDomainUtil {
       return `https://${configuration.nijmegenSubdomain}.nijmegen.nl/`;
     }
     return `https://irma-issue.${zoneName}/`;
-  }
-
-  private static getCspDomainName(zoneName:string) {
-    return `irma-issue.${zoneName}`;
   }
 
   private static getNijmegenDomainName(configuration: Configuration) {
