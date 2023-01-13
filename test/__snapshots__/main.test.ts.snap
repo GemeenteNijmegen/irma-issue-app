@@ -5380,7 +5380,7 @@ def submit_response(event: dict, context, response_status: str, error_message: s
           },
         ],
         "SourceObjectKeys": Array [
-          "ed38f419a030b19287b12a9554adff8858b999e8627f093ccaecfd8d76a39521.zip",
+          "fb8e4a116de2333ab5eba09bf463f9c5288dc1eb799dbeb2b406ac0e45bb2fc9.zip",
         ],
       },
       "Type": "Custom::CDKBucketDeployment",
@@ -6201,7 +6201,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"ed38f419a030b19287b12a9554adff8858b999e8627f093ccaecfd8d76a39521:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-irma-issue-api/testirmaissueapicloudfrontstackE66D8EBF.assets.json\\\\\\" --verbose publish \\\\\\"fb8e4a116de2333ab5eba09bf463f9c5288dc1eb799dbeb2b406ac0e45bb2fc9:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
