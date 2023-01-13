@@ -11,14 +11,14 @@ import { CallbackFunction } from './app/callback/callback-function';
 import { IssueFunction } from './app/issue/issue-function';
 import { LoginFunction } from './app/login/login-function';
 import { LogoutFunction } from './app/logout/logout-function';
+import { Configurable } from './Configuration';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
+import { AppDomainUtil } from './Util';
 
-export interface ApiStackProps extends StackProps {
+export interface ApiStackProps extends StackProps, Configurable {
   sessionsTable: SessionsTable;
-  branch: string;
-  addNijmegenDomain: boolean;
 }
 
 /**
@@ -27,12 +27,15 @@ export interface ApiStackProps extends StackProps {
  * DynamoDB sessions table to be provided and thus created first)
  */
 export class ApiStack extends Stack {
+
   private sessionsTable: Table;
   api: apigatewayv2.HttpApi;
 
   constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id);
+
     this.sessionsTable = props.sessionsTable.table;
+
     this.api = new apigatewayv2.HttpApi(this, 'irma-issue-api', {
       description: 'IRMA issue webapplicatie',
     });
@@ -43,15 +46,9 @@ export class ApiStack extends Stack {
       parameterName: Statics.ssmApiGatewayId,
     });
 
-    const cspSubdomain = Statics.cspSubDomain(props.branch);
-    const cspDomain = `${cspSubdomain}.csp-nijmegen.nl`;
-    var baseUrl = `https://${cspDomain}/`;
-
-    if (props.addNijmegenDomain) {
-      const subdomain = Statics.subDomain(props.branch);
-      const appDomain = `${subdomain}.nijmegen.nl`;
-      var baseUrl = `https://${appDomain}/`;
-    }
+    // Get the base url
+    const zoneName = SSM.StringParameter.valueForStringParameter(this, Statics.ssmZoneName);
+    const baseUrl = AppDomainUtil.getBaseUrl(props.configuration, zoneName);
 
     // this.monitoringLambda();
     const readOnlyRole = this.readOnlyRole();
@@ -65,12 +62,17 @@ export class ApiStack extends Stack {
    * @param {string} baseUrl the application url
    */
   setFunctions(baseUrl: string, readOnlyRole: Role) {
+
+    // See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html
+    const insightsArn = `arn:aws:lambda:${this.region}:580247275435:layer:LambdaInsightsExtension:16`;
+
     const loginFunction = new ApiFunction(this, 'irma-issue-login-function', {
       description: 'Login-pagina voor de IRMA issue-applicatie.',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
+      lambdaInsightsExtensionArn: insightsArn,
     }, LoginFunction);
 
     const logoutFunction = new ApiFunction(this, 'irma-issue-logout-function', {
@@ -79,6 +81,7 @@ export class ApiStack extends Stack {
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
+      lambdaInsightsExtensionArn: insightsArn,
     }, LogoutFunction);
 
     const oidcSecret = aws_secretsmanager.Secret.fromSecretNameV2(this, 'oidc-secret', Statics.secretOIDCClientSecret);
@@ -91,6 +94,7 @@ export class ApiStack extends Stack {
       environment: {
         CLIENT_SECRET_ARN: oidcSecret.secretArn,
       },
+      lambdaInsightsExtensionArn: insightsArn,
     }, AuthFunction);
     oidcSecret.grantRead(authFunction.lambda);
 
@@ -119,6 +123,7 @@ export class ApiStack extends Stack {
         IRMA_API_SECRET_KEY_ARN: secretIrmaApiSecretKey.secretArn,
         IRMA_API_KEY_ARN: secretIrmaApiKey.secretArn,
       },
+      lambdaInsightsExtensionArn: insightsArn,
     }, IssueFunction);
     secretMTLSPrivateKey.grantRead(issueFunction.lambda);
     tlskeyParam.grantRead(issueFunction.lambda);
@@ -139,6 +144,7 @@ export class ApiStack extends Stack {
       environment: {
         DIVERSIFYER: diversifiyer,
       },
+      lambdaInsightsExtensionArn: insightsArn,
     }, CallbackFunction);
 
     this.api.addRoutes({

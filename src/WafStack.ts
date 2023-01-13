@@ -1,10 +1,11 @@
 import { ArnFormat, aws_ssm as SSM, aws_wafv2, Stack, StackProps } from 'aws-cdk-lib';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
+import { Configurable } from './Configuration';
 import { Statics } from './statics';
 
-export interface WafStackProps extends StackProps {
-  branch: string;
+export interface WafStackProps extends StackProps, Configurable {
+
 }
 
 export class WafStack extends Stack {
@@ -12,7 +13,7 @@ export class WafStack extends Stack {
     super(scope, id, props);
 
     let rateBasedStatementAction: object = { block: {} };
-    if (props.branch == 'acceptance') {
+    if (!props.configuration.setWafRatelimit) {
       rateBasedStatementAction = { count: {} };
     }
 
@@ -67,7 +68,7 @@ export class WafStack extends Stack {
                       byteMatchStatement: {
                         fieldToMatch: {
                           singleHeader: {
-                            name: 'user-agent',
+                            Name: 'user-agent',
                           },
                         },
                         positionalConstraint: 'EXACTLY',

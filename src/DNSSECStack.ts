@@ -2,26 +2,32 @@ import { DnssecRecordStruct } from '@gemeentenijmegen/dnssec-record';
 import { aws_route53 as Route53, Stack, StackProps, aws_ssm as SSM } from 'aws-cdk-lib';
 import { RemoteParameters } from 'cdk-remote-stack';
 import { Construct } from 'constructs';
+import { Configurable } from './Configuration';
 import { Statics } from './statics';
+import { importProjectHostedZone } from './Util';
+
+export interface DNSSECStackProps extends StackProps, Configurable {}
 
 export class DNSSECStack extends Stack {
+
   /**
-     * Add DNSSEC using a new KMS key to the domain.
-     * The key needs to be created in us-east-1. It only adds
-     * DNSSEC to the zone for this project. The parent zone needs
-     * to have DNSSEC enabled as well.
-     *
-     * @param scope Construct
-     * @param id stack id
-     * @param props props object
-     */
-  constructor(scope: Construct, id: string, props: StackProps) {
+   * Add DNSSEC using a new KMS key to the domain.
+   * The key needs to be created in us-east-1. It only adds
+   * DNSSEC to the zone for this project. The parent zone needs
+   * to have DNSSEC enabled as well.
+   *
+   * @param scope Construct
+   * @param id stack id
+   * @param props props object
+   */
+  constructor(scope: Construct, id: string, props: DNSSECStackProps) {
     super(scope, id, props);
 
     // Import account root hosted zone
     const rootZoneParams = new RemoteParameters(this, 'root-zone-params', {
       path: Statics.accountRootHostedZonePath,
-      region: 'eu-west-1',
+      region: props.configuration.deployToEnvironment.region,
+      alwaysUpdate: false,
     });
     const accountRootZone = Route53.HostedZone.fromHostedZoneAttributes(this, 'account-root-zone', {
       hostedZoneId: rootZoneParams.get(Statics.accountRootHostedZoneId),
@@ -29,14 +35,7 @@ export class DNSSECStack extends Stack {
     });
 
     // Import project hosted zone
-    const zoneParams = new RemoteParameters(this, 'zone-params', {
-      path: Statics.ssmZonePath,
-      region: 'eu-west-1',
-    });
-    const zone = Route53.HostedZone.fromHostedZoneAttributes(this, 'zone', {
-      hostedZoneId: zoneParams.get(Statics.ssmZoneId),
-      zoneName: zoneParams.get(Statics.ssmZoneName),
-    });
+    const zone = importProjectHostedZone(this, props.configuration.deployToEnvironment.region);
 
     // Setup DNSSEC
     this.setDNSSEC(zone, accountRootZone);

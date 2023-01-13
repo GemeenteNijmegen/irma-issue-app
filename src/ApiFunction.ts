@@ -16,6 +16,7 @@ export interface ApiFunctionProps {
   readOnlyRole: Role;
   logRetention?: RetentionDays;
   ssmLogGroup?: string;
+  lambdaInsightsExtensionArn: string;
 }
 
 export class ApiFunction<T extends Lambda.Function> extends Construct {
@@ -30,15 +31,13 @@ export class ApiFunction<T extends Lambda.Function> extends Construct {
   ) {
     super(scope, id);
     const retention = props.logRetention ? props.logRetention : RetentionDays.ONE_MONTH;
-    // See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html
-    const insightsArn = 'arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:16';
     this.lambda = new apiFunction(this, 'lambda', {
       runtime: Lambda.Runtime.NODEJS_14_X, // Overwritten
       code: Lambda.Code.fromInline('empty'), // Overwritten
       handler: 'index.handler', // Overwritten by apiFunction constructor
       memorySize: 512,
       description: props.description,
-      insightsVersion: Lambda.LambdaInsightsVersion.fromInsightVersionArn(insightsArn),
+      insightsVersion: Lambda.LambdaInsightsVersion.fromInsightVersionArn(props.lambdaInsightsExtensionArn),
       logRetention: retention,
       environment: {
         APPLICATION_URL_BASE: props.applicationUrlBase || '',
