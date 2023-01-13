@@ -446,33 +446,17 @@ Object {
     "certificateEC031123": Object {
       "Properties": Object {
         "DomainName": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "irma-issue.",
-              Object {
-                "Fn::GetAtt": Array [
-                  "zoneparamsSsmParametersF6CC8160",
-                  "/cdk/irma-issue-app/zone/name",
-                ],
-              },
-            ],
+          "Fn::GetAtt": Array [
+            "zoneparamsSsmParametersF6CC8160",
+            "/cdk/irma-issue-app/zone/name",
           ],
         },
         "DomainValidationOptions": Array [
           Object {
             "DomainName": Object {
-              "Fn::Join": Array [
-                "",
-                Array [
-                  "irma-issue.",
-                  Object {
-                    "Fn::GetAtt": Array [
-                      "zoneparamsSsmParametersF6CC8160",
-                      "/cdk/irma-issue-app/zone/name",
-                    ],
-                  },
-                ],
+              "Fn::GetAtt": Array [
+                "zoneparamsSsmParametersF6CC8160",
+                "/cdk/irma-issue-app/zone/name",
               ],
             },
             "HostedZoneId": Object {

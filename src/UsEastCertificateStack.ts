@@ -2,7 +2,7 @@ import { aws_certificatemanager as CertificateManager, Stack, StackProps, aws_ss
 import { Construct } from 'constructs';
 import { Configurable, Configuration } from './Configuration';
 import { Statics } from './statics';
-import { importProjectHostedZone } from './Util';
+import { AppDomainUtil, importProjectHostedZone } from './Util';
 
 export interface UsEastCertificateStackProps extends StackProps, Configurable {}
 
@@ -16,17 +16,10 @@ export class UsEastCertificateStack extends Stack {
   createCertificate(configuration: Configuration) {
 
     const hostedZone = importProjectHostedZone(this, configuration.deployToEnvironment.region);
-
-    const cspDomain = `irma-issue.${hostedZone.zoneName}`;
-
-    let subjectAlternativeNames = undefined;
-    if (configuration.nijmegenSubdomain) {
-      const appDomain = `${configuration.nijmegenSubdomain}.nijmegen.nl`;
-      subjectAlternativeNames = [appDomain];
-    }
+    const subjectAlternativeNames = AppDomainUtil.getAlternativeDomainNames(configuration);
 
     const certificate = new CertificateManager.Certificate(this, 'certificate', {
-      domainName: cspDomain,
+      domainName: hostedZone.zoneName,
       subjectAlternativeNames,
       validation: CertificateManager.CertificateValidation.fromDns(hostedZone),
     });
