@@ -9,7 +9,7 @@ const app = new App();
 const branchToBuild = process.env.BRANCH_NAME ?? 'acceptance';
 const configuration = getConfiguration(branchToBuild);
 
-console.log('Building branch', branchToBuild);
+console.log('Building branch:', branchToBuild);
 
 new PipelineStack(app, 'irma-issue-pipeline-acceptance',
   {

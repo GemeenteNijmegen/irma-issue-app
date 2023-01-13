@@ -63,6 +63,7 @@ export class CloudfrontStack extends Stack {
     const parameters = new RemoteParameters(this, 'params', {
       path: `${Statics.certificatePath}/`,
       region: 'us-east-1',
+      alwaysUpdate: false,
     });
     const certificateArn = parameters.get(Statics.certificateArn);
     return certificateArn;
@@ -76,6 +77,7 @@ export class CloudfrontStack extends Stack {
     const parameters = new RemoteParameters(this, 'waf-params', {
       path: `${Statics.wafPath}/`,
       region: 'us-east-1',
+      alwaysUpdate: false,
     });
     const wafAclId = parameters.get(Statics.ssmWafAclArn);
     return wafAclId;

@@ -27,6 +27,7 @@ export class DNSSECStack extends Stack {
     const rootZoneParams = new RemoteParameters(this, 'root-zone-params', {
       path: Statics.accountRootHostedZonePath,
       region: props.configuration.deployToEnvironment.region,
+      alwaysUpdate: false,
     });
     const accountRootZone = Route53.HostedZone.fromHostedZoneAttributes(this, 'account-root-zone', {
       hostedZoneId: rootZoneParams.get(Statics.accountRootHostedZoneId),

@@ -14,6 +14,7 @@ export function importProjectHostedZone(scope: Construct, fromRegion: string) {
   const zoneParams = new RemoteParameters(scope, 'zone-params', {
     path: Statics.ssmZonePath,
     region: fromRegion,
+    alwaysUpdate: false,
   });
   return Route53.HostedZone.fromHostedZoneAttributes(scope, 'zone', {
     hostedZoneId: zoneParams.get(Statics.ssmZoneId),
