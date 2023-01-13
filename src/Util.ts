@@ -56,7 +56,7 @@ export class AppDomainUtil {
     if (configuration.nijmegenSubdomain) {
       return `https://${configuration.nijmegenSubdomain}.nijmegen.nl/`;
     }
-    return `https://irma-issue.${zoneName}/`;
+    return `https://${zoneName}/`;
   }
 
   private static getNijmegenDomainName(configuration: Configuration) {
