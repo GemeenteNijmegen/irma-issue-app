@@ -30,42 +30,27 @@ import {
 import { HttpOrigin, S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { RemoteParameters } from 'cdk-remote-stack';
 import { Construct } from 'constructs';
+import { Configurable } from './Configuration';
 import { Statics } from './statics';
+import { AppDomainUtil } from './Util';
 
-export interface CloudFrontStackProps extends StackProps {
+export interface CloudFrontStackProps extends StackProps, Configurable {
   /**
-     * Domain for the default origin (HTTPorigin)
-     */
-  hostDomain: string;
-  /**
-     * current branch: Determines subdomain of csp-nijmegen.nl
-     */
-  branch: string;
-
-  /**
-   * Add *.nijmegen.nl domain to cloudfront distribution
+   * Domain for the default origin (HTTPorigin)
    */
-  addNijmegenDomain: boolean;
-
+  apiGatewayDomain: string;
 }
 
 export class CloudfrontStack extends Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id);
 
-    const cspSubdomain = Statics.cspSubDomain(props.branch);
-    const cspDomain = `${cspSubdomain}.csp-nijmegen.nl`;
-    var domains = [cspDomain];
-
-    if (props.addNijmegenDomain) {
-      const subdomain = Statics.subDomain(props.branch);
-      const mainDomain = `${subdomain}.nijmegen.nl`;
-      domains.push(mainDomain);
-    }
+    const zoneName = SSM.StringParameter.valueForStringParameter(this, Statics.ssmZoneName);
+    const domains = AppDomainUtil.getDomainNames(props.configuration, zoneName);
 
     const certificateArn = this.certificateArn();
 
-    const cloudfrontDistribution = this.setCloudfrontStack(props.hostDomain, domains, certificateArn);
+    const cloudfrontDistribution = this.setCloudfrontStack(props.apiGatewayDomain, domains, certificateArn);
     this.addStaticResources(cloudfrontDistribution);
     this.addDnsRecords(cloudfrontDistribution);
   }
