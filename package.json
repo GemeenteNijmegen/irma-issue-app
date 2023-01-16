@@ -1,5 +1,5 @@
 {
-  "name": "irma-issue-app",
+  "name": "yivi-issue-app",
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",
@@ -78,7 +78,6 @@
     "@gemeentenijmegen/dnssec-record": "^0.0.4",
     "@gemeentenijmegen/session": "^0.0.5",
     "@gemeentenijmegen/utils": "^0.0.0",
-    "@privacybydesign/irma-frontend": "^0.4.3",
     "@types/aws-lambda": "^8.10.109",
     "@types/cookie": "^0.5.1",
     "@types/mustache": "^4.2.2",

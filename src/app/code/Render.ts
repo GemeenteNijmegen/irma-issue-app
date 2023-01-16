@@ -18,7 +18,7 @@ export default async (data: any, template: string, partials?: {[key: string]: st
   };
 
   data = {
-    name: 'IRMA', // TODO later veranderen bij naam switch
+    name: 'YIVI',
     logos: false,
     ...data,
   };

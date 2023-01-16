@@ -4,7 +4,7 @@ const project = new GemeenteNijmegenCdkApp({
   cdkVersion: '2.22.0',
   defaultReleaseBranch: 'production',
   majorVersion: 1,
-  name: 'irma-issue-app',
+  name: 'yivi-issue-app',
   deps: [
     'dotenv',
     '@aws-cdk/aws-apigatewayv2-alpha',
@@ -22,7 +22,7 @@ const project = new GemeenteNijmegenCdkApp({
     '@gemeentenijmegen/session',
     '@gemeentenijmegen/utils',
     '@gemeentenijmegen/apigateway-http',
-    '@privacybydesign/irma-frontend',
+    //'@privacybydesign/yivi-frontend', // YIVI check if this package is actually used in the code
     'axios@^0.27.2', // TODO upgrade however https://github.com/jamesmbourne/aws4-axios/issues/701
     'mustache',
     '@types/mustache',

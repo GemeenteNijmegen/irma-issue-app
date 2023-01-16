@@ -2,20 +2,20 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { issueRequestHandler } from './issueRequestHandler';
-import { IrmaApi } from '../code/IrmaApi';
+import { YiviApi } from '../code/YiviApi';
 
 const dynamoDBClient = new DynamoDBClient({});
 
 const brpClient = new ApiClient();
-const irmaApi = new IrmaApi();
+const yiviApi = new YiviApi();
 
 async function init() {
   console.time('init');
   console.timeLog('init', 'start init');
   let promiseBrp = brpClient.init();
-  let promiseIrma = irmaApi.init();
+  let promiseYivi = yiviApi.init();
   console.timeEnd('init');
-  return Promise.all([promiseBrp, promiseIrma]);
+  return Promise.all([promiseBrp, promiseYivi]);
 }
 
 const initPromise = init();
@@ -31,7 +31,7 @@ exports.handler = async (event: any) => {
     const params = parseEvent(event);
     await initPromise;
 
-    return await issueRequestHandler(params.cookies, brpClient, irmaApi, dynamoDBClient);
+    return await issueRequestHandler(params.cookies, brpClient, yiviApi, dynamoDBClient);
 
   } catch (err) {
     console.error(err);

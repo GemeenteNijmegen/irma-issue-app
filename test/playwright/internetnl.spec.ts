@@ -1,19 +1,11 @@
 import { test, expect, Page } from '@playwright/test';
 
 let page: Page;
-let baseUrl = 'irma-issue.auth-prod.csp-nijmegen.nl';
-const isAcceptance = process.env.ENVIRONMENT ? process.env.ENVIRONMENT == 'acceptance': true;
+const baseUrl = process.env.ENVIRONMENT_SUBDOMAIN ?? `yivi.accp.csp-nijmegen.nl`;
 
 test.beforeAll(async ({ browser }) => {
-
-  if (isAcceptance) {
-    baseUrl = 'irma-issue.accp.csp-nijmegen.nl';
-  }
   console.log('Running internet.nl test with base url:', baseUrl);
-
-  // Create page once.
   page = await browser.newPage();
-
 });
 
 test.afterAll(async () => {

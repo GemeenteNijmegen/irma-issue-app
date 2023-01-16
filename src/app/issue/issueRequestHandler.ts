@@ -4,30 +4,30 @@ import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import { BrpApi } from './BrpApi';
 import * as template from './issue.mustache';
-import { IrmaApi } from '../code/IrmaApi';
+import { YiviApi } from '../code/YiviApi';
 import render from '../code/Render';
 
 /**
  * Check login and handle request
  */
-export async function issueRequestHandler(cookies: string, brpClient: ApiClient, irmaApi: IrmaApi, dynamoDBClient: DynamoDBClient) {
+export async function issueRequestHandler(cookies: string, brpClient: ApiClient, yiviApi: YiviApi, dynamoDBClient: DynamoDBClient) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() == true) {
-    return handleLoggedinRequest(session, brpClient, irmaApi);
+    return handleLoggedinRequest(session, brpClient, yiviApi);
   }
   return Response.redirect('/login');
 }
 
 /**
- * Request persoonsgegevens form BRP send them to the IRMA server
- * logs the issue event and passes the irma sessionPtr to the render.
+ * Request persoonsgegevens form BRP send them to the YIVI server
+ * logs the issue event and passes the yivi sessionPtr to the render.
  * @param session
  * @param brpClient
- * @param irmaApi
+ * @param yiviApi
  * @returns
  */
-async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irmaApi: IrmaApi) {
+async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiviApi: YiviApi) {
   let error = undefined;
 
   // If issuing already is completed
@@ -48,17 +48,17 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
     }
   }
 
-  // Start IRMA session
-  let irmaSession = undefined;
+  // Start YIVI session
+  let yiviSession = undefined;
   if (!error) {
-    const irmaResponse = await irmaApi.startSession(brpData);
-    if (!irmaResponse.error) {
-      irmaSession = {
-        irmaSessionPtrQr: irmaResponse.sessionPtr.irmaqr,
-        irmaSessionPtrU: irmaResponse.sessionPtr.u,
+    const yiviResponse = await yiviApi.startSession(brpData);
+    if (!yiviResponse.error) {
+      yiviSession = {
+        yiviSessionPtrQr: yiviResponse.sessionPtr.yiviqr,
+        yiviSessionPtrU: yiviResponse.sessionPtr.u,
       };
     } else {
-      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in IRMA.';
+      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in YIVI.';
     }
   }
 
@@ -72,17 +72,17 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, irm
     title: 'opladen',
     shownav: true,
     volledigenaam: naam,
-    irmaServer: `https://${irmaApi.getHost()}`,
+    yiviServer: `https://${yiviApi.getHost()}`,
     error: error,
-    ...irmaSession,
+    ...yiviSession,
   };
   const html = await render(data, template.default);
   return Response.html(html, 200, session.getCookie());
 }
 
 /**
- * Logs the issue event for collecting statistics one usage of the irma-issue-app
- * @param brpData the BRP-IRMA api response
+ * Logs the issue event for collecting statistics one usage of the yivi-issue-app
+ * @param brpData the BRP-YIVI api response
  * @param session the uses session to store data in
  */
 async function storeIssueEventInSession(brpData: any, session: Session) {

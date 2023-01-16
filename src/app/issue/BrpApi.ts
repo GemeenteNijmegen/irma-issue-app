@@ -7,12 +7,15 @@ export class BrpApi {
   private client: ApiClient;
 
   constructor(client: ApiClient) {
-    this.endpoint = process.env.BRP_API_URL ? process.env.BRP_API_URL : 'Irma';
+    if(!process.env.BRP_API_URL){
+      throw new Error("Could not initialize brp api as no endpoint is provided in BRP_API_URL");
+    }
+    this.endpoint = process.env.BRP_API_URL;
     this.client = client ? client : new ApiClient();
   }
 
   /**
-   * Bevraag de IRMA-BRP API
+   * Bevraag de layer7 BRP API
    * @param bsn the bsn to get data for
    * @returns the API response data of {error: ""}
    */
