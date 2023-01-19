@@ -2954,7 +2954,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "c29efd75514badd6e99094f63c40e20387723674937c9f48f39132eb88a5cbef.zip",
+          "S3Key": "108522d0cc1149571ed529b0c3cd7c95b778bf90a6df71e5c924df776155daad.zip",
         },
         "Description": "Home-lambda voor de YIVI issue-applicatie.",
         "Environment": Object {
@@ -6592,7 +6592,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"c29efd75514badd6e99094f63c40e20387723674937c9f48f39132eb88a5cbef:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"108522d0cc1149571ed529b0c3cd7c95b778bf90a6df71e5c924df776155daad:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
