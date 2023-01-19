@@ -14,7 +14,7 @@ export class YiviApi {
 
   constructor() {
     this.host = process.env.YIVI_API_HOST ? process.env.YIVI_API_HOST : '';
-    this.demo = process.env.YIVI_API_DEMO == 'demo' ? true : false;
+    this.demo = process.env.YIVI_API_DEMO != 'demo' ? false : true;
     this.credentials = {
       accessKeyId: '',
       secretAccessKey: '',
