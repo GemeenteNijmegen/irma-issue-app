@@ -2954,7 +2954,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "a4520577101b79a9940820345477e0eb37d4fc2e0220814744f24bd2f74de4f9.zip",
+          "S3Key": "e7ba1989ebbf4b57cfd1f45b62fdea235a806970854fd79aa04908ce1bb5c052.zip",
         },
         "Description": "Home-lambda voor de YIVI issue-applicatie.",
         "Environment": Object {
@@ -5356,7 +5356,7 @@ def submit_response(event: dict, context, response_status: str, error_message: s
           },
         ],
         "SourceObjectKeys": Array [
-          "3941d56fe3af1a17e27ed8585651a5eff8b565acfe9cc2e24d29ac32d48dd2f1.zip",
+          "33aff9e4772475b2bfa4b8d7f4187aa90a00dc8fbae582872ed8a13f4224da5f.zip",
         ],
       },
       "Type": "Custom::CDKBucketDeployment",
@@ -6117,7 +6117,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapicloudfrontstack5E5974C5.assets.json\\\\\\" --verbose publish \\\\\\"3941d56fe3af1a17e27ed8585651a5eff8b565acfe9cc2e24d29ac32d48dd2f1:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapicloudfrontstack5E5974C5.assets.json\\\\\\" --verbose publish \\\\\\"33aff9e4772475b2bfa4b8d7f4187aa90a00dc8fbae582872ed8a13f4224da5f:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6592,7 +6592,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"a4520577101b79a9940820345477e0eb37d4fc2e0220814744f24bd2f74de4f9:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"e7ba1989ebbf4b57cfd1f45b62fdea235a806970854fd79aa04908ce1bb5c052:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
