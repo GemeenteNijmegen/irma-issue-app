@@ -9,7 +9,7 @@ const yiviClient = yivi.newWeb({
         url: yiviServer,
         start: false, // No need to start session from the browser (done server-sied)
         mapping: {
-            sessionPtr: r => { return { "u": sessionPtrU, "yiviqr": sessionPtrQr } },
+            sessionPtr: r => { return { "u": sessionPtrU, "irmaqr": sessionPtrQr } },
         },
         result: false, // No need to fetch session result (status success / failed is sufficient)
     },
