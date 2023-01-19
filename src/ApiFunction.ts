@@ -1,4 +1,3 @@
-import * as path from 'path';
 import { aws_lambda as Lambda, aws_dynamodb, aws_ssm as SSM, RemovalPolicy, Duration } from 'aws-cdk-lib';
 import { Alarm } from 'aws-cdk-lib/aws-cloudwatch';
 import { Role } from 'aws-cdk-lib/aws-iam';
@@ -9,29 +8,37 @@ import { Statics } from './statics';
 
 export interface ApiFunctionProps {
   description: string;
-  codePath: string;
   table: aws_dynamodb.ITable;
   tablePermissions: string;
   applicationUrlBase?: string;
   environment?: {[key: string]: string};
   monitorFilterPattern?: IFilterPattern;
   readOnlyRole: Role;
+  logRetention?: RetentionDays;
+  ssmLogGroup?: string;
+  lambdaInsightsExtensionArn: string;
 }
 
-export class ApiFunction extends Construct {
-  lambda: Lambda.Function;
-  constructor(scope: Construct, id: string, props: ApiFunctionProps) {
+export class ApiFunction<T extends Lambda.Function> extends Construct {
+
+  lambda: T;
+
+  constructor(
+    scope: Construct,
+    id: string,
+    props: ApiFunctionProps,
+    apiFunction: {new(scope2: Construct, id2:string, props2?: Lambda.FunctionProps): T},
+  ) {
     super(scope, id);
-    // See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html
-    const insightsArn = 'arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:16';
-    this.lambda = new Lambda.Function(this, 'lambda', {
-      runtime: Lambda.Runtime.NODEJS_14_X,
+    const retention = props.logRetention ? props.logRetention : RetentionDays.ONE_MONTH;
+    this.lambda = new apiFunction(this, 'lambda', {
+      runtime: Lambda.Runtime.NODEJS_14_X, // Overwritten
+      code: Lambda.Code.fromInline('empty'), // Overwritten
+      handler: 'index.handler', // Overwritten by apiFunction constructor
       memorySize: 512,
-      handler: 'index.handler',
       description: props.description,
-      code: Lambda.Code.fromAsset(path.join(__dirname, props.codePath)),
-      insightsVersion: Lambda.LambdaInsightsVersion.fromInsightVersionArn(insightsArn),
-      logRetention: RetentionDays.ONE_MONTH,
+      insightsVersion: Lambda.LambdaInsightsVersion.fromInsightVersionArn(props.lambdaInsightsExtensionArn),
+      logRetention: retention,
       environment: {
         APPLICATION_URL_BASE: props.applicationUrlBase || '',
         AUTH_URL_BASE: SSM.StringParameter.valueForStringParameter(this, Statics.ssmAuthUrlBaseParameter),
@@ -41,7 +48,15 @@ export class ApiFunction extends Construct {
         ...props.environment,
       },
     });
+
     props.table.grantReadWriteData(this.lambda.grantPrincipal);
+
+    if (props.ssmLogGroup) { // Export the loggroup to an ssm parameter
+      new SSM.StringParameter(this, 'log-group-ssm', {
+        parameterName: props.ssmLogGroup,
+        stringValue: this.lambda.logGroup.logGroupName,
+      });
+    }
 
     this.monitor(props.monitorFilterPattern);
     this.allowAccessToReadOnlyRole(props.readOnlyRole);

@@ -1,0 +1,76 @@
+body {
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.municipalityLogos img {
+  max-height: 75px;
+  max-width: 100px;
+  padding: 10px;
+  filter: grayscale(100%);
+}
+
+.municipalityLogos img:hover {
+  filter: grayscale(0%);
+}
+
+.nav-home {
+  opacity: 1 !important;
+}
+
+#yivi-web-form {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hidden {
+  display: none;
+}
+
+.content {
+  margin: 0px auto;
+  max-width: 800px;
+}
+
+.link-wrapper {
+  max-width: 600px;
+  margin: 50px auto;
+}
+
+.link-wrapper a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+.link {
+  flex: 1 1 0%;
+  min-width: 300px;
+}
+
+
+.logo-size-50 {
+  width: 50px;
+}
+
+.logo-size-72 {
+  width: 72px;
+}
+
+.opacity-1 {
+  opacity: 1;
+}
+
+.logo-wrapper {
+  padding-top:20px;
+}
+
+.mainContainer {
+  padding-bottom: 0px;
+}
+
+
+.logout a svg {
+  width: 24px;
+  height: 24px;
+}

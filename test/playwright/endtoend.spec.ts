@@ -1,11 +1,15 @@
 import { test, expect, Page } from '@playwright/test';
 
 let page: Page;
+const isAcceptance = process.env.ENVIRONMENT ? process.env.ENVIRONMENT == 'acceptance': true;
+
 test.beforeAll(async ({ browser }) => {
   // Create page once and sign in.
   page = await browser.newPage();
-  // Go to https://mijn.accp.nijmegen.nl/login
-  await page.goto('https://mijn.accp.nijmegen.nl/login');
+
+  await page.goto('https://yivi.accp.csp-nijmegen.nl/');
+
+  if(!isAcceptance) return; // We cannot authenticate using DigiD in prod
 
   // Click text=Inloggen via DigiD
   await page.locator('text=Inloggen via DigiD').click();
@@ -24,48 +28,19 @@ test.beforeAll(async ({ browser }) => {
 
   // Click [data-test="send-button"]
   await page.locator('[data-test="send-button"]').click();
-  await expect(page).toHaveURL('https://mijn.accp.nijmegen.nl/');
+  await expect(page).toHaveURL('https://yivi.accp.csp-nijmegen.nl');
 });
 
 test.afterAll(async () => {
   await page.close();
 });
 
-test('Visiting main page with valid BSN shows cards', async () => {
-
-  // Click #navbar-collapse >> text=Uitkeringen
-  await expect(page).toHaveURL('https://mijn.accp.nijmegen.nl/');
-
-  // Click text=Hier vindt u een overzicht van uw uitkeringen.
-  const cards =  page.locator('.card');
-  await expect(cards).toContainText(['Persoonsgegevens', 'Uitkeringen']);
-  await page.screenshot({ path: 'test/playwright/screenshots/home.png', fullPage: true });
-
-});
-
-test('Visiting uitkeringen-page with valid BSN shows info', async () => {
-
-  // Click #navbar-collapse >> text=Uitkeringen
-  await page.locator('#navbar-collapse >> text=Uitkeringen').click();
-  await expect(page).toHaveURL('https://mijn.accp.nijmegen.nl/uitkeringen');
-
-  // Click text=Hier vindt u een overzicht van uw uitkeringen.
-  const table =  page.locator('table tbody').first();
-  await expect(table).toContainText('BSN van klant');
-  await page.screenshot({ path: 'test/playwright/screenshots/uitkering.png', fullPage: true });
-
-});
-
-
-test('Visiting persoonsgegevens-page with valid BSN shows info', async () => {
-
-  // Click #navbar-collapse >> text=Uitkeringen
-  await page.locator('#navbar-collapse >> text=Persoonsgegevens').click();
-  await expect(page).toHaveURL('https://mijn.accp.nijmegen.nl/persoonsgegevens');
-
-  // Click text=Hier vindt u een overzicht van uw uitkeringen.
-  const table =  page.locator('h2');
-  await expect(table).toContainText(['Persoonsgegevens', 'Adresgegevens']);
-  await page.screenshot({ path: 'test/playwright/screenshots/persoonsgegevens.png', fullPage: true });
-
+test('Visiting issue page', async () => {
+  if(isAcceptance) return;
+  
+  await expect(page).toHaveURL('https://yivi.accp.csp-nijmegen.nl');
+  await page.screenshot({ path: 'test/playwright/screenshots/issue.png', fullPage: true });
+  // Check if session ptr is set in html
+  //await expect(page.locator('#session-ptr-u')).toHaveAttribute('data', /^https:\/\/gw-test.nijmegen.nl\/ i r m a \/session\/.*/); // YIVI fix when server is moved
+  await expect(page.locator('#session-ptr-qr')).toHaveAttribute('data', 'issuing');
 });

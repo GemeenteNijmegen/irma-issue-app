@@ -1,40 +1,27 @@
 import { aws_certificatemanager as CertificateManager, Stack, StackProps, aws_ssm as SSM } from 'aws-cdk-lib';
-import { RemoteParameters } from 'cdk-remote-stack';
 import { Construct } from 'constructs';
+import { Configurable, Configuration } from './Configuration';
 import { Statics } from './statics';
+import { AppDomainUtil, importProjectHostedZone } from './Util';
 
-export interface UsEastCertificateStackProps extends StackProps {
-  branch: string;
-}
+export interface UsEastCertificateStackProps extends StackProps, Configurable {}
 
 export class UsEastCertificateStack extends Stack {
-  private branch: string;
 
   constructor(scope: Construct, id: string, props: UsEastCertificateStackProps) {
     super(scope, id, props);
-    this.branch = props.branch;
-    this.createCertificate();
+    this.createCertificate(props.configuration);
   }
 
-  getZoneAttributesFromEuWest(parameters: RemoteParameters, id: string, name: string): { hostedZoneId: string; zoneName: string} {
-    const zoneId = parameters.get(id);
-    const zoneName = parameters.get(name);
-    return {
-      hostedZoneId: zoneId,
-      zoneName: zoneName,
-    };
-  }
+  createCertificate(configuration: Configuration) {
 
-  createCertificate() {
-    const subdomain = Statics.subDomain(this.branch);
-    const cspSubdomain = Statics.cspSubDomain(this.branch);
-    const appDomain = `${subdomain}.nijmegen.nl`;
-    const cspDomain = `${cspSubdomain}.csp-nijmegen.nl`;
+    const hostedZone = importProjectHostedZone(this, configuration.deployToEnvironment.region);
+    const subjectAlternativeNames = AppDomainUtil.getAlternativeDomainNames(configuration);
 
     const certificate = new CertificateManager.Certificate(this, 'certificate', {
-      domainName: appDomain,
-      subjectAlternativeNames: [cspDomain],
-      validation: CertificateManager.CertificateValidation.fromDns(),
+      domainName: hostedZone.zoneName,
+      subjectAlternativeNames,
+      validation: CertificateManager.CertificateValidation.fromDns(hostedZone),
     });
 
     new SSM.StringParameter(this, 'cert-arn', {

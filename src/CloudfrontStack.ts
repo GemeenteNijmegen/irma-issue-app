@@ -30,32 +30,27 @@ import {
 import { HttpOrigin, S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { RemoteParameters } from 'cdk-remote-stack';
 import { Construct } from 'constructs';
+import { Configurable } from './Configuration';
 import { Statics } from './statics';
+import { AppDomainUtil } from './Util';
 
-export interface CloudFrontStackProps extends StackProps {
+export interface CloudFrontStackProps extends StackProps, Configurable {
   /**
-     * Domain for the default origin (HTTPorigin)
-     */
-  hostDomain: string;
-  /**
-     * current branch: Determines subdomain of csp-nijmegen.nl
-     */
-  branch: string;
+   * Domain for the default origin (HTTPorigin)
+   */
+  apiGatewayDomain: string;
 }
 
 export class CloudfrontStack extends Stack {
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id);
 
-    const subdomain = Statics.subDomain(props.branch);
-    const cspSubdomain = Statics.cspSubDomain(props.branch);
-    const cspDomain = `${cspSubdomain}.csp-nijmegen.nl`;
-    const mainDomain = `${subdomain}.nijmegen.nl`;
-    var domains = [mainDomain, cspDomain];
+    const zoneName = SSM.StringParameter.valueForStringParameter(this, Statics.ssmZoneName);
+    const domains = AppDomainUtil.getDomainNames(props.configuration, zoneName);
 
     const certificateArn = this.certificateArn();
 
-    const cloudfrontDistribution = this.setCloudfrontStack(props.hostDomain, domains, certificateArn);
+    const cloudfrontDistribution = this.setCloudfrontStack(props.apiGatewayDomain, domains, certificateArn);
     this.addStaticResources(cloudfrontDistribution);
     this.addDnsRecords(cloudfrontDistribution);
   }
@@ -68,6 +63,7 @@ export class CloudfrontStack extends Stack {
     const parameters = new RemoteParameters(this, 'params', {
       path: `${Statics.certificatePath}/`,
       region: 'us-east-1',
+      alwaysUpdate: false,
     });
     const certificateArn = parameters.get(Statics.certificateArn);
     return certificateArn;
@@ -77,14 +73,15 @@ export class CloudfrontStack extends Stack {
    * Get the certificate ARN from parameter store in us-east-1
    * @returns string Certificate ARN
    */
-  // private wafAclId() {
-  //   const parameters = new RemoteParameters(this, 'waf-params', {
-  //     path: `${Statics.wafPath}/`,
-  //     region: 'us-east-1',
-  //   });
-  //   const wafAclId = parameters.get(Statics.ssmWafAclArn);
-  //   return wafAclId;
-  // }
+  private wafAclId() {
+    const parameters = new RemoteParameters(this, 'waf-params', {
+      path: `${Statics.wafPath}/`,
+      region: 'us-east-1',
+      alwaysUpdate: false,
+    });
+    const wafAclId = parameters.get(Statics.ssmWafAclArn);
+    return wafAclId;
+  }
 
   /**
    * Add static contents to cloudfront
@@ -122,18 +119,18 @@ export class CloudfrontStack extends Stack {
    */
   setCloudfrontStack(apiGatewayDomain: string, domainNames?: string[], certificateArn?: string): Distribution {
     const certificate = (certificateArn) ? CertificateManager.Certificate.fromCertificateArn(this, 'certificate', certificateArn) : undefined;
-    //const webAclId = this.wafAclId();
+    const webAclId = this.wafAclId();
     if (!certificate) { domainNames = undefined; };
 
     const distribution = new Distribution(this, 'cf-distribution', {
       priceClass: PriceClass.PRICE_CLASS_100,
       domainNames,
       certificate,
-      //webAclId,
+      webAclId,
       defaultBehavior: {
         origin: new HttpOrigin(apiGatewayDomain),
         originRequestPolicy: new OriginRequestPolicy(this, 'cf-originrequestpolicy', {
-          originRequestPolicyName: 'cfOriginRequestPolicyIrmaIssueApp',
+          originRequestPolicyName: 'cfOriginRequestPolicyYiviIssueApp',
           headerBehavior: OriginRequestHeaderBehavior.allowList(
             'Accept-Charset',
             'Origin',
@@ -147,7 +144,7 @@ export class CloudfrontStack extends Stack {
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: AllowedMethods.ALLOW_ALL,
         cachePolicy: new CachePolicy(this, 'cf-caching', {
-          cachePolicyName: 'cfCachingSessionsIrmaIssueApp',
+          cachePolicyName: 'cfCachingSessionsYiviIssueApp',
           cookieBehavior: CacheCookieBehavior.all(),
           headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
           queryStringBehavior: CacheQueryStringBehavior.all(),
@@ -160,7 +157,8 @@ export class CloudfrontStack extends Stack {
       errorResponses: this.errorResponses(),
       logBucket: this.logBucket(),
       minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2021,
-      defaultRootObject: 'home',
+      defaultRootObject: 'issue',
+      comment: 'YIVI issue app',
     });
     return distribution;
   }
@@ -248,17 +246,18 @@ export class CloudfrontStack extends Stack {
    * @returns string csp header values
    */
   cspHeaderValue() {
-    const cspValues = 'default-src \'self\';\
-    frame-ancestors \'self\';\
-    frame-src \'self\';\
-    connect-src \'self\' https://componenten.nijmegen.nl;\
-    style-src \'self\' https://componenten.nijmegen.nl https://fonts.googleapis.com https://fonts.gstatic.com \
-    \'sha256-hS1LM/30PjUBJK3kBX9Vm9eOAhQNCiNhf/SCDnUqu14=\' \'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=\' \'sha256-OTeu7NEHDo6qutIWo0F2TmYrDhsKWCzrUgGoxxHGJ8o=\';\
-    script-src \'self\' https://componenten.nijmegen.nl https://siteimproveanalytics.com;\
-    font-src \'self\' https://componenten.nijmegen.nl https://fonts.gstatic.com;\
-    img-src \'self\' https://componenten.nijmegen.nl data: https://*.siteimproveanalytics.io;\
-    object-src \'none\';\
-    ';
+    const yiviHost = SSM.StringParameter.valueForStringParameter(this, Statics.ssmYiviApiHost);
+    const cspValues = [
+      'default-src \'self\';',
+      'frame-ancestors \'self\';',
+      'frame-src \'self\';',
+      `connect-src \'self\' https://componenten.nijmegen.nl https://${yiviHost};`,
+      'style-src \'self\' https://componenten.nijmegen.nl https://fonts.googleapis.com https://fonts.gstatic.com \'sha256-hS1LM/30PjUBJK3kBX9Vm9eOAhQNCiNhf/SCDnUqu14=\' \'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=\' \'sha256-OTeu7NEHDo6qutIWo0F2TmYrDhsKWCzrUgGoxxHGJ8o=\';',
+      'script-src \'self\' https://componenten.nijmegen.nl https://siteimproveanalytics.com;',
+      'font-src \'self\' https://componenten.nijmegen.nl https://fonts.gstatic.com;',
+      'img-src \'self\' https://componenten.nijmegen.nl data: https://*.siteimproveanalytics.io;',
+      'object-src \'none\';',
+    ].join(' ');
     return cspValues.replace(/[ ]+/g, ' ').trim();
   }
 

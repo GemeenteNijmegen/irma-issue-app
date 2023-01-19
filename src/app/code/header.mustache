@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+        <title>Gegevens toevoegen aan YIVI</title>
+
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="stylesheet" href="/static/styles/theme.css"/>
+        <link rel="stylesheet" href="/static/styles/main.css"/>
+        <link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+
+    </head>
+    <body>
+        <div id="app">
+            <div class="fixedHeaderContainer">
+                <div class="headerWrapper wrapper">
+                    <header>
+                        <a href="https://privacybydesign.foundation/yivi/" class="logo-size-50">
+                            <img class="logo" src="/static/img/yiviLogo.png" alt="YIVI">
+                        </a>
+                        <div class="navigationWrapper navigationSlider">
+                            <nav class="slidingNav"></nav>
+                        </div>
+                        {{#volledigenaam}}
+                        <div class="logout">
+                        <a href="logout" class="name">
+                            <span>{{volledigenaam}}</span>
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" /></svg>
+                        </a>
+                        </div>
+                        {{/volledigenaam}}
+                    </header>
+                </div>
+            </div>
+            <div class="navPusher">
+                <div>
+                    <div class="homeContainer">
+                        <div class="homeSplashFade">
+                            <div class="wrapper homeWrapper">

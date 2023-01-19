@@ -1,19 +1,24 @@
-import * as path from 'path';
 import * as apigatewayv2 from '@aws-cdk/aws-apigatewayv2-alpha';
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
-import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM, aws_lambda as Lambda } from 'aws-cdk-lib';
+import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM } from 'aws-cdk-lib';
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
 import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
+import { AuthFunction } from './app/auth/auth-function';
+import { CallbackFunction } from './app/callback/callback-function';
+import { IssueFunction } from './app/issue/issue-function';
+import { LoginFunction } from './app/login/login-function';
+import { LogoutFunction } from './app/logout/logout-function';
+import { Configurable } from './Configuration';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
+import { AppDomainUtil } from './Util';
 
-export interface ApiStackProps extends StackProps {
+export interface ApiStackProps extends StackProps, Configurable {
   sessionsTable: SessionsTable;
-  branch: string;
 }
 
 /**
@@ -22,14 +27,17 @@ export interface ApiStackProps extends StackProps {
  * DynamoDB sessions table to be provided and thus created first)
  */
 export class ApiStack extends Stack {
+
   private sessionsTable: Table;
   api: apigatewayv2.HttpApi;
 
   constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id);
+
     this.sessionsTable = props.sessionsTable.table;
-    this.api = new apigatewayv2.HttpApi(this, 'irma-issue-api', {
-      description: 'IRMA issue webapplicatie',
+
+    this.api = new apigatewayv2.HttpApi(this, 'yivi-issue-api', {
+      description: 'YIVI issue webapplicatie',
     });
 
     // Store apigateway ID to be used in other stacks
@@ -38,39 +46,14 @@ export class ApiStack extends Stack {
       parameterName: Statics.ssmApiGatewayId,
     });
 
-    const subdomain = Statics.subDomain(props.branch);
-    const appDomain = `${subdomain}.nijmegen.nl`;
+    // Get the base url
+    const zoneName = SSM.StringParameter.valueForStringParameter(this, Statics.ssmZoneName);
+    const baseUrl = AppDomainUtil.getBaseUrl(props.configuration, zoneName);
 
-    this.monitoringLambda();
+    // this.monitoringLambda();
     const readOnlyRole = this.readOnlyRole();
-    this.setFunctions(`https://${appDomain}/`, readOnlyRole);
+    this.setFunctions(baseUrl, readOnlyRole);
     this.allowReadAccessToTable(readOnlyRole, this.sessionsTable);
-  }
-
-
-  /**
-   * Create a lambda function to monitor cloudwatch logs
-   *
-   * @returns {Lambda.Function} a lambda responsible for monitoring cloudwatch logs
-   */
-  private monitoringLambda(): Lambda.Function {
-    let webhookUrl = SSM.StringParameter.valueForStringParameter(this, Statics.ssmSlackWebhookUrl);
-    const lambda = new Lambda.Function(this, 'lambda', {
-      runtime: Lambda.Runtime.NODEJS_14_X,
-      handler: 'index.handler',
-      description: 'Monitor IRMA issue app cloudwatch logs',
-      code: Lambda.Code.fromAsset(path.join(__dirname, 'monitoring', 'lambda')),
-      logRetention: RetentionDays.ONE_MONTH,
-      environment: {
-        SLACK_WEBHOOK_URL: webhookUrl,
-      },
-    });
-
-    new SSM.StringParameter(this, 'ssm_slack_1', {
-      stringValue: lambda.functionArn,
-      parameterName: Statics.ssmMonitoringLambdaArn,
-    });
-    return lambda;
   }
 
   /**
@@ -79,28 +62,31 @@ export class ApiStack extends Stack {
    * @param {string} baseUrl the application url
    */
   setFunctions(baseUrl: string, readOnlyRole: Role) {
-    const loginFunction = new ApiFunction(this, 'irma-issue-login-function', {
-      description: 'Login-pagina voor de IRMA issue-applicatie.',
-      codePath: 'app/login',
-      table: this.sessionsTable,
-      tablePermissions: 'ReadWrite',
-      applicationUrlBase: baseUrl,
-      readOnlyRole,
-    });
 
-    const logoutFunction = new ApiFunction(this, 'irma-issue-logout-function', {
-      description: 'Uitlog-pagina voor de IRMA issue-applicatie.',
-      codePath: 'app/logout',
+    // See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html
+    const insightsArn = `arn:aws:lambda:${this.region}:580247275435:layer:LambdaInsightsExtension:16`;
+
+    const loginFunction = new ApiFunction(this, 'yivi-issue-login-function', {
+      description: 'Login-pagina voor de YIVI issue-applicatie.',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
-    });
+      lambdaInsightsExtensionArn: insightsArn,
+    }, LoginFunction);
+
+    const logoutFunction = new ApiFunction(this, 'yivi-issue-logout-function', {
+      description: 'Uitlog-pagina voor de YIVI issue-applicatie.',
+      table: this.sessionsTable,
+      tablePermissions: 'ReadWrite',
+      applicationUrlBase: baseUrl,
+      readOnlyRole,
+      lambdaInsightsExtensionArn: insightsArn,
+    }, LogoutFunction);
 
     const oidcSecret = aws_secretsmanager.Secret.fromSecretNameV2(this, 'oidc-secret', Statics.secretOIDCClientSecret);
-    const authFunction = new ApiFunction(this, 'irma-issue-auth-function', {
-      description: 'Authenticatie-lambd voor de IRMA issue-applicatie.',
-      codePath: 'app/auth',
+    const authFunction = new ApiFunction(this, 'yivi-issue-auth-function', {
+      description: 'Authenticatie-lambd voor de YIVI issue-applicatie.',
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
@@ -108,51 +94,86 @@ export class ApiStack extends Stack {
       environment: {
         CLIENT_SECRET_ARN: oidcSecret.secretArn,
       },
-    });
+      lambdaInsightsExtensionArn: insightsArn,
+    }, AuthFunction);
     oidcSecret.grantRead(authFunction.lambda);
 
     const secretMTLSPrivateKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'tls-key-secret', Statics.secretMTLSPrivateKey);
     const tlskeyParam = SSM.StringParameter.fromStringParameterName(this, 'tlskey', Statics.ssmMTLSClientCert);
     const tlsRootCAParam = SSM.StringParameter.fromStringParameterName(this, 'tlsrootca', Statics.ssmMTLSRootCA);
-    const homeFunction = new ApiFunction(this, 'irma-issue-home-function', {
-      description: 'Home-lambda voor de IRMA issue-applicatie.',
-      codePath: 'app/home',
+    const yiviApiHost = SSM.StringParameter.valueForStringParameter(this, Statics.ssmYiviApiHost);
+    const yiviApiDemo = SSM.StringParameter.valueForStringParameter(this, Statics.ssmYiviApiDemo);
+    const secretYiviApiAccessKeyId = aws_secretsmanager.Secret.fromSecretNameV2(this, 'yivi-api-access-key', Statics.secretYiviApiAccessKeyId);
+    const secretYiviApiSecretKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'yivi-api-secret-key', Statics.secretYiviApiSecretKey);
+    const secretYiviApiKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'yivi-api-key', Statics.secretYiviApiKey);
+    const issueFunction = new ApiFunction(this, 'yivi-issue-issue-function', {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       readOnlyRole,
+      description: 'Home-lambda voor de YIVI issue-applicatie.',
       environment: {
         MTLS_PRIVATE_KEY_ARN: secretMTLSPrivateKey.secretArn,
         MTLS_CLIENT_CERT_NAME: Statics.ssmMTLSClientCert,
         MTLS_ROOT_CA_NAME: Statics.ssmMTLSRootCA,
         BRP_API_URL: SSM.StringParameter.valueForStringParameter(this, Statics.ssmBrpApiEndpointUrl),
+        YIVI_API_HOST: yiviApiHost,
+        YIVI_API_DEMO: yiviApiDemo,
+        YIVI_API_ACCESS_KEY_ID_ARN: secretYiviApiAccessKeyId.secretArn,
+        YIVI_API_SECRET_KEY_ARN: secretYiviApiSecretKey.secretArn,
+        YIVI_API_KEY_ARN: secretYiviApiKey.secretArn,
       },
-    });
-    secretMTLSPrivateKey.grantRead(homeFunction.lambda);
-    tlskeyParam.grantRead(homeFunction.lambda);
-    tlsRootCAParam.grantRead(homeFunction.lambda);
+      lambdaInsightsExtensionArn: insightsArn,
+    }, IssueFunction);
+    secretMTLSPrivateKey.grantRead(issueFunction.lambda);
+    tlskeyParam.grantRead(issueFunction.lambda);
+    tlsRootCAParam.grantRead(issueFunction.lambda);
+    secretYiviApiAccessKeyId.grantRead(issueFunction.lambda);
+    secretYiviApiSecretKey.grantRead(issueFunction.lambda);
+    secretYiviApiKey.grantRead(issueFunction.lambda);
+
+    const diversifiyer = SSM.StringParameter.valueForStringParameter(this, Statics.ssmSubjectHashDiversifier);
+    const callbackFunction = new ApiFunction(this, 'yivi-issue-callback-function', {
+      table: this.sessionsTable,
+      tablePermissions: 'ReadWrite',
+      applicationUrlBase: baseUrl,
+      readOnlyRole,
+      description: 'Callback-lambda voor de YIVI issue-applicatie.',
+      logRetention: RetentionDays.ONE_YEAR, // Keep track of statistics for 1 year
+      ssmLogGroup: Statics.ssmStatisticsLogGroup,
+      environment: {
+        DIVERSIFYER: diversifiyer,
+      },
+      lambdaInsightsExtensionArn: insightsArn,
+    }, CallbackFunction);
 
     this.api.addRoutes({
-      integration: new HttpLambdaIntegration('irma-issue-login', loginFunction.lambda),
+      integration: new HttpLambdaIntegration('yivi-issue-login', loginFunction.lambda),
       path: '/login',
       methods: [apigatewayv2.HttpMethod.GET],
     });
 
     this.api.addRoutes({
-      integration: new HttpLambdaIntegration('irma-issue-logout', logoutFunction.lambda),
+      integration: new HttpLambdaIntegration('yivi-issue-logout', logoutFunction.lambda),
       path: '/logout',
       methods: [apigatewayv2.HttpMethod.GET],
     });
 
     this.api.addRoutes({
-      integration: new HttpLambdaIntegration('irma-issue-auth', authFunction.lambda),
+      integration: new HttpLambdaIntegration('yivi-issue-auth', authFunction.lambda),
       path: '/auth',
       methods: [apigatewayv2.HttpMethod.GET],
     });
 
     this.api.addRoutes({ // Also availabel at / due to CloudFront defaultRootObject
-      integration: new HttpLambdaIntegration('irma-issue-home', homeFunction.lambda),
-      path: '/home',
+      integration: new HttpLambdaIntegration('yivi-issue-issue', issueFunction.lambda),
+      path: '/issue',
+      methods: [apigatewayv2.HttpMethod.GET],
+    });
+
+    this.api.addRoutes({
+      integration: new HttpLambdaIntegration('yivi-issue-success', callbackFunction.lambda),
+      path: '/callback',
       methods: [apigatewayv2.HttpMethod.GET],
     });
   }
@@ -180,8 +201,8 @@ export class ApiStack extends Stack {
    */
   readOnlyRole(): Role {
     const readOnlyRole = new Role(this, 'read-only-role', {
-      roleName: 'irma-issue-full-read',
-      description: 'Read-only role for IRMA issue app with access to lambdas, logging, session store',
+      roleName: 'yivi-issue-full-read',
+      description: 'Read-only role for YIVI issue app with access to lambdas, logging, session store',
       assumedBy: new PrincipalWithConditions(
         new AccountPrincipal(Statics.iamAccountId), //IAM account
         {

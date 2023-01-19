@@ -1,10 +1,11 @@
 import { ArnFormat, aws_ssm as SSM, aws_wafv2, Stack, StackProps } from 'aws-cdk-lib';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
+import { Configurable } from './Configuration';
 import { Statics } from './statics';
 
-export interface WafStackProps extends StackProps {
-  branch: string;
+export interface WafStackProps extends StackProps, Configurable {
+
 }
 
 export class WafStack extends Stack {
@@ -12,18 +13,18 @@ export class WafStack extends Stack {
     super(scope, id, props);
 
     let rateBasedStatementAction: object = { block: {} };
-    if (props.branch == 'acceptance') {
+    if (!props.configuration.setWafRatelimit) {
       rateBasedStatementAction = { count: {} };
     }
 
-    const acl = new aws_wafv2.CfnWebACL(this, 'waf-mijnNijmegen', {
+    const acl = new aws_wafv2.CfnWebACL(this, 'waf-yiviIssueApp', {
       defaultAction: { allow: {} },
-      description: 'used for the mijnNijmegen apps',
-      name: 'mijnNijmegenWaf',
+      description: 'used for the yivi issue app',
+      name: 'yiviIssueAppWaf',
       visibilityConfig: {
         sampledRequestsEnabled: true,
         cloudWatchMetricsEnabled: true,
-        metricName: 'mijnNijmegen-web-acl',
+        metricName: 'yiviIssueApp-web-acl',
       },
       rules: [
         {
@@ -67,7 +68,7 @@ export class WafStack extends Stack {
                       byteMatchStatement: {
                         fieldToMatch: {
                           singleHeader: {
-                            name: 'user-agent',
+                            Name: 'user-agent',
                           },
                         },
                         positionalConstraint: 'EXACTLY',
@@ -149,7 +150,7 @@ export class WafStack extends Stack {
       scope: 'CLOUDFRONT',
     });
 
-    new SSM.StringParameter(this, 'mijn-acl-id', {
+    new SSM.StringParameter(this, 'yivi-issue-acl-id', {
       stringValue: acl.attrArn,
       parameterName: Statics.ssmWafAclArn,
     });
@@ -173,7 +174,7 @@ export class WafStack extends Stack {
    */
   private logGroupArn() {
     const logGroup = new LogGroup(this, 'waf-logs', {
-      logGroupName: 'aws-waf-logs-mijn-nijmegen',
+      logGroupName: 'aws-waf-logs-yivi-issue-app',
     });
 
     const logGroupArn = this.formatArn({

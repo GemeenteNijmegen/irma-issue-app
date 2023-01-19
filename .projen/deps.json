@@ -1,6 +1,10 @@
 {
   "dependencies": [
     {
+      "name": "@gemeentenijmegen/projen-project-type",
+      "type": "build"
+    },
+    {
       "name": "@playwright/test",
       "type": "build"
     },
@@ -26,6 +30,14 @@
     {
       "name": "aws-cdk",
       "version": "^2.22.0",
+      "type": "build"
+    },
+    {
+      "name": "aws-sdk-client-mock",
+      "type": "build"
+    },
+    {
+      "name": "axios-mock-adapter",
       "type": "build"
     },
     {
@@ -58,8 +70,16 @@
       "type": "build"
     },
     {
+      "name": "jest-aws-client-mock",
+      "type": "build"
+    },
+    {
       "name": "jest-junit",
       "version": "^13",
+      "type": "build"
+    },
+    {
+      "name": "jest-raw-loader",
       "type": "build"
     },
     {
@@ -68,7 +88,7 @@
     },
     {
       "name": "npm-check-updates",
-      "version": "^15",
+      "version": "^16",
       "type": "build"
     },
     {
@@ -101,12 +121,69 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-sdk/client-dynamodb",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-sdk/client-secrets-manager",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-sdk/client-ses",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-sdk/client-ssm",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-solutions-constructs/aws-lambda-dynamodb",
+      "type": "runtime"
+    },
+    {
+      "name": "@gemeentenijmegen/apiclient",
+      "type": "runtime"
+    },
+    {
+      "name": "@gemeentenijmegen/apigateway-http",
+      "type": "runtime"
+    },
+    {
+      "name": "@gemeentenijmegen/dnssec-record",
+      "type": "runtime"
+    },
+    {
+      "name": "@gemeentenijmegen/session",
+      "type": "runtime"
+    },
+    {
+      "name": "@gemeentenijmegen/utils",
+      "type": "runtime"
+    },
+    {
+      "name": "@types/aws-lambda",
+      "type": "runtime"
+    },
+    {
+      "name": "@types/cookie",
+      "type": "runtime"
+    },
+    {
+      "name": "@types/mustache",
       "type": "runtime"
     },
     {
       "name": "aws-cdk-lib",
       "version": "^2.22.0",
+      "type": "runtime"
+    },
+    {
+      "name": "aws4-axios",
+      "type": "runtime"
+    },
+    {
+      "name": "axios",
+      "version": "^0.27.2",
       "type": "runtime"
     },
     {
@@ -119,7 +196,19 @@
       "type": "runtime"
     },
     {
+      "name": "cookie",
+      "type": "runtime"
+    },
+    {
       "name": "dotenv",
+      "type": "runtime"
+    },
+    {
+      "name": "mustache",
+      "type": "runtime"
+    },
+    {
+      "name": "openid-client",
       "type": "runtime"
     }
   ],

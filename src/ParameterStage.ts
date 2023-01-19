@@ -52,7 +52,7 @@ export class ssmParamsConstruct extends Construct {
     });
 
     new SSM.StringParameter(this, 'ssm_auth_2', {
-      stringValue: 'AawootW574MqIMRAfAgzdv8lhQYLuGY3',
+      stringValue: 'eQLZc8Wl0luIr5PZoajjFUt3tMPMAKHf',
       parameterName: Statics.ssmOIDCClientID,
     });
 
@@ -82,13 +82,48 @@ export class ssmParamsConstruct extends Construct {
     });
 
     new SSM.StringParameter(this, 'ssm_brp_1', {
-      stringValue: 'https://data-test.nijmegen.nl/TenT/Bevraging/Irma',
+      stringValue: '-',
       parameterName: Statics.ssmBrpApiEndpointUrl,
     });
 
     new SSM.StringParameter(this, 'ssm_slack_1', {
       stringValue: '-',
       parameterName: Statics.ssmSlackWebhookUrl,
+    });
+
+    new SSM.StringParameter(this, 'ssm_api_1', {
+      stringValue: '-',
+      parameterName: Statics.ssmYiviApiHost,
+    });
+
+    new SSM.StringParameter(this, 'ssm_api_2', {
+      stringValue: '-',
+      parameterName: Statics.ssmYiviApiDemo,
+    });
+
+    new SecretsManager.Secret(this, 'secret_api_1', {
+      secretName: Statics.secretYiviApiAccessKeyId,
+      description: 'YIVI API Access Key ID (AWS sign)',
+    });
+
+    new SecretsManager.Secret(this, 'secret_api_2', {
+      secretName: Statics.secretYiviApiSecretKey,
+      description: 'YIVI API Secret Key (AWS sign)',
+    });
+
+    new SecretsManager.Secret(this, 'secret_api_3', {
+      secretName: Statics.secretYiviApiKey,
+      description: 'YIVI API key',
+    });
+
+    new SSM.StringParameter(this, 'ssm_statistics_1', {
+      stringValue: '-',
+      parameterName: Statics.ssmYiviStatisticsRecipients,
+    });
+
+    new SSM.StringParameter(this, 'ssm_statistics_2', {
+      stringValue: '-',
+      parameterName: Statics.ssmSubjectHashDiversifier,
     });
   }
 }
