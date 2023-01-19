@@ -37,7 +37,7 @@ export class DashboardStack extends Stack {
   }
 
   /**
-   * Note: this includes front-end error (from irma.js) that are send
+   * Note: this includes front-end error (from yivi.js) that are send
    * using the callback function only. Other lambdas have their own logging
    * and are not included in this widget.
    * @param logGroup
@@ -110,7 +110,7 @@ export class DashboardStack extends Stack {
    */
   createDashboard(layout: cloudwatch.IWidget[][]) {
     new cloudwatch.Dashboard(this, 'dashboard', {
-      dashboardName: 'IRMA-issue-statistics',
+      dashboardName: 'YIVI-issue-statistics',
       widgets: layout,
     });
   }

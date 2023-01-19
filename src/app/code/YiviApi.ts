@@ -2,7 +2,7 @@ import { aws4Interceptor } from 'aws4-axios';
 import axios, { Axios } from 'axios';
 import { AwsUtil } from './AwsUtil';
 
-export class IrmaApi {
+export class YiviApi {
 
   private host;
   private demo;
@@ -13,8 +13,8 @@ export class IrmaApi {
   private apiKey: string;
 
   constructor() {
-    this.host = process.env.IRMA_API_HOST ? process.env.IRMA_API_HOST : '';
-    this.demo = process.env.IRMA_API_DEMO == 'demo' ? true : false;
+    this.host = process.env.YIVI_API_HOST ? process.env.YIVI_API_HOST : '';
+    this.demo = process.env.YIVI_API_DEMO == 'demo' ? true : false;
     this.credentials = {
       accessKeyId: '',
       secretAccessKey: '',
@@ -27,14 +27,14 @@ export class IrmaApi {
   }
 
   async init() {
-    if (!process.env.IRMA_API_ACCESS_KEY_ID_ARN || !process.env.IRMA_API_SECRET_KEY_ARN || !process.env.IRMA_API_KEY_ARN) {
-      throw Error('Clould not initialize IRMA API client');
+    if (!process.env.YIVI_API_ACCESS_KEY_ID_ARN || !process.env.YIVI_API_SECRET_KEY_ARN || !process.env.YIVI_API_KEY_ARN) {
+      throw Error('Clould not initialize YIVI API client');
     }
     const util = new AwsUtil();
-    this.apiKey = await util.getSecret(process.env.IRMA_API_KEY_ARN);
+    this.apiKey = await util.getSecret(process.env.YIVI_API_KEY_ARN);
     this.credentials = {
-      accessKeyId: await util.getSecret(process.env.IRMA_API_ACCESS_KEY_ID_ARN),
-      secretAccessKey: await util.getSecret(process.env.IRMA_API_SECRET_KEY_ARN),
+      accessKeyId: await util.getSecret(process.env.YIVI_API_ACCESS_KEY_ID_ARN),
+      secretAccessKey: await util.getSecret(process.env.YIVI_API_SECRET_KEY_ARN),
     };
   }
 
@@ -50,8 +50,8 @@ export class IrmaApi {
 
 
   async startSession(brpData: any) {
-    const irmaIssueRequest = this.constructIrmaIssueRequest(brpData);
-    return this.doSignedPostRequest('session', irmaIssueRequest, 'De IRMA sessie kon niet worden gestart.');
+    const yiviIssueRequest = this.constructYiviIssueRequest(brpData);
+    return this.doSignedPostRequest('session', yiviIssueRequest, 'De YIVI sessie kon niet worden gestart.');
   }
 
   private getSigningClient(): Axios {
@@ -66,7 +66,7 @@ export class IrmaApi {
       baseURL: `https://${this.host}`,
       timeout: 2000,
       headers: {
-        'irma-authorization': this.apiKey,
+        'yivi-authorization': this.apiKey,
         'Content-type': 'application/json',
       },
     });
@@ -108,7 +108,7 @@ export class IrmaApi {
     }
   }
 
-  private constructIrmaIssueRequest(brpData: any) {
+  private constructYiviIssueRequest(brpData: any) {
 
     // Get persoonsgegevens
     const gegevens = brpData.Persoon.Persoonsgegevens;
@@ -123,7 +123,7 @@ export class IrmaApi {
       type: 'issuing',
       credentials: [
         {
-          credential: this.demo ? 'irma-demo.gemeente.address' : 'irma.gemeente.address',
+          credential: this.demo ? 'yivi-demo.gemeente.address' : 'yivi.gemeente.address',
           validity: date1ytd,
           attributes: {
             street: brpData.Persoon.Adres.Straat,
@@ -134,7 +134,7 @@ export class IrmaApi {
           },
         },
         {
-          credential: this.demo ? 'irma-demo.gemeente.personalData' : 'irma.gemeente.personalData',
+          credential: this.demo ? 'yivi-demo.gemeente.personalData' : 'yivi.gemeente.personalData',
           validity: date5ytd,
           attributes: {
             initials: gegevens.Voorletters,

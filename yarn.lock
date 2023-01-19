@@ -1858,11 +1858,6 @@
     "@pnpm/network.ca-file" "^1.0.1"
     config-chain "^1.1.11"
 
-"@privacybydesign/irma-frontend@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@privacybydesign/irma-frontend/-/irma-frontend-0.4.3.tgz#5d1389ecc9d3e08bef175756830f934f460de484"
-  integrity sha512-1UFNUI4cqAYXFndgcywckgEZKYqtz/eTXmH83gFNYkeBQzv8PKygowrrSOFlb5HUWaXCNnMeTTxVnZH4eLy9EQ==
-
 "@sindresorhus/is@^5.2.0":
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-5.3.0.tgz#0ec9264cf54a527671d990eb874e030b55b70dcc"

@@ -17,14 +17,14 @@ export class WafStack extends Stack {
       rateBasedStatementAction = { count: {} };
     }
 
-    const acl = new aws_wafv2.CfnWebACL(this, 'waf-irmaIssueApp', {
+    const acl = new aws_wafv2.CfnWebACL(this, 'waf-yiviIssueApp', {
       defaultAction: { allow: {} },
-      description: 'used for the irma issue app',
-      name: 'irmaIssueAppWaf',
+      description: 'used for the yivi issue app',
+      name: 'yiviIssueAppWaf',
       visibilityConfig: {
         sampledRequestsEnabled: true,
         cloudWatchMetricsEnabled: true,
-        metricName: 'irmaIssueApp-web-acl',
+        metricName: 'yiviIssueApp-web-acl',
       },
       rules: [
         {
@@ -150,7 +150,7 @@ export class WafStack extends Stack {
       scope: 'CLOUDFRONT',
     });
 
-    new SSM.StringParameter(this, 'irma-issue-acl-id', {
+    new SSM.StringParameter(this, 'yivi-issue-acl-id', {
       stringValue: acl.attrArn,
       parameterName: Statics.ssmWafAclArn,
     });
@@ -174,7 +174,7 @@ export class WafStack extends Stack {
    */
   private logGroupArn() {
     const logGroup = new LogGroup(this, 'waf-logs', {
-      logGroupName: 'aws-waf-logs-irma-issue-app',
+      logGroupName: 'aws-waf-logs-yivi-issue-app',
     });
 
     const logGroupArn = this.formatArn({

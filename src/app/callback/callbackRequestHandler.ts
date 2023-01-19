@@ -16,8 +16,8 @@ export async function callbackRequestHandler(params: any, dynamoDBClient: Dynamo
 }
 
 /**
- * Request persoonsgegevens form BRP send them to the IRMA server
- * logs the issue event and passes the irma sessionPtr to the render.
+ * Request persoonsgegevens form BRP send them to the YIVI server
+ * logs the issue event and passes the yivi sessionPtr to the render.
  * @param session the session object
  * @param params the http request parameters
  * @returns
@@ -40,7 +40,7 @@ async function handleLoggedinRequest(session: Session, params: any) {
 }
 
 /**
- * Logs the issue event for collecting statistics one usage of the irma-issue-app
+ * Logs the issue event for collecting statistics one usage of the yivi-issue-app
  * @param bsn hashed BSN from session
  * @param gemeente municipality from session
  * @param timestamp event time

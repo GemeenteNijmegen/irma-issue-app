@@ -1,4 +1,4 @@
-import { IrmaApi } from '../../src/app/code/IrmaApi';
+import { YiviApi } from '../../src/app/code/YiviApi';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { AwsUtil } from '../../src/app/code/AwsUtil';
@@ -23,11 +23,11 @@ beforeEach(() => {
     axiosMock.reset();
 });
 
-test('Check if irma api adds aws4-singature and irma-authorization header', async () => {
+test('Check if yivi api adds aws4-singature and yivi-authorization header', async () => {
     axiosMock.onPost('/session').reply(200, sessionResponse);
 
-    const client = new IrmaApi();
-    client.manualInit('gw-test.nijmegen.nl', true, 'someid', 'somesecretkey', 'irma-autharizaiton-header');
+    const client = new YiviApi();
+    client.manualInit('gw-test.nijmegen.nl', true, 'someid', 'somesecretkey', 'yivi-autharizaiton-header');
     const imraResp = await client.startSession(brpData);
 
     // Check if the response is correct
@@ -38,50 +38,49 @@ test('Check if irma api adds aws4-singature and irma-authorization header', asyn
     // Validate if the headers are set
     expect(request.headers).not.toBe(undefined);
     if (request.headers) {
-        expect(request.headers['irma-authorization']).toBe('irma-autharizaiton-header');
+        expect(request.headers['yivi-authorization']).toBe('yivi-autharizaiton-header');
         expect(request.headers['Authorization']).not.toBeUndefined();
         expect(request.headers['X-Amz-Date']).not.toBeUndefined();
     }
 });
 
 test('Initialization', async () => {
-    process.env.IRMA_API_ACCESS_KEY_ID_ARN = 'key-id-arn';
-    process.env.IRMA_API_SECRET_KEY_ARN = 'secret-arn';
-    process.env.IRMA_API_KEY_ARN = 'key-arn';
-    process.env.IRMA_API_HOST = 'gw-test.nijmegen.nl';
-    process.env.IRMA_API_DEMO = 'demo';
+    process.env.YIVI_API_ACCESS_KEY_ID_ARN = 'key-id-arn';
+    process.env.YIVI_API_SECRET_KEY_ARN = 'secret-arn';
+    process.env.YIVI_API_KEY_ARN = 'key-arn';
+    process.env.YIVI_API_HOST = 'gw-test.nijmegen.nl';
+    process.env.YIVI_API_DEMO = 'demo';
 
-
-    const api = new IrmaApi();
+    const api = new YiviApi();
     await api.init();
-    expect(api.getHost()).toBe(process.env.IRMA_API_HOST);
+    expect(api.getHost()).toBe(process.env.YIVI_API_HOST);
     expect(getSecretMock).toHaveBeenCalledTimes(3);
 });
 
 test('Initialization and test', async () => {
-    process.env.IRMA_API_ACCESS_KEY_ID_ARN = 'key-id-arn';
-    process.env.IRMA_API_SECRET_KEY_ARN = 'secret-arn';
-    process.env.IRMA_API_KEY_ARN = 'key-arn';
-    process.env.IRMA_API_HOST = 'gw-test.nijmegen.nl';
-    process.env.IRMA_API_DEMO = 'demo';
+    process.env.YIVI_API_ACCESS_KEY_ID_ARN = 'key-id-arn';
+    process.env.YIVI_API_SECRET_KEY_ARN = 'secret-arn';
+    process.env.YIVI_API_KEY_ARN = 'key-arn';
+    process.env.YIVI_API_HOST = 'gw-test.nijmegen.nl';
+    process.env.YIVI_API_DEMO = 'demo';
 
     axiosMock.onPost('/session').reply(200, sessionResponse);
 
-    const api = new IrmaApi();
+    const api = new YiviApi();
     await api.init();
     expect(getSecretMock).toHaveBeenCalledTimes(3);
 
-    const irmaResp = await api.startSession(brpData);
+    const yiviResp = await api.startSession(brpData);
 
     // Check if the response is correct
-    expect(irmaResp).toStrictEqual(sessionResponse);
+    expect(yiviResp).toStrictEqual(sessionResponse);
     // Check request config in history
     const request = axiosMock.history['post'][0];
     expect(request).not.toBe(undefined);
     // Validate if the headers are set
     expect(request.headers).not.toBe(undefined);
     if (request.headers) {
-        expect(request.headers['irma-authorization']).toBe('secret-key-arn');
+        expect(request.headers['yivi-authorization']).toBe('secret-key-arn');
         expect(request.headers['Authorization']).not.toBeUndefined();
         expect(request.headers['X-Amz-Date']).not.toBeUndefined();
     }
@@ -126,8 +125,8 @@ const brpData = {
 
 const sessionResponse = {
     sessionPtr: {
-        u: 'https://gw-test.nijmegen.nl/irma/session/anothertoken',
-        irmaqr: 'issuing'
+        u: 'https://gw-test.nijmegen.nl/yivi/session/anothertoken',
+        yiviqr: 'issuing'
     },
     token: 'sometoken',
     frontendRequest: {

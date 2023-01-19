@@ -161,10 +161,6 @@
       "type": "runtime"
     },
     {
-      "name": "@privacybydesign/irma-frontend",
-      "type": "runtime"
-    },
-    {
       "name": "@types/aws-lambda",
       "type": "runtime"
     },

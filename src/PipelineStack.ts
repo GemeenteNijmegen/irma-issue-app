@@ -23,9 +23,9 @@ export class PipelineStack extends Stack {
     const source = this.connectionSource(this.configuration.codeStarConnectionArn);
     const pipeline = this.pipeline(source);
 
-    pipeline.addStage(new ParameterStage(this, 'irma-issue-parameters', { env: this.configuration.deployToEnvironment }));
+    pipeline.addStage(new ParameterStage(this, 'yivi-issue-parameters', { env: this.configuration.deployToEnvironment }));
 
-    const apiStage = pipeline.addStage(new ApiStage(this, 'irma-issue-api', {
+    const apiStage = pipeline.addStage(new ApiStage(this, 'yivi-issue-api', {
       env: this.configuration.deployToEnvironment,
       configuration: this.configuration,
     }));
@@ -71,8 +71,8 @@ export class PipelineStack extends Stack {
       ],
     });
 
-    const pipeline = new pipelines.CodePipeline(this, `irma-issue-app-${this.configuration.branchName}`, {
-      pipelineName: `irma-issue-app-${this.configuration.branchName}`,
+    const pipeline = new pipelines.CodePipeline(this, `yivi-issue-app-${this.configuration.branchName}`, {
+      pipelineName: `yivi-issue-app-${this.configuration.branchName}`,
       dockerEnabledForSelfMutation: true,
       dockerEnabledForSynth: true,
       crossAccountKeys: true,
@@ -82,7 +82,7 @@ export class PipelineStack extends Stack {
   }
 
   private connectionSource(connectionArn: string): pipelines.CodePipelineSource {
-    return pipelines.CodePipelineSource.connection('GemeenteNijmegen/irma-issue-app', this.configuration.branchName, {
+    return pipelines.CodePipelineSource.connection('GemeenteNijmegen/yivi-issue-app', this.configuration.branchName, {
       connectionArn,
     });
   }

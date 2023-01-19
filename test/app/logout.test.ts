@@ -13,7 +13,7 @@ beforeAll(() => {
   }
 
   // Set env variables
-  process.env.SESSION_TABLE = 'irma-issue-sessions';
+  process.env.SESSION_TABLE = 'yivi-issue-sessions';
   process.env.AUTH_URL_BASE = 'https://authenticatie-accp.nijmegen.nl';
   process.env.APPLICATION_URL_BASE = 'https://testing.example.com/';
   process.env.OIDC_SECRET_ARN = '123';

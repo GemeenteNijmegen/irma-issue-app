@@ -20,7 +20,7 @@ export class DNSStack extends Stack {
     });
 
     this.zone = new Route53.HostedZone(this, 'hosted-zone', {
-      zoneName: `irma-issue.${this.accountRootZone.zoneName}`,
+      zoneName: `yivi-issue.${this.accountRootZone.zoneName}`,
     });
 
     this.addZoneIdAndNametoParams();
@@ -56,7 +56,7 @@ export class DNSStack extends Stack {
     new Route53.NsRecord(this, 'ns-record', {
       zone: this.accountRootZone,
       values: this.zone.hostedZoneNameServers,
-      recordName: 'irma-issue',
+      recordName: 'yivi-issue',
     });
   }
 

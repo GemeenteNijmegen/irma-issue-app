@@ -20,8 +20,8 @@ export class KeyStack extends Stack {
     super(scope, id);
     this.key = new KMS.Key(this, 'kmskey', {
       enableKeyRotation: true,
-      description: 'encryption key for irma-issue-app',
-      alias: 'irma-issue-app/userdata',
+      description: 'encryption key for yivi-issue-app',
+      alias: 'yivi-issue-app/userdata',
     });
 
     // Store key arn to be used in other stacks/projects

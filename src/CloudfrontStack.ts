@@ -130,7 +130,7 @@ export class CloudfrontStack extends Stack {
       defaultBehavior: {
         origin: new HttpOrigin(apiGatewayDomain),
         originRequestPolicy: new OriginRequestPolicy(this, 'cf-originrequestpolicy', {
-          originRequestPolicyName: 'cfOriginRequestPolicyIrmaIssueApp',
+          originRequestPolicyName: 'cfOriginRequestPolicyYiviIssueApp',
           headerBehavior: OriginRequestHeaderBehavior.allowList(
             'Accept-Charset',
             'Origin',
@@ -144,7 +144,7 @@ export class CloudfrontStack extends Stack {
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: AllowedMethods.ALLOW_ALL,
         cachePolicy: new CachePolicy(this, 'cf-caching', {
-          cachePolicyName: 'cfCachingSessionsIrmaIssueApp',
+          cachePolicyName: 'cfCachingSessionsYiviIssueApp',
           cookieBehavior: CacheCookieBehavior.all(),
           headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
           queryStringBehavior: CacheQueryStringBehavior.all(),
@@ -158,7 +158,7 @@ export class CloudfrontStack extends Stack {
       logBucket: this.logBucket(),
       minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2021,
       defaultRootObject: 'issue',
-      comment: 'IRMA issue app',
+      comment: 'YIVI issue app',
     });
     return distribution;
   }
@@ -246,12 +246,12 @@ export class CloudfrontStack extends Stack {
    * @returns string csp header values
    */
   cspHeaderValue() {
-    const irmaHost = SSM.StringParameter.valueForStringParameter(this, Statics.ssmIrmaApiHost);
+    const yiviHost = SSM.StringParameter.valueForStringParameter(this, Statics.ssmYiviApiHost);
     const cspValues = [
       'default-src \'self\';',
       'frame-ancestors \'self\';',
       'frame-src \'self\';',
-      `connect-src \'self\' https://componenten.nijmegen.nl https://${irmaHost};`,
+      `connect-src \'self\' https://componenten.nijmegen.nl https://${yiviHost};`,
       'style-src \'self\' https://componenten.nijmegen.nl https://fonts.googleapis.com https://fonts.gstatic.com \'sha256-hS1LM/30PjUBJK3kBX9Vm9eOAhQNCiNhf/SCDnUqu14=\' \'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=\' \'sha256-OTeu7NEHDo6qutIWo0F2TmYrDhsKWCzrUgGoxxHGJ8o=\';',
       'script-src \'self\' https://componenten.nijmegen.nl https://siteimproveanalytics.com;',
       'font-src \'self\' https://componenten.nijmegen.nl https://fonts.gstatic.com;',
