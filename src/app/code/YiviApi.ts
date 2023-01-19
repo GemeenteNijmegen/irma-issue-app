@@ -66,7 +66,7 @@ export class YiviApi {
       baseURL: `https://${this.host}`,
       timeout: 2000,
       headers: {
-        'yivi-authorization': this.apiKey,
+        'irma-authorization': this.apiKey,
         'Content-type': 'application/json',
       },
     });

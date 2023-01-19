@@ -23,11 +23,11 @@ beforeEach(() => {
     axiosMock.reset();
 });
 
-test('Check if yivi api adds aws4-singature and yivi-authorization header', async () => {
+test('Check if yivi api adds aws4-singature and irma-authorization header', async () => {
     axiosMock.onPost('/session').reply(200, sessionResponse);
 
     const client = new YiviApi();
-    client.manualInit('gw-test.nijmegen.nl', true, 'someid', 'somesecretkey', 'yivi-autharizaiton-header');
+    client.manualInit('gw-test.nijmegen.nl', true, 'someid', 'somesecretkey', 'irma-autharizaiton-header');
     const imraResp = await client.startSession(brpData);
 
     // Check if the response is correct
@@ -38,7 +38,7 @@ test('Check if yivi api adds aws4-singature and yivi-authorization header', asyn
     // Validate if the headers are set
     expect(request.headers).not.toBe(undefined);
     if (request.headers) {
-        expect(request.headers['yivi-authorization']).toBe('yivi-autharizaiton-header');
+        expect(request.headers['irma-authorization']).toBe('irma-autharizaiton-header');
         expect(request.headers['Authorization']).not.toBeUndefined();
         expect(request.headers['X-Amz-Date']).not.toBeUndefined();
     }
@@ -80,7 +80,7 @@ test('Initialization and test', async () => {
     // Validate if the headers are set
     expect(request.headers).not.toBe(undefined);
     if (request.headers) {
-        expect(request.headers['yivi-authorization']).toBe('secret-key-arn');
+        expect(request.headers['irma-authorization']).toBe('secret-key-arn');
         expect(request.headers['Authorization']).not.toBeUndefined();
         expect(request.headers['X-Amz-Date']).not.toBeUndefined();
     }
