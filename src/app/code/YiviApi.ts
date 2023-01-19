@@ -123,7 +123,7 @@ export class YiviApi {
       type: 'issuing',
       credentials: [
         {
-          credential: this.demo ? 'yivi-demo.gemeente.address' : 'yivi.gemeente.address',
+          credential: this.demo ? 'irma-demo.gemeente.address' : 'irma.gemeente.address',
           validity: date1ytd,
           attributes: {
             street: brpData.Persoon.Adres.Straat,
@@ -134,7 +134,7 @@ export class YiviApi {
           },
         },
         {
-          credential: this.demo ? 'yivi-demo.gemeente.personalData' : 'yivi.gemeente.personalData',
+          credential: this.demo ? 'irma-demo.gemeente.personalData' : 'irma.gemeente.personalData',
           validity: date5ytd,
           attributes: {
             initials: gegevens.Voorletters,
