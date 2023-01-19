@@ -4,8 +4,8 @@ import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import { BrpApi } from './BrpApi';
 import * as template from './issue.mustache';
-import { YiviApi } from '../code/YiviApi';
 import render from '../code/Render';
+import { YiviApi } from '../code/YiviApi';
 
 /**
  * Check login and handle request

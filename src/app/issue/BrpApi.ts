@@ -7,8 +7,8 @@ export class BrpApi {
   private client: ApiClient;
 
   constructor(client: ApiClient) {
-    if(!process.env.BRP_API_URL){
-      throw new Error("Could not initialize brp api as no endpoint is provided in BRP_API_URL");
+    if (!process.env.BRP_API_URL) {
+      throw new Error('Could not initialize brp api as no endpoint is provided in BRP_API_URL');
     }
     this.endpoint = process.env.BRP_API_URL;
     this.client = client ? client : new ApiClient();
