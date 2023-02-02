@@ -93,6 +93,20 @@
                 margin-top: 1em;
               }
 
+              .button {
+                padding: 10px;
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+                border-radius: 10px;
+                text-align: center;
+                background: 
+                  linear-gradient(80deg,  #f60440 50%, transparent 50% 60%, transparent 60% 70%, transparent 70% 80%, transparent 80% 100%),
+                  linear-gradient(100deg, #f60440 40%, #cb2153   50% 60%, transparent 60% 70%, transparent 70% 80%, transparent 80% 100%),
+                  linear-gradient(65deg,  #f60440 40%, #cb2153   40% 50%, #ae2651   60% 70%, transparent 70% 80%, transparent 80% 100%),
+                  linear-gradient(110deg, #f60440 40%, #cb2153   40% 50%, #ae2651   50% 60%, #93294f   70% 80%, transparent 80% 100%),
+                  linear-gradient(60deg,  #f60440 40%, #cb2153   40% 50%, #ae2651   50% 60%, #93294f   60% 70%, #ae2651   80% 100%);
+                }
             </style>
         </head>
         <body>
@@ -120,7 +134,7 @@
   
       <p>Laad uw BRP attributen in de YIVI app door de QR code te scannen.</p>
       <div id="yivi-web-form"></div>
-      <a href="/logout" class="digid">Uitloggen bij DigiD</a>
+      <a href="/logout" class="digid button">Uitloggen bij DigiD</a>
   
   </main>
         </body>
