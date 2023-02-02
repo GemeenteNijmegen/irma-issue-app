@@ -20,15 +20,11 @@ const yiviClient = yivi.newWeb({
 
 yiviClient.start()
     .then(() => { // Hide QR show success message
-        document.getElementById('yivi-form').classList.add("hidden");
-        document.getElementById('success').classList.remove("hidden");
         fetch('/callback?result=success')
             .then(() => console.log('Callback succesfull'))
             .catch(err => console.log('Callback failed', err));
     })
     .catch((err) => { // Hide QR show error message
-        document.getElementById('yivi-form').classList.add("hidden");
-        document.getElementById('failed-yivi').classList.remove("hidden");
         fetch(encodeURI('/callback?result=failure&error=' + err))
             .then(() => console.log('Callback succesfull'))
             .catch(err => console.log('Callback failed', err));
