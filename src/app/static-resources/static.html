@@ -1,0 +1,82 @@
+<html>
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            <title>Gegevens toevoegen aan YIVI</title>
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <link rel="stylesheet" href="/static/styles/main.css"/>
+            <link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+            <style>
+              html {
+                font-family: 'Open sans', arial, sans-serif;
+              }
+              main {
+                max-width: 70ch;
+                padding: 1em 1em;
+                margin: auto;
+                line-height: 1.75;
+                font-size: 1em;
+              }
+
+              header {
+                display: flex;
+                justify-content: space-between;
+                padding: .5rem;
+                gap: 1em;
+              }
+
+              header a {
+                flex-shrink: 0;
+              }
+
+              header img {
+                height: 3rem;
+              }
+
+              h1 {
+                font-size: 1.25em;
+                line-height: 1.4;
+                margin: 1.5em 0 1em;
+              }
+
+              p  {
+                margin-bottom: 2em;
+                color: #1d1d1d;
+                font-family: sans-serif;
+              }
+
+              img { 
+                max-width: 100%;
+              }
+
+              .digid {
+                display: flex;
+                align-items: center;
+                gap: .5em;
+                font-size: 1.125em;
+              }
+
+              .digid::before {
+                content: " ";
+                width: 1.5em;
+                height: 1.5em;
+                display: inline-block;
+                background: transparent url('static/img/digid.svg') left center no-repeat;
+              }
+
+
+            </style>
+        </head>
+        <body>
+            <header>
+                <a href="#"><img src="static/img/yivi-logo-compact.svg" alt="Yivi - the identity wallet"></a>
+                <a href="#"><img src="https://componenten.nijmegen.nl/v6.0.0/img/beeldmerklabel.svg" alt="Gemeente Nijmegen"></a>
+            </header>
+    <main>
+        <h1>Persoonsgegevens toevoegen</h1>
+        <p>Log in via Digid om je persoonsgegevens en adres aan Yivi toe te voegen.</p>
+        <p>Je gegevens worden opgehaald via de gemeente Nijmegen, ook als je daar niet woont. Je logt daarom in via Digid bij de gemeente Nijmegen.</p>
+        <a href="/" class="digid">Voeg gegevens toe</a>
+    </main>
+        </body>
+    </html>
