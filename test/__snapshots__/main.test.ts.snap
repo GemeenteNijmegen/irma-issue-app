@@ -2954,7 +2954,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "a4520577101b79a9940820345477e0eb37d4fc2e0220814744f24bd2f74de4f9.zip",
+          "S3Key": "56df07215ddbb6b6e543045a90ec4a8bdad4f33bbf6b4aa5016edb7694799e4d.zip",
         },
         "Description": "Home-lambda voor de YIVI issue-applicatie.",
         "Environment": Object {
@@ -3502,7 +3502,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "c7a31e0abf03accb2a6692c65ec9982efc3500eb0f11bad733883c2385669f19.zip",
+          "S3Key": "717abf8a7e9babee477cbd3da8501c40ee1e636a4429770910c746779d15ed7d.zip",
         },
         "Description": "Login-pagina voor de YIVI issue-applicatie.",
         "Environment": Object {
@@ -3793,7 +3793,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "ff834ac86dd47a1bdfe319cbdcd7616eb66b726038725861b62c816ea97e4772.zip",
+          "S3Key": "c5d135aef48e23e1cf5fc1e5d07a7d04f6ae8a58fde5034257eaa1f4a163da39.zip",
         },
         "Description": "Uitlog-pagina voor de YIVI issue-applicatie.",
         "Environment": Object {
@@ -5356,7 +5356,7 @@ def submit_response(event: dict, context, response_status: str, error_message: s
           },
         ],
         "SourceObjectKeys": Array [
-          "33aff9e4772475b2bfa4b8d7f4187aa90a00dc8fbae582872ed8a13f4224da5f.zip",
+          "3a348e179c1be2c53c959c3a539a6e7f4ffa49f6b476362bd93e1f422754b38a.zip",
         ],
       },
       "Type": "Custom::CDKBucketDeployment",
@@ -6117,7 +6117,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapicloudfrontstack5E5974C5.assets.json\\\\\\" --verbose publish \\\\\\"33aff9e4772475b2bfa4b8d7f4187aa90a00dc8fbae582872ed8a13f4224da5f:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapicloudfrontstack5E5974C5.assets.json\\\\\\" --verbose publish \\\\\\"3a348e179c1be2c53c959c3a539a6e7f4ffa49f6b476362bd93e1f422754b38a:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6415,7 +6415,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"c7a31e0abf03accb2a6692c65ec9982efc3500eb0f11bad733883c2385669f19:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"717abf8a7e9babee477cbd3da8501c40ee1e636a4429770910c746779d15ed7d:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6474,7 +6474,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"ff834ac86dd47a1bdfe319cbdcd7616eb66b726038725861b62c816ea97e4772:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"c5d135aef48e23e1cf5fc1e5d07a7d04f6ae8a58fde5034257eaa1f4a163da39:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6592,7 +6592,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"a4520577101b79a9940820345477e0eb37d4fc2e0220814744f24bd2f74de4f9:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"56df07215ddbb6b6e543045a90ec4a8bdad4f33bbf6b4aa5016edb7694799e4d:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
