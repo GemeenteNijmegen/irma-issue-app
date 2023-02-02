@@ -32,7 +32,7 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiv
 
   // If issuing already is completed
   if (session.getValue('issued', 'BOOL')) {
-    error = 'Om uw gegevens nog een keer in te laden dient u eerst uit te loggen';
+    error = 'Om uw gegevens nog een keer in te laden dient u eerst uit te loggen.';
   }
 
   // BRP request
@@ -44,7 +44,7 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiv
     brpData = await brpApi.getBrpData(bsn);
     naam = brpData?.Persoon?.Persoonsgegevens?.Naam ?? naam;
     if (brpData.error) {
-      error = 'Het ophalen van uw persoonsgegevens is mis gegaan.';
+      error = 'Het ophalen van uw persoonsgegevens is mis gegaan. Propeer het later opnieuw.';
     }
   }
 
@@ -59,7 +59,7 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiv
         yiviSessionPtrU: yiviResponse.sessionPtr.u,
       };
     } else {
-      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in YIVI.';
+      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in YIVI. Probeer het later opnieuw';
     }
   }
 
