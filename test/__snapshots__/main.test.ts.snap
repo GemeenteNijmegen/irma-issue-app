@@ -365,7 +365,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
           },
-          "S3Key": "eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8.zip",
+          "S3Key": "e45ee2082d227db1b6f0292696ce5ce2b061c105d15efb341925ca040d1feb68.zip",
         },
         "Handler": "index.handler",
         "Role": Object {
@@ -574,7 +574,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
           },
-          "S3Key": "2157f4ab8972014e220d70707296b292b3b7301f163f7cd641ccda0ee663530f.zip",
+          "S3Key": "53c95d71cfd280747d971a38505aea07f812fdba75874a090358a2fc4f58f79b.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (api-stage-snapshot/us-cert-stack/zone-params/MyProvider)",
         "Environment": Object {
@@ -766,7 +766,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
           },
-          "S3Key": "eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8.zip",
+          "S3Key": "e45ee2082d227db1b6f0292696ce5ce2b061c105d15efb341925ca040d1feb68.zip",
         },
         "Handler": "index.handler",
         "Role": Object {
@@ -1043,7 +1043,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
           },
-          "S3Key": "2157f4ab8972014e220d70707296b292b3b7301f163f7cd641ccda0ee663530f.zip",
+          "S3Key": "53c95d71cfd280747d971a38505aea07f812fdba75874a090358a2fc4f58f79b.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (api-stage-snapshot/dnssec-stack/dnssec-record/provider)",
         "Environment": Object {
@@ -1258,7 +1258,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
           },
-          "S3Key": "2157f4ab8972014e220d70707296b292b3b7301f163f7cd641ccda0ee663530f.zip",
+          "S3Key": "53c95d71cfd280747d971a38505aea07f812fdba75874a090358a2fc4f58f79b.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (api-stage-snapshot/dnssec-stack/root-zone-params/MyProvider)",
         "Environment": Object {
@@ -1480,7 +1480,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
           },
-          "S3Key": "2157f4ab8972014e220d70707296b292b3b7301f163f7cd641ccda0ee663530f.zip",
+          "S3Key": "53c95d71cfd280747d971a38505aea07f812fdba75874a090358a2fc4f58f79b.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (api-stage-snapshot/dnssec-stack/zone-params/MyProvider)",
         "Environment": Object {
@@ -1718,7 +1718,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8.zip",
+          "S3Key": "e45ee2082d227db1b6f0292696ce5ce2b061c105d15efb341925ca040d1feb68.zip",
         },
         "Handler": "index.handler",
         "Role": Object {
@@ -2309,7 +2309,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "41c9cca0546e1a301995a2de090e26279c2577cf00d25bdbc4372d634d6ed3bc.zip",
+          "S3Key": "7bbb70f9656d472b122f25a4a5b72083b2e96b8320e3b140586e807de0c3645b.zip",
         },
         "Description": "Authenticatie-lambd voor de YIVI issue-applicatie.",
         "Environment": Object {
@@ -2647,7 +2647,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "fa7fa4e7df764856ab205ccd2de19e133aa80576c89fd3a194a851c342f5e67c.zip",
+          "S3Key": "157e577662ec8ded282e266cbc3165768940fbedf8ca8118fa335a40331b35e0.zip",
         },
         "Description": "Callback-lambda voor de YIVI issue-applicatie.",
         "Environment": Object {
@@ -2954,7 +2954,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "56df07215ddbb6b6e543045a90ec4a8bdad4f33bbf6b4aa5016edb7694799e4d.zip",
+          "S3Key": "bea8846912bee12661b1c5e9b4f891addc2cfa6d5ae0d9b7be18998a784cf31f.zip",
         },
         "Description": "Home-lambda voor de YIVI issue-applicatie.",
         "Environment": Object {
@@ -3502,7 +3502,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "717abf8a7e9babee477cbd3da8501c40ee1e636a4429770910c746779d15ed7d.zip",
+          "S3Key": "a0cc61c1a637f1e97c8dc2168f927a46e471a498c6a0fe8eae6ac376c0f5a46f.zip",
         },
         "Description": "Login-pagina voor de YIVI issue-applicatie.",
         "Environment": Object {
@@ -3793,7 +3793,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "c5d135aef48e23e1cf5fc1e5d07a7d04f6ae8a58fde5034257eaa1f4a163da39.zip",
+          "S3Key": "f3ae80a9fa2b3d7c2d2a912497747850dc0a7665b97e4adf6de9c82f3e561651.zip",
         },
         "Description": "Uitlog-pagina voor de YIVI issue-applicatie.",
         "Environment": Object {
@@ -4558,7 +4558,7 @@ def submit_response(event: dict, context, response_status: str, error_message: s
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8.zip",
+          "S3Key": "e45ee2082d227db1b6f0292696ce5ce2b061c105d15efb341925ca040d1feb68.zip",
         },
         "Handler": "index.handler",
         "Role": Object {
@@ -5027,7 +5027,7 @@ def submit_response(event: dict, context, response_status: str, error_message: s
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "2157f4ab8972014e220d70707296b292b3b7301f163f7cd641ccda0ee663530f.zip",
+          "S3Key": "53c95d71cfd280747d971a38505aea07f812fdba75874a090358a2fc4f58f79b.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (api-stage-snapshot/cloudfront-stack/params/MyProvider)",
         "Environment": Object {
@@ -5356,7 +5356,7 @@ def submit_response(event: dict, context, response_status: str, error_message: s
           },
         ],
         "SourceObjectKeys": Array [
-          "3a348e179c1be2c53c959c3a539a6e7f4ffa49f6b476362bd93e1f422754b38a.zip",
+          "2cb20f056288eab17dffbc00805a8b5b5e51b48937e54f722347b6b1b8b97137.zip",
         ],
       },
       "Type": "Custom::CDKBucketDeployment",
@@ -5447,7 +5447,7 @@ def submit_response(event: dict, context, response_status: str, error_message: s
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "2157f4ab8972014e220d70707296b292b3b7301f163f7cd641ccda0ee663530f.zip",
+          "S3Key": "53c95d71cfd280747d971a38505aea07f812fdba75874a090358a2fc4f58f79b.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (api-stage-snapshot/cloudfront-stack/waf-params/MyProvider)",
         "Environment": Object {
@@ -6117,7 +6117,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapicloudfrontstack5E5974C5.assets.json\\\\\\" --verbose publish \\\\\\"3a348e179c1be2c53c959c3a539a6e7f4ffa49f6b476362bd93e1f422754b38a:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapicloudfrontstack5E5974C5.assets.json\\\\\\" --verbose publish \\\\\\"2cb20f056288eab17dffbc00805a8b5b5e51b48937e54f722347b6b1b8b97137:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6236,8 +6236,8 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapidnssecstack63B0519B.assets.json\\\\\\" --verbose publish \\\\\\"2157f4ab8972014e220d70707296b292b3b7301f163f7cd641ccda0ee663530f:123456789012-us-east-1\\\\\\"\\",
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapicloudfrontstack5E5974C5.assets.json\\\\\\" --verbose publish \\\\\\"2157f4ab8972014e220d70707296b292b3b7301f163f7cd641ccda0ee663530f:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapidnssecstack63B0519B.assets.json\\\\\\" --verbose publish \\\\\\"53c95d71cfd280747d971a38505aea07f812fdba75874a090358a2fc4f58f79b:123456789012-us-east-1\\\\\\"\\",
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapicloudfrontstack5E5974C5.assets.json\\\\\\" --verbose publish \\\\\\"53c95d71cfd280747d971a38505aea07f812fdba75874a090358a2fc4f58f79b:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6296,8 +6296,8 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapidnssecstack63B0519B.assets.json\\\\\\" --verbose publish \\\\\\"eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8:123456789012-us-east-1\\\\\\"\\",
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapidnssecstack63B0519B.assets.json\\\\\\" --verbose publish \\\\\\"e45ee2082d227db1b6f0292696ce5ce2b061c105d15efb341925ca040d1feb68:123456789012-us-east-1\\\\\\"\\",
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"e45ee2082d227db1b6f0292696ce5ce2b061c105d15efb341925ca040d1feb68:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6415,7 +6415,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"717abf8a7e9babee477cbd3da8501c40ee1e636a4429770910c746779d15ed7d:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"a0cc61c1a637f1e97c8dc2168f927a46e471a498c6a0fe8eae6ac376c0f5a46f:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6474,7 +6474,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"c5d135aef48e23e1cf5fc1e5d07a7d04f6ae8a58fde5034257eaa1f4a163da39:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"f3ae80a9fa2b3d7c2d2a912497747850dc0a7665b97e4adf6de9c82f3e561651:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6533,7 +6533,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"41c9cca0546e1a301995a2de090e26279c2577cf00d25bdbc4372d634d6ed3bc:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"7bbb70f9656d472b122f25a4a5b72083b2e96b8320e3b140586e807de0c3645b:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6592,7 +6592,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"56df07215ddbb6b6e543045a90ec4a8bdad4f33bbf6b4aa5016edb7694799e4d:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"bea8846912bee12661b1c5e9b4f891addc2cfa6d5ae0d9b7be18998a784cf31f:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
@@ -6651,7 +6651,7 @@ Object {
     },
     \\"build\\": {
       \\"commands\\": [
-        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"fa7fa4e7df764856ab205ccd2de19e133aa80576c89fd3a194a851c342f5e67c:123456789012-eu-central-1\\\\\\"\\"
+        \\"cdk-assets --path \\\\\\"assembly-test-yivi-issue-api/testyiviissueapiapistack723A40B1.assets.json\\\\\\" --verbose publish \\\\\\"157e577662ec8ded282e266cbc3165768940fbedf8ca8118fa335a40331b35e0:123456789012-eu-central-1\\\\\\"\\"
       ]
     }
   }
