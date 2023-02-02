@@ -15,7 +15,7 @@
                 padding: 1em 1em;
                 margin: auto;
                 line-height: 1.75;
-                font-size: 1em;
+                font-size: 1.125em;
               }
 
               header {
@@ -39,7 +39,7 @@
                 margin: 1.5em 0 1em;
               }
 
-              p  {
+              p {
                 margin-bottom: 2em;
                 color: #1d1d1d;
                 font-family: sans-serif;
@@ -47,6 +47,19 @@
 
               img { 
                 max-width: 100%;
+              }
+
+              .logo-large {
+                display: none;
+              }
+
+              @media (min-width: 600px) {
+                .logo-large {
+                  display: initial;
+                }
+                .logo-compact {
+                  display: none;
+                }
               }
 
               .digid {
@@ -64,19 +77,51 @@
                 background: transparent url('static/img/digid.svg') left center no-repeat;
               }
 
+              .error {
+                padding: 1em .5em;
+                border-left: 4px solid #E02146;
+                background: #ffdde3;
+                color: black;
+                padding: .5em .5em .5em 1em;
+              }
+
+              .error p {
+                margin: 0;
+              }
+
+              .error p + p {
+                margin-top: 1em;
+              }
 
             </style>
         </head>
         <body>
             <header>
-                <a href="#"><img src="static/img/yivi-logo-compact.svg" alt="Yivi - the identity wallet"></a>
+                <a href="#">
+                  <img class="logo-compact" src="static/img/yivi-logo-compact.svg" alt="Yivi - the identity wallet">
+                  <img class="logo-large" src="static/img/yivi-logo.svg" alt="Yivi - the identity wallet">
+                </a>
                 <a href="#"><img src="https://componenten.nijmegen.nl/v6.0.0/img/beeldmerklabel.svg" alt="Gemeente Nijmegen"></a>
             </header>
-    <main>
+    <!-- <main>
         <h1>Persoonsgegevens toevoegen</h1>
         <p>Log in via Digid om je persoonsgegevens en adres aan Yivi toe te voegen.</p>
         <p>Je gegevens worden opgehaald via de gemeente Nijmegen, ook als je daar niet woont. Je logt daarom in via Digid bij de gemeente Nijmegen.</p>
         <a href="/" class="digid">Voeg gegevens toe</a>
-    </main>
+    </main> -->
+    <main>
+
+      <h1>YIVI BRP attributen laden via DigiD</h1>
+      
+      <!-- TODO make error thingy-->
+      <div class="error"> 
+          <p>Er is iets misgegaan: De BRP is niet beschikbaar. Probeer het later opnieuw. Dit is een lange tekst voor het geval dat we lange tekst moeten tonen.</p>
+      </div>
+  
+      <p>Laad uw BRP attributen in de YIVI app door de QR code te scannen.</p>
+      <div id="yivi-web-form"></div>
+      <a href="/logout" class="digid">Uitloggen bij DigiD</a>
+  
+  </main>
         </body>
     </html>
