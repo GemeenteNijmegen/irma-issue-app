@@ -62,7 +62,7 @@ const project = new GemeenteNijmegenCdkApp({
     'src/app/**/tests/output',
     'test/playwright/report',
     'test/playwright/screenshots',
-    'test/__snapshots__/*'
+    'test/__snapshots__/*',
   ],
   bundlerOptions: {
     loaders: {
