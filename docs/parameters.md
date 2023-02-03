@@ -4,6 +4,6 @@
 - BRP API url
 - BRP certificate + key
 - OIDC client id + secret
-- YIVI server host (NOTE: host no protocol or path required just domain name gw-test.nijmegen.nl)
-- YIVI API key
-- YIVI AWS credentials
+- Yivi server host (NOTE: host no protocol or path required just domain name gw-test.nijmegen.nl)
+- Yivi API key
+- Yivi AWS credentials
