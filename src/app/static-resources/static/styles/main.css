@@ -54,18 +54,7 @@ img {
 }
 
 .digid {
-  display: flex;
-  align-items: center;
   gap: .5em;
-  font-size: 1.125em;
-}
-
-.digid::before {
-  content: " ";
-  width: 1.5em;
-  height: 1.5em;
-  display: inline-block;
-  background: transparent url('../img/digid.svg') left center no-repeat;
 }
 
 .error {
@@ -85,23 +74,23 @@ img {
 }
 
 .button {
-  padding: 10px;
-  color: white;
+  display: flex;
+  align-items: center;
+  font-size: 1.125em;
+  padding: .5em;
   text-decoration: none;
   font-weight: bold;
-  border-radius: 10px;
   text-align: center;
-  background: 
-    linear-gradient(80deg,  #f60440 50%, transparent 50% 60%, transparent 60% 70%, transparent 70% 80%, transparent 80% 100%),
-    linear-gradient(100deg, #f60440 40%, #cb2153   50% 60%, transparent 60% 70%, transparent 70% 80%, transparent 80% 100%),
-    linear-gradient(65deg,  #f60440 40%, #cb2153   40% 50%, #ae2651   60% 70%, transparent 70% 80%, transparent 80% 100%),
-    linear-gradient(110deg, #f60440 40%, #cb2153   40% 50%, #ae2651   50% 60%, #93294f   70% 80%, transparent 80% 100%),
-    linear-gradient(60deg,  #f60440 40%, #cb2153   40% 50%, #ae2651   50% 60%, #93294f   60% 70%, #ae2651   80% 100%);
-}
-
-.button span {
-  width: 100%;
-  text-align: center;
+  border-radius: .5em;
+  color: white;
+  background: top left url('../img/digid.svg') no-repeat, 
+  linear-gradient(80deg,  #f60440 50%, transparent 50% 60%, transparent 60% 70%, transparent 70% 80%, transparent 80% 100%),
+  linear-gradient(100deg, #f60440 40%, #cb2153   50% 60%, transparent 60% 70%, transparent 70% 80%, transparent 80% 100%),
+  linear-gradient(65deg,  #f60440 40%, #cb2153   40% 50%, #ae2651   60% 70%, transparent 70% 80%, transparent 80% 100%),
+  linear-gradient(110deg, #f60440 40%, #cb2153   40% 50%, #ae2651   50% 60%, #93294f   70% 80%, transparent 80% 100%),
+  linear-gradient(60deg,  #f60440 40%, #cb2153   40% 50%, #ae2651   50% 60%, #93294f   60% 70%, #ae2651   80% 100%);
+  background-size: 2em, 100%, 100%, 100%, 100%, 100%;
+  background-position: left .5em center, top left;
 }
 
 #yivi-web-form {
