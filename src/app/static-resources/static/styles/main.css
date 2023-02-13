@@ -116,15 +116,8 @@ img {
   text-decoration: underline;
 }
 
-.button.digid:hover {
-  background-size: 2em, 105%, 105%, 105%, 105%, 105%;
-}
-
-.button.primary:hover {
-  background-size: 105%, 105%, 105%, 105%, 105%;
-}
-
-.button:active,
-.button:active {
-  transform: translateY(2px);
+#yivi-web-form {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
 }
