@@ -59,5 +59,6 @@ const configurations: { [name: string] : Configuration } = {
     codeStarConnectionArn: Statics.codeStarConnectionArn,
     includePipelineValidationChecks: false,
     setWafRatelimit: false,
+    nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
   },
 };
