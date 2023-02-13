@@ -29,7 +29,8 @@ export class WafStack extends Stack {
       rules: [
         {
           priority: 0,
-          overrideAction: { none: {} },
+          // Disable for now as we search engines may visit this site and meta data tags must be accessible by social media
+          overrideAction: { count: {} },
           visibilityConfig: {
             sampledRequestsEnabled: true,
             cloudWatchMetricsEnabled: true,
@@ -50,52 +51,52 @@ export class WafStack extends Stack {
           },
         },
         // After counting the SignalNonBrowserUserAgent matches, block all except the excluded ua
-        {
-          priority: 1,
-          name: 'BlockMostNonBrowserUserAgents',
-          statement: {
-            andStatement: {
-              statements: [
-                {
-                  labelMatchStatement: {
-                    scope: 'LABEL',
-                    key: 'awswaf:managed:aws:bot-control:signal:non_browser_user_agent',
-                  },
-                },
-                {
-                  notStatement: {
-                    statement: {
-                      byteMatchStatement: {
-                        fieldToMatch: {
-                          singleHeader: {
-                            Name: 'user-agent',
-                          },
-                        },
-                        positionalConstraint: 'EXACTLY',
-                        searchString: 'internetnl/1.0',
-                        textTransformations: [
-                          {
-                            priority: 0,
-                            type: 'NONE',
-                          },
-                        ],
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-          },
-          ruleLabels: [],
-          action: {
-            block: {},
-          },
-          visibilityConfig: {
-            sampledRequestsEnabled: true,
-            cloudWatchMetricsEnabled: true,
-            metricName: 'AWS-ManagedRulesBotControlRuleSet',
-          },
-        },
+        // {
+        //   priority: 1,
+        //   name: 'BlockMostNonBrowserUserAgents',
+        //   statement: {
+        //     andStatement: {
+        //       statements: [
+        //         {
+        //           labelMatchStatement: {
+        //             scope: 'LABEL',
+        //             key: 'awswaf:managed:aws:bot-control:signal:non_browser_user_agent',
+        //           },
+        //         },
+        //         {
+        //           notStatement: {
+        //             statement: {
+        //               byteMatchStatement: {
+        //                 fieldToMatch: {
+        //                   singleHeader: {
+        //                     Name: 'user-agent',
+        //                   },
+        //                 },
+        //                 positionalConstraint: 'EXACTLY',
+        //                 searchString: 'internetnl/1.0',
+        //                 textTransformations: [
+        //                   {
+        //                     priority: 0,
+        //                     type: 'NONE',
+        //                   },
+        //                 ],
+        //               },
+        //             },
+        //           },
+        //         },
+        //       ],
+        //     },
+        //   },
+        //   ruleLabels: [],
+        //   action: {
+        //     block: {},
+        //   },
+        //   visibilityConfig: {
+        //     sampledRequestsEnabled: true,
+        //     cloudWatchMetricsEnabled: true,
+        //     metricName: 'AWS-ManagedRulesBotControlRuleSet',
+        //   },
+        // },
         {
           priority: 10,
           action: rateBasedStatementAction,
