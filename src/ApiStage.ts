@@ -1,7 +1,7 @@
 import { Stage, StageProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { ApiStack } from './ApiStack';
-import { CloudfrontStack } from './CloudfrontStack';
+// import { CloudfrontStack } from './CloudfrontStack';
 import { Configurable, Configuration } from './Configuration';
 import { DashboardStack } from './DashboardStack';
 import { DNSSECStack } from './DNSSECStack';
@@ -45,11 +45,11 @@ export class ApiStage extends Stage {
       configuration: this.configuration,
     });
 
-    const cloudfrontStack = new CloudfrontStack(this, 'cloudfront-stack', {
-      apiGatewayDomain: apistack.domain(),
-      configuration: this.configuration,
-    });
-    cloudfrontStack.addDependency(usEastCertificateStack);
+    // const cloudfrontStack = new CloudfrontStack(this, 'cloudfront-stack', {
+    //   apiGatewayDomain: apistack.domain(),
+    //   configuration: this.configuration,
+    // });
+    // cloudfrontStack.addDependency(usEastCertificateStack);
 
     const dashboardStack = new DashboardStack(this, 'dashboard-stack');
     dashboardStack.addDependency(apistack, 'Uses a log group form a lambda in the apiStack');
