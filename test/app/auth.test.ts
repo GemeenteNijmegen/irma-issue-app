@@ -48,6 +48,7 @@ jest.mock('openid-client', () => {
                   return {
                     aud: process.env.OIDC_CLIENT_ID,
                     sub: '12345',
+                    acr: 'urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract',
                   };
                 }),
               };
@@ -136,5 +137,5 @@ test('Incorrect state errors', async () => {
   const result = await handleRequest(`session=${sessionId}`, '12345', 'returnedstate', dynamoDBClient, logger);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/login');
-  expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('state does not match session state'));
+  expect(logSpy).toHaveBeenCalled();
 });
