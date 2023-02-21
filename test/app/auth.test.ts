@@ -1,3 +1,4 @@
+import { Logger } from '@aws-lambda-powertools/logger';
 import { DynamoDBClient, GetItemCommand, GetItemCommandOutput } from '@aws-sdk/client-dynamodb';
 import { SecretsManagerClient, GetSecretValueCommandOutput, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import { mockClient } from 'aws-sdk-client-mock';
@@ -27,6 +28,7 @@ beforeAll(() => {
 
 });
 
+const logger = new Logger({ serviceName: 'YiviAuthLambda'});
 const ddbMock = mockClient(DynamoDBClient);
 const secretsMock = mockClient(SecretsManagerClient);
 
@@ -79,7 +81,7 @@ test('Successful auth redirects to home', async () => {
   };
   ddbMock.on(GetItemCommand).resolves(getItemOutput);
 
-  const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient);
+  const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient, logger);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/');
 });
@@ -101,7 +103,7 @@ test('Successful auth creates new session', async () => {
   ddbMock.on(GetItemCommand).resolves(getItemOutput);
 
 
-  const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient);
+  const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient, logger);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/');
   expect(result.cookies).toContainEqual(expect.stringContaining('session='));
@@ -109,7 +111,7 @@ test('Successful auth creates new session', async () => {
 
 test('No session redirects to login', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
-  const result = await handleRequest('', 'state', 'state', dynamoDBClient);
+  const result = await handleRequest('', 'state', 'state', dynamoDBClient, logger);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/login');
 });
@@ -128,9 +130,10 @@ test('Incorrect state errors', async () => {
       },
     },
   };
+  const logger = new Logger({serviceName: 'test'});
   ddbMock.on(GetItemCommand).resolves(getItemOutput);
-  const logSpy = jest.spyOn(console, 'error');
-  const result = await handleRequest(`session=${sessionId}`, '12345', 'returnedstate', dynamoDBClient);
+  const logSpy = jest.spyOn(logger, 'error');
+  const result = await handleRequest(`session=${sessionId}`, '12345', 'returnedstate', dynamoDBClient, logger);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/login');
   expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('state does not match session state'));
