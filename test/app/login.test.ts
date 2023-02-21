@@ -2,7 +2,6 @@ import { writeFile } from 'fs';
 import * as path from 'path';
 import { DynamoDBClient, GetItemCommandOutput, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
-import { handler } from '../../src/app/login/login.lambda';
 import { handleLoginRequest } from '../../src/app/login/loginRequestHandler';
 
 const ddbMock = mockClient(DynamoDBClient);
@@ -31,14 +30,15 @@ beforeEach(() => {
 
 
 test('index is ok', async () => {
-  const result = await handler({});
+  const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
+  const result = await handleLoginRequest({ cookies: '' }, dynamoDBClient);
   expect(result.statusCode).toBe(200);
 });
 
 
 test('Return login page with correct link', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
-  const result = await handleLoginRequest('', dynamoDBClient);
+  const result = await handleLoginRequest({ cookies: '' }, dynamoDBClient);
   if(!('body' in result)){
     expect('body' in result).toBe(true);
     return;
@@ -52,14 +52,14 @@ test('Return login page with correct link', async () => {
 test('No redirect if session cookie doesn\'t exist', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
 
-  const result = await handleLoginRequest('demo=12345', dynamoDBClient);
+  const result = await handleLoginRequest({ cookies: 'demo=12345' }, dynamoDBClient);
   expect(result.statusCode).toBe(200);
 });
 
 test('Create session if no session exists', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
 
-  await handleLoginRequest('', dynamoDBClient);
+  await handleLoginRequest({ cookies: 'demo=12345' }, dynamoDBClient);
 
   expect(ddbMock.calls().length).toBe(1);
 });
@@ -79,7 +79,7 @@ test('Redirect to home if already logged in', async () => {
   ddbMock.on(GetItemCommand).resolves(output);
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
   const sessionId = '12345';
-  const result = await handleLoginRequest(`session=${sessionId}`, dynamoDBClient);
+  const result = await handleLoginRequest({ cookies: `session=${sessionId}` }, dynamoDBClient);
   expect(result.statusCode).toBe(302);
   if(!('Location' in (result.headers ?? {}))){
     expect('Location' in (result.headers ?? {})).toBe(true);
@@ -93,7 +93,7 @@ test('Unknown session returns login page', async () => {
   const output: Partial<GetItemCommandOutput> = {}; //empty output
   ddbMock.on(GetItemCommand).resolves(output);
   const sessionId = '12345';
-  const result = await handleLoginRequest(`session=${sessionId}`, dynamoDBClient);
+  const result = await handleLoginRequest({ cookies: `session=${sessionId}` }, dynamoDBClient);
   expect(ddbMock.calls().length).toBe(2);
   expect(result.statusCode).toBe(200);
 });
@@ -109,14 +109,14 @@ test('Known session without login returns login page, without creating new sessi
   ddbMock.on(GetItemCommand).resolves(output);
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
   const sessionId = '12345';
-  const result = await handleLoginRequest(`session=${sessionId}`, dynamoDBClient);
+  const result = await handleLoginRequest({cookies: `session=${sessionId}` }, dynamoDBClient);
   expect(ddbMock.calls().length).toBe(2);
   expect(result.statusCode).toBe(200);
 });
 
 test('Request without session returns session cookie', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
-  const result = await handleLoginRequest('', dynamoDBClient);
+  const result = await handleLoginRequest({cookies: ''}, dynamoDBClient);
   if(!('cookies' in result)){
     expect('cookies' in result).toBe(true);
     return;
@@ -131,7 +131,7 @@ test('DynamoDB error', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
   let failed = false;
   try {
-    await handleLoginRequest('session=12345', dynamoDBClient);
+    await handleLoginRequest({ cookies: `session=12345` }, dynamoDBClient);
   } catch (error) {
     failed = true;
   }
