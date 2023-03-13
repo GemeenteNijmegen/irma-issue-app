@@ -47,6 +47,12 @@ export interface Configuration {
    */
   readonly cnameRecords?: {[key: string]: string};
 
+  /**
+   * If the issue lambda uses the demo scheme or the production scheme.
+   * Note: shoud only be true in production
+   */
+  readonly useDemoScheme: boolean;
+
 }
 
 export function getConfiguration(branchName: string): Configuration {
@@ -64,6 +70,7 @@ const configurations: { [name: string] : Configuration } = {
     codeStarConnectionArn: Statics.codeStarConnectionArn,
     includePipelineValidationChecks: false,
     setWafRatelimit: false,
+    useDemoScheme: true,
     nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
     cnameRecords: {
       '_2efd09bc809f1129572f073cb0873936.yivi-issue.accp.csp-nijmegen.nl': '_37726a837615087fa929e1970e5ad7c2.hsmgrxbjqd.acm-validations.aws',

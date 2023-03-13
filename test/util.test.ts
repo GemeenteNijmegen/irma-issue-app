@@ -8,6 +8,7 @@ test('get domain names', () => {
     deployToEnvironment: { region: "", account: "" },
     includePipelineValidationChecks: false,
     setWafRatelimit: false,
+    useDemoScheme: true,
     nijmegenSubdomain: "test",
   }, "test.csp-nijmegen.nl");
   expect(domainNames).toContain('test.nijmegen.nl');
@@ -23,6 +24,7 @@ test('baseurl', () => {
     deployToEnvironment: { region: "", account: "" },
     includePipelineValidationChecks: false,
     setWafRatelimit: false,
+    useDemoScheme: true,
     nijmegenSubdomain: "test",
   }, "test.csp-nijmegen.nl");
   expect(baseurl).toContain('https://test.nijmegen.nl/');
