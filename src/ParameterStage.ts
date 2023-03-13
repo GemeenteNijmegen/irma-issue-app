@@ -96,11 +96,6 @@ export class ssmParamsConstruct extends Construct {
       parameterName: Statics.ssmYiviApiHost,
     });
 
-    new SSM.StringParameter(this, 'ssm_api_2', {
-      stringValue: '-',
-      parameterName: Statics.ssmYiviApiDemo,
-    });
-
     new SecretsManager.Secret(this, 'secret_api_1', {
       secretName: Statics.secretYiviApiAccessKeyId,
       description: 'YIVI API Access Key ID (AWS sign)',
