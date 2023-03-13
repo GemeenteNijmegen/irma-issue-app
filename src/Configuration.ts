@@ -42,6 +42,11 @@ export interface Configuration {
    */
   readonly setWafRatelimit: boolean;
 
+  /**
+   * A list of CNAME records to register in the hosted zone
+   */
+  readonly cnameRecords?: {[key: string]: string};
+
 }
 
 export function getConfiguration(branchName: string): Configuration {
@@ -59,5 +64,9 @@ const configurations: { [name: string] : Configuration } = {
     codeStarConnectionArn: Statics.codeStarConnectionArn,
     includePipelineValidationChecks: false,
     setWafRatelimit: false,
+    nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
+    cnameRecords: {
+      '_2efd09bc809f1129572f073cb0873936.yivi-issue.accp.csp-nijmegen.nl': '_37726a837615087fa929e1970e5ad7c2.hsmgrxbjqd.acm-validations.aws',
+    },
   },
 };
