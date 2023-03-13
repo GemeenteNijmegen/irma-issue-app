@@ -1,6 +1,6 @@
+import { AWS } from '@gemeentenijmegen/utils';
 import { aws4Interceptor } from 'aws4-axios';
 import axios, { Axios } from 'axios';
-import { AWS } from '@gemeentenijmegen/utils';
 
 export class YiviApi {
 
@@ -27,7 +27,7 @@ export class YiviApi {
   }
 
   async init() {
-    if (!process.env.YIVI_API_ACCESS_KEY_ID_ARN || !process.env.YIVI_API_SECRET_KEY_ARN 
+    if (!process.env.YIVI_API_ACCESS_KEY_ID_ARN || !process.env.YIVI_API_SECRET_KEY_ARN
           || !process.env.YIVI_API_KEY_ARN || !process.env.YIVI_API_HOST) {
       throw Error('Clould not initialize YIVI API client');
     }
