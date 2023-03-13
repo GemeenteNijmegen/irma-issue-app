@@ -100,7 +100,10 @@ img {
 
 .button.primary {
   color: white;
-  background: top left no-repeat, var(--button-gradient);
+  text-indent: 2.5em;
+  background: var(--button-gradient);
+  background-size: 100%, 100%, 100%, 100%, 100%;
+  background-position: left .5em center, top left;
 }
 
 .button.digid {
