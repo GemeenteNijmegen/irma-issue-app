@@ -95,6 +95,7 @@ img {
   font-weight: bold;
   text-align: center;
   border-radius: .5em;
+  transition: background-size .2s ease;
 }
 
 .button.primary {
@@ -114,6 +115,14 @@ img {
 
 .button:hover {
   text-decoration: underline;
+}
+
+.button.digid:hover {
+  background-size: 2em, 105%, 105%, 105%, 105%, 105%;
+}
+
+.button.primary:hover {
+  background-size: 105%, 105%, 105%, 105%, 105%;
 }
 
 #yivi-web-form {
