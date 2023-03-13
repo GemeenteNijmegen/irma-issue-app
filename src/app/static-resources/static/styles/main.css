@@ -100,15 +100,13 @@ img {
 
 .button.primary {
   color: white;
-  color: white;
-  background: var(--button-gradient);
+  background: top left no-repeat, var(--button-gradient);
 }
 
 .button.digid {
   color: white;
   text-indent: 2.5em;
-  background: top left url('../img/digid.svg') no-repeat, 
-  var(--button-gradient);
+  background: top left url('../img/digid.svg') no-repeat, var(--button-gradient);
   background-size: 2em, 100%, 100%, 100%, 100%, 100%;
   background-position: left .5em center, top left;
 }
