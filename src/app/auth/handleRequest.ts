@@ -17,6 +17,7 @@ export async function handleRequest(
   queryStringParamState: string,
   dynamoDBClient: DynamoDBClient,
   logger: Logger,
+  OIDC: OpenIDConnect,
 ) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
@@ -25,7 +26,6 @@ export async function handleRequest(
     return Response.redirect('/login');
   }
   const state = session.getValue('state');
-  const OIDC = new OpenIDConnect();
   try {
     const claims = await OIDC.authorize(queryStringParamCode, state, queryStringParamState);
     return await authenticate(session, claims, logger);
