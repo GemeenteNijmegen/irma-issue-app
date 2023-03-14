@@ -66,6 +66,11 @@ export class ApiStack extends Stack {
     // See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html
     const insightsArn = `arn:aws:lambda:${this.region}:580247275435:layer:LambdaInsightsExtension:16`;
 
+
+    const authBaseUrl = SSM.StringParameter.fromStringParameterName(this, 'ssm-auth-base-url', Statics.ssmAuthUrlBaseParameter);
+    const odicClientId = SSM.StringParameter.fromStringParameterName(this, 'ssm-odic-client-id', Statics.ssmOIDCClientID);
+    const oidcScope = SSM.StringParameter.fromStringParameterName(this, 'ssm-odic-scope', Statics.ssmOIDCScope);
+
     const loginFunction = new ApiFunction(this, 'yivi-issue-login-function', {
       description: 'Login-pagina voor de YIVI issue-applicatie.',
       table: this.sessionsTable,
@@ -73,7 +78,15 @@ export class ApiStack extends Stack {
       applicationUrlBase: baseUrl,
       readOnlyRole,
       lambdaInsightsExtensionArn: insightsArn,
+      environment: {
+        AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
+        OIDC_CLIENT_ID_SSM: Statics.ssmOIDCClientID,
+        OIDC_SCOPE_SSM: Statics.ssmOIDCScope,
+      },
     }, LoginFunction);
+    authBaseUrl.grantRead(loginFunction.lambda);
+    odicClientId.grantRead(loginFunction.lambda);
+    oidcScope.grantRead(loginFunction.lambda);
 
     const logoutFunction = new ApiFunction(this, 'yivi-issue-logout-function', {
       description: 'Uitlog-pagina voor de YIVI issue-applicatie.',
@@ -93,10 +106,16 @@ export class ApiStack extends Stack {
       readOnlyRole,
       environment: {
         CLIENT_SECRET_ARN: oidcSecret.secretArn,
+        AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
+        OIDC_CLIENT_ID_SSM: Statics.ssmOIDCClientID,
+        OIDC_SCOPE_SSM: Statics.ssmOIDCScope,
       },
       lambdaInsightsExtensionArn: insightsArn,
     }, AuthFunction);
     oidcSecret.grantRead(authFunction.lambda);
+    authBaseUrl.grantRead(loginFunction.lambda);
+    odicClientId.grantRead(loginFunction.lambda);
+    oidcScope.grantRead(loginFunction.lambda);
 
     const secretMTLSPrivateKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'tls-key-secret', Statics.secretMTLSPrivateKey);
     const tlskeyParam = SSM.StringParameter.fromStringParameterName(this, 'tlskey', Statics.ssmMTLSClientCert);

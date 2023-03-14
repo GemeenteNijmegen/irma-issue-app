@@ -1,36 +1,47 @@
-import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import { AWS } from '@gemeentenijmegen/utils';
 import { Issuer, generators } from 'openid-client';
 
 export class OpenIDConnect {
 
   private issuer?: Issuer;
-  private clientSecret?: string;
+  private authBaseUrl?: string;
+  private applicationBaseUrl?: string;
+  private oidcClientId?: string;
+  private oidcClientSecret?: string;
+  private oidcScope?: string;
 
   /**
-     * Helper class for our OIDC auth flow
-     */
-  constructor() {
-    this.issuer = this.getIssuer();
+   * Helper class for our OIDC auth flow
+   */
+  constructor() {}
+
+  async init() {
+    if (!process.env.AUTH_URL_BASE_SSM || !process.env.OIDC_CLIENT_ID_SSM || !process.env.APPLICATION_URL_BASE || !process.env.OIDC_SCOPE_SSM) {
+      let errorMsg = 'Initalization failed: one of the folowing env variables is missing:';
+      errorMsg += [
+        'AUTH_URL_BASE_SSM',
+        'OIDC_CLIENT_ID_SSM',
+        'APPLICATION_URL_BASE',
+        'OIDC_SCOPE_SSM',
+      ].join(', ');
+      throw Error(errorMsg);
+    }
+    this.authBaseUrl = await AWS.getParameter(process.env.AUTH_URL_BASE_SSM);
+    this.oidcClientId = await AWS.getParameter(process.env.OIDC_CLIENT_ID_SSM);
+    this.oidcScope = await AWS.getParameter(process.env.OIDC_SCOPE_SSM);
+
+    this.issuer = this.getIssuer(this.authBaseUrl);
+    this.applicationBaseUrl = process.env.APPLICATION_URL_BASE;
   }
 
-  /**
-     * Retrieve client secret from secrets manager
-     *
-     * @returns string the client secret
-     */
   async getOidcClientSecret() {
-    if (!this.clientSecret) {
-      const secretsManagerClient = new SecretsManagerClient({});
-      const command = new GetSecretValueCommand({ SecretId: process.env.CLIENT_SECRET_ARN });
-      const data = await secretsManagerClient.send(command);
-      // Depending on whether the secret is a string or binary, one of these fields will be populated.
-      if ('SecretString' in data) {
-        this.clientSecret = data.SecretString;
-      } else {
-        console.log('no secret value found');
+    if (!this.oidcClientSecret) {
+      if (!process.env.CLIENT_SECRET_ARN) {
+        throw Error('process.env.CLIENT_SECRET_ARN not configured');
       }
+      this.oidcClientSecret = await AWS.getSecret(process.env.CLIENT_SECRET_ARN);
     }
-    return this.clientSecret;
+    return this.oidcClientSecret;
   }
 
   /**
@@ -40,16 +51,16 @@ export class OpenIDConnect {
      *
      * @returns openid-client Issuer
      */
-  getIssuer() {
+  getIssuer(url: string) {
     const issuer = new Issuer({
-      issuer: `${process.env.AUTH_URL_BASE}/broker/sp/oidc`,
-      authorization_endpoint: `${process.env.AUTH_URL_BASE}/broker/sp/oidc/authenticate`,
-      token_endpoint: `${process.env.AUTH_URL_BASE}/broker/sp/oidc/token`,
-      jwks_uri: `${process.env.AUTH_URL_BASE}/broker/sp/oidc/certs`,
-      userinfo_endpoint: `${process.env.AUTH_URL_BASE}/broker/sp/oidc/userinfo`,
-      revocation_endpoint: `${process.env.AUTH_URL_BASE}/broker/sp/oidc/token/revoke`,
-      introspection_endpoint: `${process.env.AUTH_URL_BASE}/broker/sp/oidc/token/introspect`,
-      end_session_endpoint: `${process.env.AUTH_URL_BASE}/broker/sp/oidc/logout`,
+      issuer: `${url}/broker/sp/oidc`,
+      authorization_endpoint: `${url}/broker/sp/oidc/authenticate`,
+      token_endpoint: `${url}/broker/sp/oidc/token`,
+      jwks_uri: `${url}/broker/sp/oidc/certs`,
+      userinfo_endpoint: `${url}/broker/sp/oidc/userinfo`,
+      revocation_endpoint: `${url}/broker/sp/oidc/token/revoke`,
+      introspection_endpoint: `${url}/broker/sp/oidc/token/introspect`,
+      end_session_endpoint: `${url}/broker/sp/oidc/logout`,
       token_endpoint_auth_methods_supported: ['client_secret_post', 'client_secret_basic'],
       introspection_endpoint_auth_methods_supported: ['client_secret_post', 'client_secret_basic'],
       revocation_endpoint_auth_methods_supported: ['client_secret_post', 'client_secret_basic'],
@@ -65,19 +76,19 @@ export class OpenIDConnect {
      * @returns {string} the login url
      */
   getLoginUrl(state: string) {
-    if (!this.issuer || !process.env.APPLICATION_URL_BASE || !process.env.OIDC_CLIENT_ID) {
-      throw Error('Issuer does not yet exist or APPLICATION_URL_BASE or OIDC_CLIENT_ID env parms are not set');
+    if (!this.issuer || !this.applicationBaseUrl || !this.oidcClientId) {
+      throw Error('Client not (correctly) initalized!');
     }
-    const base_url = new URL(process.env.APPLICATION_URL_BASE);
+    const base_url = new URL(this.applicationBaseUrl);
     const redirect_uri = new URL('/auth', base_url);
     const client = new this.issuer.Client({
-      client_id: process.env.OIDC_CLIENT_ID,
+      client_id: this.oidcClientId,
       redirect_uris: [redirect_uri.toString()],
       response_types: ['code'],
     });
     const authUrl = client.authorizationUrl({
-      scope: process.env.OIDC_SCOPE,
-      resource: process.env.AUTH_URL_BASE,
+      scope: this.oidcScope,
+      resource: this.authBaseUrl,
       state: state,
     });
     return authUrl;
@@ -92,14 +103,14 @@ export class OpenIDConnect {
      * @returns {object | false} returns a claims object on succesful auth
      */
   async authorize(code: string, state: string, returnedState: string | false) {
-    if (!this.issuer || !process.env.APPLICATION_URL_BASE || !process.env.OIDC_CLIENT_ID) {
-      throw Error('Issuer does not yet exist or APPLICATION_URL_BASE or OIDC_CLIENT_ID env parms are not set');
+    if (!this.issuer || !this.applicationBaseUrl || !this.oidcClientId) {
+      throw Error('Client not (correctly) initialized!');
     }
-    const base_url = new URL(process.env.APPLICATION_URL_BASE);
+    const base_url = new URL(this.applicationBaseUrl);
     const redirect_uri = new URL('/auth', base_url);
     const client_secret = await this.getOidcClientSecret();
     const client = new this.issuer.Client({
-      client_id: process.env.OIDC_CLIENT_ID,
+      client_id: this.oidcClientId,
       redirect_uris: [redirect_uri.toString()],
       client_secret: client_secret,
       response_types: ['code'],
@@ -115,7 +126,7 @@ export class OpenIDConnect {
       throw new Error(`${err.error} ${err.error_description}`);
     }
     const claims = tokenSet.claims();
-    if (claims.aud != process.env.OIDC_CLIENT_ID) {
+    if (claims.aud != this.oidcClientId) {
       throw new Error('claims aud does not match client id');
     }
     return claims;
