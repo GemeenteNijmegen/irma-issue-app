@@ -78,6 +78,11 @@ export class ApiStack extends Stack {
       applicationUrlBase: baseUrl,
       readOnlyRole,
       lambdaInsightsExtensionArn: insightsArn,
+      environment: {
+        AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
+        OIDC_CLIENT_ID_SSM: Statics.ssmOIDCClientID,
+        OIDC_SCOPE_SSM: Statics.ssmOIDCScope,
+      },
     }, LoginFunction);
     authBaseUrl.grantRead(loginFunction.lambda);
     odicClientId.grantRead(loginFunction.lambda);
@@ -101,6 +106,9 @@ export class ApiStack extends Stack {
       readOnlyRole,
       environment: {
         CLIENT_SECRET_ARN: oidcSecret.secretArn,
+        AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
+        OIDC_CLIENT_ID_SSM: Statics.ssmOIDCClientID,
+        OIDC_SCOPE_SSM: Statics.ssmOIDCScope,
       },
       lambdaInsightsExtensionArn: insightsArn,
     }, AuthFunction);

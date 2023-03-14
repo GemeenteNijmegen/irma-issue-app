@@ -25,11 +25,11 @@ beforeAll( async () => {
 
   // Set env variables
   process.env.SESSION_TABLE = 'yivi-issue-sessions';
-  process.env.AUTH_URL_BASE = 'https://authenticatie-accp.nijmegen.nl';
+  process.env.AUTH_URL_BASE_SSM = 'https://authenticatie-accp.nijmegen.nl';
   process.env.APPLICATION_URL_BASE = 'https://testing.example.com/';
   process.env.OIDC_SECRET_ARN = '123';
-  process.env.OIDC_CLIENT_ID = '1234';
-  process.env.OIDC_SCOPE = 'openid';
+  process.env.OIDC_CLIENT_ID_SSM = '1234';
+  process.env.OIDC_SCOPE_SSM = 'openid';
 
   await OIDC.init();
 });
@@ -54,7 +54,7 @@ test('Return login page with correct link', async () => {
     expect('body' in result).toBe(true);
     return;
   }
-  expect(result.body).toContain(`${process.env.AUTH_URL_BASE}/broker/sp/oidc/authenticate`);
+  expect(result.body).toContain(`${process.env.AUTH_URL_BASE_SSM}/broker/sp/oidc/authenticate`);
   expect(result.body).toContain(encodeURIComponent(`${process.env.APPLICATION_URL_BASE}auth`));
   expect(result.statusCode).toBe(200);
   writeFile(path.join(__dirname, 'output', 'test.html'), result.body ?? '', () => { });

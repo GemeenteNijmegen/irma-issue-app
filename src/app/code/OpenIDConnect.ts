@@ -16,19 +16,19 @@ export class OpenIDConnect {
   constructor() {}
 
   async init() {
-    if (!process.env.AUTH_URL_BASE || !process.env.OIDC_CLIENT_ID || !process.env.APPLICATION_URL_BASE || !process.env.OIDC_SCOPE) {
+    if (!process.env.AUTH_URL_BASE_SSM || !process.env.OIDC_CLIENT_ID_SSM || !process.env.APPLICATION_URL_BASE || !process.env.OIDC_SCOPE_SSM) {
       let errorMsg = 'Initalization failed: one of the folowing env variables is missing:';
       errorMsg += [
-        'AUTH_URL_BASE (ssm path)',
-        'OIDC_CLIENT_ID (ssm path)',
+        'AUTH_URL_BASE_SSM',
+        'OIDC_CLIENT_ID_SSM',
         'APPLICATION_URL_BASE',
-        'OIDC_SCOPE',
+        'OIDC_SCOPE_SSM',
       ].join(', ');
       throw Error(errorMsg);
     }
-    this.authBaseUrl = await AWS.getParameter(process.env.AUTH_URL_BASE);
-    this.oidcClientId = await AWS.getParameter(process.env.OIDC_CLIENT_ID);
-    this.oidcScope = await AWS.getParameter(process.env.OIDC_SCOPE);
+    this.authBaseUrl = await AWS.getParameter(process.env.AUTH_URL_BASE_SSM);
+    this.oidcClientId = await AWS.getParameter(process.env.OIDC_CLIENT_ID_SSM);
+    this.oidcScope = await AWS.getParameter(process.env.OIDC_SCOPE_SSM);
 
     this.issuer = this.getIssuer(this.authBaseUrl);
     this.applicationBaseUrl = process.env.APPLICATION_URL_BASE;

@@ -24,11 +24,11 @@ beforeAll( async () => {
 
   // Set env variables
   process.env.SESSION_TABLE = 'mijnuitkering-sessions';
-  process.env.AUTH_URL_BASE = 'https://authenticatie-accp.nijmegen.nl';
+  process.env.AUTH_URL_BASE_SSM = 'https://authenticatie-accp.nijmegen.nl';
   process.env.APPLICATION_URL_BASE = 'https://testing.example.com/';
   process.env.CLIENT_SECRET_ARN = '123';
-  process.env.OIDC_CLIENT_ID = '1234';
-  process.env.OIDC_SCOPE = 'openid';
+  process.env.OIDC_CLIENT_ID_SSM = '1234';
+  process.env.OIDC_SCOPE_SSM = 'openid';
 
   await OIDC.init();
 
