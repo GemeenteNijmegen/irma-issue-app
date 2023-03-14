@@ -113,9 +113,9 @@ export class ApiStack extends Stack {
       lambdaInsightsExtensionArn: insightsArn,
     }, AuthFunction);
     oidcSecret.grantRead(authFunction.lambda);
-    authBaseUrl.grantRead(loginFunction.lambda);
-    odicClientId.grantRead(loginFunction.lambda);
-    oidcScope.grantRead(loginFunction.lambda);
+    authBaseUrl.grantRead(authFunction.lambda);
+    odicClientId.grantRead(authFunction.lambda);
+    oidcScope.grantRead(authFunction.lambda);
 
     const secretMTLSPrivateKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'tls-key-secret', Statics.secretMTLSPrivateKey);
     const tlskeyParam = SSM.StringParameter.fromStringParameterName(this, 'tlskey', Statics.ssmMTLSClientCert);
