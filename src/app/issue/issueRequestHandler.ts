@@ -50,10 +50,12 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiv
 
   // Start YIVI session
   let yiviSession = undefined;
+  let yiviFullSession = undefined;
   if (!error) {
     const yiviResponse = await yiviApi.startSession(brpData);
     console.debug('YIVI session: ', yiviResponse);
     if (!yiviResponse.error) {
+      yiviFullSession = Buffer.from(JSON.stringify(yiviResponse)).toString('base64');
       yiviSession = {
         yiviSessionPtrQr: yiviResponse.sessionPtr.irmaqr,
         yiviSessionPtrU: yiviResponse.sessionPtr.u,
@@ -75,6 +77,7 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiv
     volledigenaam: naam,
     yiviServer: `https://${yiviApi.getHost()}`,
     error: error,
+    yiviFullSession: yiviFullSession,
     ...yiviSession,
   };
   console.debug('Rendering page with data:', data);
