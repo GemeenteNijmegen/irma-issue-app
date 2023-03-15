@@ -47,17 +47,12 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   }
 
   // Start YIVI session
-  let yiviSession = undefined;
   let yiviFullSession = undefined;
   if (!error) {
     const yiviResponse = await yiviApi.startSession(brpData);
     console.debug('YIVI session: ', yiviResponse);
     if (!yiviResponse.error) {
       yiviFullSession = Buffer.from(JSON.stringify(yiviResponse), 'utf-8').toString('base64');
-      yiviSession = {
-        yiviSessionPtrQr: yiviResponse.sessionPtr.irmaqr,
-        yiviSessionPtrU: yiviResponse.sessionPtr.u,
-      };
     } else {
       error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in YIVI. Probeer het later opnieuw';
     }
@@ -76,7 +71,6 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     yiviServer: `https://${yiviApi.getHost()}`,
     error: error,
     yiviFullSession: yiviFullSession,
-    ...yiviSession,
   };
   console.debug('Rendering page with data:', data);
   const html = await render(data, template.default);

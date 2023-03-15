@@ -1,7 +1,4 @@
-const sessionPtrU = document.getElementById("session-ptr-u").getAttribute('data');
-const sessionPtrQr = document.getElementById("session-ptr-qr").getAttribute('data');
 const yiviServer = document.getElementById("yiviServer").getAttribute('data');
-
 // Get the session response
 const yiviFullSessionEncoded = document.getElementById("yiviFullSession").getAttribute('data');
 const yiviFullSession = JSON.parse(atob(yiviFullSessionEncoded));
