@@ -19,7 +19,7 @@ const yiviClient = yivi.newWeb({
     state: {
         serverSentEvents: false,
         frontendOptions: {
-            endpoint:           'frontendoptions',
+            endpoint:           'options',
             requestContext:     'https://irma.app/ld/request/frontendoptions/v1'
         },
         pairing: {
