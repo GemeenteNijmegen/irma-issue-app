@@ -1,7 +1,4 @@
-const sessionPtrU = document.getElementById("session-ptr-u").getAttribute('data');
-const sessionPtrQr = document.getElementById("session-ptr-qr").getAttribute('data');
 const yiviServer = document.getElementById("yiviServer").getAttribute('data');
-
 // Get the session response
 const yiviFullSessionEncoded = document.getElementById("yiviFullSession").getAttribute('data');
 const yiviFullSession = JSON.parse(atob(yiviFullSessionEncoded));
@@ -22,7 +19,7 @@ const yiviClient = yivi.newWeb({
     state: {
         serverSentEvents: false,
         frontendOptions: {
-            endpoint:           'frontendoptions',
+            endpoint:           'options',
             requestContext:     'https://irma.app/ld/request/frontendoptions/v1'
         },
         pairing: {
