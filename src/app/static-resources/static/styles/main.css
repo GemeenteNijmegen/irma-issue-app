@@ -96,6 +96,7 @@ img {
   text-align: center;
   border-radius: .5em;
   transition: background-size .2s ease;
+  margin-bottom: 20px;
 }
 
 .button.primary {
@@ -130,4 +131,8 @@ img {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 20px;
+}
+
+.hidden {
+  display: none;
 }
