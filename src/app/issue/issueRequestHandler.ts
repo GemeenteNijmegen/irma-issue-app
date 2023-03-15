@@ -55,7 +55,7 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiv
     const yiviResponse = await yiviApi.startSession(brpData);
     console.debug('YIVI session: ', yiviResponse);
     if (!yiviResponse.error) {
-      yiviFullSession = Buffer.from(JSON.stringify(yiviResponse)).toString('base64');
+      yiviFullSession = Buffer.from(JSON.stringify(yiviResponse), 'utf-8').toString('base64');
       yiviSession = {
         yiviSessionPtrQr: yiviResponse.sessionPtr.irmaqr,
         yiviSessionPtrU: yiviResponse.sessionPtr.u,
