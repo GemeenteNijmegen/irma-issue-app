@@ -4,7 +4,7 @@ const yiviServer = document.getElementById("yiviServer").getAttribute('data');
 
 // Get the session response
 const yiviFullSessionEncoded = document.getElementById("yiviFullSession").getAttribute('data');
-const yiviFullSession = JSON.parse(Buffer.from(yiviFullSessionEncoded, 'base64').toString("utf-8"));
+const yiviFullSession = JSON.parse(atob(yiviFullSessionEncoded));
 
 const yiviClient = yivi.newWeb({
     debugging: true,
@@ -22,8 +22,8 @@ const yiviClient = yivi.newWeb({
     state: {
         serverSentEvents: false,
         frontendOptions: {
-            endpoint:           'options',
-            requestContext:     'https://irma.app/ld/request/options/v1'
+            endpoint:           'frontendoptions',
+            requestContext:     'https://irma.app/ld/request/frontendoptions/v1'
         },
         pairing: {
             onlyEnableIf:      m => yiviFullSession.frontendRequest.pairingHint,
