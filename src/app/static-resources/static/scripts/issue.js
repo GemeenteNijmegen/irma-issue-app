@@ -15,6 +15,12 @@ const yiviClient = yivi.newWeb({
     },
     state: {
         serverSentEvents: false,
+        pairing: {
+            onlyEnableIf:      m => m.frontendRequest.pairingHint,
+            completedEndpoint: 'pairingcompleted',
+            minCheckingDelay:  500, // Minimum delay before accepting or rejecting a pairing code, for better user experience.
+            pairingMethod:     'pin'
+        }       
     }
 });
 
