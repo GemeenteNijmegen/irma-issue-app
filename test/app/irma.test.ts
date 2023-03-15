@@ -1,16 +1,18 @@
 import { YiviApi } from '../../src/app/code/YiviApi';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { AwsUtil } from '../../src/app/code/AwsUtil';
+import {AWS } from '@gemeentenijmegen/utils';
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-const axiosMock = new MockAdapter(axios);
 
-const getSecretMock = jest.spyOn(AwsUtil.prototype, 'getSecret')
-.mockImplementation(async (arn: string) => {
-    return `secret-${arn}`;
-});
+const axiosMock = new MockAdapter(axios);
+jest.mock('@gemeentenijmegen/utils/lib/AWS', () => ({
+    AWS: {
+        getParameter: jest.fn().mockImplementation((name) => `param-${name}`),
+        getSecret: jest.fn().mockImplementation((arn) => `secret-${arn}`),
+    }
+}));
 
 beforeAll(() => {
     console.log = jest.fn();
@@ -48,13 +50,13 @@ test('Initialization', async () => {
     process.env.YIVI_API_ACCESS_KEY_ID_ARN = 'key-id-arn';
     process.env.YIVI_API_SECRET_KEY_ARN = 'secret-arn';
     process.env.YIVI_API_KEY_ARN = 'key-arn';
-    process.env.YIVI_API_HOST = 'gw-test.nijmegen.nl';
+    process.env.YIVI_API_HOST = '/yivi/api/host';
     process.env.YIVI_API_DEMO = 'demo';
 
     const api = new YiviApi();
     await api.init();
-    expect(api.getHost()).toBe(process.env.YIVI_API_HOST);
-    expect(getSecretMock).toHaveBeenCalledTimes(3);
+    expect(api.getHost()).toBe('param-/yivi/api/host');
+    expect(AWS.getSecret).toHaveBeenCalledTimes(3);
 });
 
 test('Initialization and test', async () => {
@@ -68,7 +70,6 @@ test('Initialization and test', async () => {
 
     const api = new YiviApi();
     await api.init();
-    expect(getSecretMock).toHaveBeenCalledTimes(3);
 
     const yiviResp = await api.startSession(brpData);
 

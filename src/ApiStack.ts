@@ -52,7 +52,7 @@ export class ApiStack extends Stack {
 
     // this.monitoringLambda();
     const readOnlyRole = this.readOnlyRole();
-    this.setFunctions(baseUrl, readOnlyRole);
+    this.setFunctions(props, baseUrl, readOnlyRole);
     this.allowReadAccessToTable(readOnlyRole, this.sessionsTable);
   }
 
@@ -61,10 +61,15 @@ export class ApiStack extends Stack {
    * add routes to the gateway.
    * @param {string} baseUrl the application url
    */
-  setFunctions(baseUrl: string, readOnlyRole: Role) {
+  setFunctions(props: ApiStackProps, baseUrl: string, readOnlyRole: Role) {
 
     // See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html
     const insightsArn = `arn:aws:lambda:${this.region}:580247275435:layer:LambdaInsightsExtension:16`;
+
+
+    const authBaseUrl = SSM.StringParameter.fromStringParameterName(this, 'ssm-auth-base-url', Statics.ssmAuthUrlBaseParameter);
+    const odicClientId = SSM.StringParameter.fromStringParameterName(this, 'ssm-odic-client-id', Statics.ssmOIDCClientID);
+    const oidcScope = SSM.StringParameter.fromStringParameterName(this, 'ssm-odic-scope', Statics.ssmOIDCScope);
 
     const loginFunction = new ApiFunction(this, 'yivi-issue-login-function', {
       description: 'Login-pagina voor de YIVI issue-applicatie.',
@@ -73,7 +78,15 @@ export class ApiStack extends Stack {
       applicationUrlBase: baseUrl,
       readOnlyRole,
       lambdaInsightsExtensionArn: insightsArn,
+      environment: {
+        AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
+        OIDC_CLIENT_ID_SSM: Statics.ssmOIDCClientID,
+        OIDC_SCOPE_SSM: Statics.ssmOIDCScope,
+      },
     }, LoginFunction);
+    authBaseUrl.grantRead(loginFunction.lambda);
+    odicClientId.grantRead(loginFunction.lambda);
+    oidcScope.grantRead(loginFunction.lambda);
 
     const logoutFunction = new ApiFunction(this, 'yivi-issue-logout-function', {
       description: 'Uitlog-pagina voor de YIVI issue-applicatie.',
@@ -93,19 +106,25 @@ export class ApiStack extends Stack {
       readOnlyRole,
       environment: {
         CLIENT_SECRET_ARN: oidcSecret.secretArn,
+        AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
+        OIDC_CLIENT_ID_SSM: Statics.ssmOIDCClientID,
+        OIDC_SCOPE_SSM: Statics.ssmOIDCScope,
       },
       lambdaInsightsExtensionArn: insightsArn,
     }, AuthFunction);
     oidcSecret.grantRead(authFunction.lambda);
+    authBaseUrl.grantRead(authFunction.lambda);
+    odicClientId.grantRead(authFunction.lambda);
+    oidcScope.grantRead(authFunction.lambda);
 
     const secretMTLSPrivateKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'tls-key-secret', Statics.secretMTLSPrivateKey);
     const tlskeyParam = SSM.StringParameter.fromStringParameterName(this, 'tlskey', Statics.ssmMTLSClientCert);
     const tlsRootCAParam = SSM.StringParameter.fromStringParameterName(this, 'tlsrootca', Statics.ssmMTLSRootCA);
-    const yiviApiHost = SSM.StringParameter.valueForStringParameter(this, Statics.ssmYiviApiHost);
-    const yiviApiDemo = SSM.StringParameter.valueForStringParameter(this, Statics.ssmYiviApiDemo);
     const secretYiviApiAccessKeyId = aws_secretsmanager.Secret.fromSecretNameV2(this, 'yivi-api-access-key', Statics.secretYiviApiAccessKeyId);
     const secretYiviApiSecretKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'yivi-api-secret-key', Statics.secretYiviApiSecretKey);
     const secretYiviApiKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'yivi-api-key', Statics.secretYiviApiKey);
+    const yiviApiHost = SSM.StringParameter.fromStringParameterName(this, 'yivi-api-host', Statics.ssmYiviApiHost);
+    const brpApiUrl = SSM.StringParameter.fromStringParameterName(this, 'brp-api-url', Statics.ssmBrpApiEndpointUrl);
     const issueFunction = new ApiFunction(this, 'yivi-issue-issue-function', {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
@@ -116,15 +135,17 @@ export class ApiStack extends Stack {
         MTLS_PRIVATE_KEY_ARN: secretMTLSPrivateKey.secretArn,
         MTLS_CLIENT_CERT_NAME: Statics.ssmMTLSClientCert,
         MTLS_ROOT_CA_NAME: Statics.ssmMTLSRootCA,
-        BRP_API_URL: SSM.StringParameter.valueForStringParameter(this, Statics.ssmBrpApiEndpointUrl),
-        YIVI_API_HOST: yiviApiHost,
-        YIVI_API_DEMO: yiviApiDemo,
+        BRP_API_URL: Statics.ssmBrpApiEndpointUrl,
+        YIVI_API_HOST: Statics.ssmYiviApiHost,
+        YIVI_API_DEMO: props.configuration.useDemoScheme ? 'demo': '',
         YIVI_API_ACCESS_KEY_ID_ARN: secretYiviApiAccessKeyId.secretArn,
         YIVI_API_SECRET_KEY_ARN: secretYiviApiSecretKey.secretArn,
         YIVI_API_KEY_ARN: secretYiviApiKey.secretArn,
       },
       lambdaInsightsExtensionArn: insightsArn,
     }, IssueFunction);
+    yiviApiHost.grantRead(issueFunction.lambda);
+    brpApiUrl.grantRead(issueFunction.lambda);
     secretMTLSPrivateKey.grantRead(issueFunction.lambda);
     tlskeyParam.grantRead(issueFunction.lambda);
     tlsRootCAParam.grantRead(issueFunction.lambda);

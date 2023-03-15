@@ -35,12 +35,13 @@ const yiviClient = yivi.newWeb({
 });
 
 yiviClient.start()
-    .then(() => { // Hide QR show success message
+    .then(() => {
         fetch('/callback?result=success')
             .then(() => console.log('Callback succesfull'))
             .catch(err => console.log('Callback failed', err));
     })
-    .catch((err) => { // Hide QR show error message
+    .catch((err) => {
+        document.getElementById('retry-button').classList.remove('hidden');
         fetch(encodeURI('/callback?result=failure&error=' + err))
             .then(() => console.log('Callback succesfull'))
             .catch(err => console.log('Callback failed', err));

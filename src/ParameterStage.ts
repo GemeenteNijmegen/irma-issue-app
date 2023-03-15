@@ -57,7 +57,7 @@ export class ssmParamsConstruct extends Construct {
     });
 
     new SSM.StringParameter(this, 'ssm_auth_3', {
-      stringValue: 'openid idp_scoping:simulator idp_scoping:https://was-preprod1.digid.nl/saml/idp/metadata',
+      stringValue: 'openid idp_scoping:simulator service:DigiD_Midden idp_scoping:https://was-preprod1.digid.nl/saml/idp/metadata',
       parameterName: Statics.ssmOIDCScope,
     });
 
@@ -94,11 +94,6 @@ export class ssmParamsConstruct extends Construct {
     new SSM.StringParameter(this, 'ssm_api_1', {
       stringValue: '-',
       parameterName: Statics.ssmYiviApiHost,
-    });
-
-    new SSM.StringParameter(this, 'ssm_api_2', {
-      stringValue: '-',
-      parameterName: Statics.ssmYiviApiDemo,
     });
 
     new SecretsManager.Secret(this, 'secret_api_1', {

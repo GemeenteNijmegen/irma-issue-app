@@ -33,6 +33,7 @@ const config: Configuration = {
   deployToEnvironment: snapshotEnv,
   includePipelineValidationChecks: false,
   setWafRatelimit: false,
+  useDemoScheme: true,
   nijmegenSubdomain: 'snapshot-tests',
 }
 
@@ -107,7 +108,7 @@ test('StackHasParameters', () => {
   const app = new App();
   const stack = new ParameterStack(app, 'test');
   const template = Template.fromStack(stack);
-  template.resourceCountIs('AWS::SSM::Parameter', 11);
+  template.resourceCountIs('AWS::SSM::Parameter', 10);
 });
 
 test('StackHasSecrets', () => {

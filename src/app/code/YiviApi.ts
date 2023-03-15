@@ -1,11 +1,11 @@
+import { AWS } from '@gemeentenijmegen/utils';
 import { aws4Interceptor } from 'aws4-axios';
 import axios, { Axios } from 'axios';
-import { AwsUtil } from './AwsUtil';
 
 export class YiviApi {
 
-  private host;
-  private demo;
+  private host: string;
+  private demo: boolean;
   private credentials: {
     accessKeyId: string;
     secretAccessKey: string;
@@ -13,7 +13,7 @@ export class YiviApi {
   private apiKey: string;
 
   constructor() {
-    this.host = process.env.YIVI_API_HOST ? process.env.YIVI_API_HOST : '';
+    this.host = '';
     this.demo = process.env.YIVI_API_DEMO != 'demo' ? false : true;
     this.credentials = {
       accessKeyId: '',
@@ -27,14 +27,15 @@ export class YiviApi {
   }
 
   async init() {
-    if (!process.env.YIVI_API_ACCESS_KEY_ID_ARN || !process.env.YIVI_API_SECRET_KEY_ARN || !process.env.YIVI_API_KEY_ARN) {
+    if (!process.env.YIVI_API_ACCESS_KEY_ID_ARN || !process.env.YIVI_API_SECRET_KEY_ARN
+          || !process.env.YIVI_API_KEY_ARN || !process.env.YIVI_API_HOST) {
       throw Error('Clould not initialize YIVI API client');
     }
-    const util = new AwsUtil();
-    this.apiKey = await util.getSecret(process.env.YIVI_API_KEY_ARN);
+    this.host = await AWS.getParameter(process.env.YIVI_API_HOST);
+    this.apiKey = await AWS.getSecret(process.env.YIVI_API_KEY_ARN);
     this.credentials = {
-      accessKeyId: await util.getSecret(process.env.YIVI_API_ACCESS_KEY_ID_ARN),
-      secretAccessKey: await util.getSecret(process.env.YIVI_API_SECRET_KEY_ARN),
+      accessKeyId: await AWS.getSecret(process.env.YIVI_API_ACCESS_KEY_ID_ARN),
+      secretAccessKey: await AWS.getSecret(process.env.YIVI_API_SECRET_KEY_ARN),
     };
   }
 

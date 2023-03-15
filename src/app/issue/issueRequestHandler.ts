@@ -1,5 +1,4 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import { BrpApi } from './BrpApi';
@@ -10,11 +9,11 @@ import { YiviApi } from '../code/YiviApi';
 /**
  * Check login and handle request
  */
-export async function issueRequestHandler(cookies: string, brpClient: ApiClient, yiviApi: YiviApi, dynamoDBClient: DynamoDBClient) {
+export async function issueRequestHandler(cookies: string, brpApi: BrpApi, yiviApi: YiviApi, dynamoDBClient: DynamoDBClient) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() == true) {
-    return handleLoggedinRequest(session, brpClient, yiviApi);
+    return handleLoggedinRequest(session, brpApi, yiviApi);
   }
   return Response.redirect('/login');
 }
@@ -27,7 +26,7 @@ export async function issueRequestHandler(cookies: string, brpClient: ApiClient,
  * @param yiviApi
  * @returns
  */
-async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiviApi: YiviApi) {
+async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: YiviApi) {
   let error = undefined;
 
   // If issuing already is completed
@@ -40,7 +39,6 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiv
   let brpData = undefined;
   if (!error) {
     const bsn = session.getValue('bsn');
-    const brpApi = new BrpApi(brpClient);
     brpData = await brpApi.getBrpData(bsn);
     naam = brpData?.Persoon?.Persoonsgegevens?.Naam ?? naam;
     if (brpData.error) {
