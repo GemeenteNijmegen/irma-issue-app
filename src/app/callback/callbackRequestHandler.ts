@@ -35,7 +35,7 @@ async function handleLoggedinRequest(session: Session, params: any) {
 
   // Log the issue event
   await registerIssueEvent(bsn, gemeente, success, timestamp, error);
-  if(success){
+  if (success) {
     // Only disable the session if the issueing was successful.
     await updateSessionStatus(session, bsn);
   }
