@@ -3,6 +3,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import {AWS } from '@gemeentenijmegen/utils';
 import * as dotenv from 'dotenv'
+import { DigidLoa, loaToNumber } from '../../src/app/code/DigiDLoa';
 dotenv.config()
 
 
@@ -15,7 +16,7 @@ jest.mock('@gemeentenijmegen/utils/lib/AWS', () => ({
 }));
 
 beforeAll(() => {
-    console.log = jest.fn();
+   // console.log = jest.fn();
     console.info = jest.fn();
     console.debug = jest.fn();
     console.error = jest.fn();
@@ -25,12 +26,12 @@ beforeEach(() => {
     axiosMock.reset();
 });
 
-test('Check if yivi api adds aws4-singature and irma-authorization header', async () => {
+test('Check if yivi api adds aws4-singature and irma-authorization header and right LOA', async () => {
     axiosMock.onPost('/session').reply(200, sessionResponse);
 
     const client = new YiviApi();
     client.manualInit('gw-test.nijmegen.nl', true, 'someid', 'somesecretkey', 'irma-autharizaiton-header');
-    const imraResp = await client.startSession(brpData);
+    const imraResp = await client.startSession(brpData, DigidLoa.Substantieel);
 
     // Check if the response is correct
     expect(imraResp).toStrictEqual(sessionResponse);
@@ -44,6 +45,9 @@ test('Check if yivi api adds aws4-singature and irma-authorization header', asyn
         expect(request.headers['Authorization']).not.toBeUndefined();
         expect(request.headers['X-Amz-Date']).not.toBeUndefined();
     }
+
+    const data = JSON.parse(request.data);
+    expect(data?.credentials[1]?.attributes?.digidlevel).toBe(loaToNumber(DigidLoa.Substantieel));
 });
 
 test('Initialization', async () => {
@@ -71,7 +75,7 @@ test('Initialization and test', async () => {
     const api = new YiviApi();
     await api.init();
 
-    const yiviResp = await api.startSession(brpData);
+    const yiviResp = await api.startSession(brpData, DigidLoa.Hoog);
 
     // Check if the response is correct
     expect(yiviResp).toStrictEqual(sessionResponse);
