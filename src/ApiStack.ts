@@ -160,7 +160,7 @@ export class ApiStack extends Stack {
       applicationUrlBase: baseUrl,
       readOnlyRole,
       description: 'Callback-lambda voor de YIVI issue-applicatie.',
-      logRetention: RetentionDays.ONE_YEAR, // Keep track of statistics for 1 year
+      logRetention: RetentionDays.EIGHTEEN_MONTHS, // Keep track of statistics for 1.5 year
       ssmLogGroup: Statics.ssmStatisticsLogGroup,
       environment: {
         DIVERSIFYER: diversifiyer,
