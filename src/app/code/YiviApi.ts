@@ -1,6 +1,7 @@
 import { AWS } from '@gemeentenijmegen/utils';
 import { aws4Interceptor } from 'aws4-axios';
 import axios, { Axios } from 'axios';
+import { DigidLoa, loaToNumber } from './DigiDLoa';
 
 export class YiviApi {
 
@@ -50,8 +51,8 @@ export class YiviApi {
   }
 
 
-  async startSession(brpData: any) {
-    const yiviIssueRequest = this.constructYiviIssueRequest(brpData);
+  async startSession(brpData: any, loa: DigidLoa) {
+    const yiviIssueRequest = this.constructYiviIssueRequest(brpData, loa);
     return this.doSignedPostRequest('session', yiviIssueRequest, 'De YIVI sessie kon niet worden gestart.');
   }
 
@@ -109,7 +110,7 @@ export class YiviApi {
     }
   }
 
-  private constructYiviIssueRequest(brpData: any) {
+  private constructYiviIssueRequest(brpData: any, loa: DigidLoa) {
 
     // Get persoonsgegevens
     const gegevens = brpData.Persoon.Persoonsgegevens;
@@ -150,8 +151,8 @@ export class YiviApi {
             cityofbirth: gegevens.Geboorteplaats,
             countryofbirth: gegevens.Geboorteland,
             bsn: brpData.Persoon.BSN.BSN,
-            digidlevel: '12', // TODO check what this should be?
-            ...brpData.Persoon.ageLimits, // Set agelimits directly
+            digidlevel: loaToNumber(loa),
+            ...brpData.Persoon.ageLimits,
           },
         },
       ],

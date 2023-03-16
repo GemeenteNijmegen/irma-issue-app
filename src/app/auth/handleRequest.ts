@@ -3,13 +3,8 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import { IdTokenClaims } from 'openid-client';
+import { DigidLoa } from '../code/DigiDLoa';
 import { OpenIDConnect } from '../code/OpenIDConnect';
-
-// DigiD levels of assurance
-const DigiD_LOA_BASIC = 'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport';
-// const DigiD_LOA_MIDDEN = 'urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorContract';
-// const DigiD_LOA_Substantieel = 'urn:oasis:names:tc:SAML:2.0:ac:classes:Smartcard';
-// const DigiD_LOA_HOOG = 'urn:oasis:names:tc:SAML:2.0:ac:classes:SmartcardPKI';
 
 export async function handleRequest(
   cookies: string,
@@ -45,12 +40,13 @@ export async function handleRequest(
 async function authenticate(session: Session, claims: IdTokenClaims, logger: Logger) {
   if (claims && claims.hasOwnProperty('acr')) {
     const loa = claims.acr;
-    if ( loa == DigiD_LOA_BASIC) {
+    if ( loa == DigidLoa.Basis) {
       return fail(logger, 'Insufficient OIDC claims', 'loa');
     }
     await session.createSession({
       loggedin: { BOOL: true },
       bsn: { S: claims.sub },
+      loa: { S: loa },
     });
     logger.info('Authentication successful', { loa });
   } else {
