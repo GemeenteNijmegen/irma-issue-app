@@ -77,7 +77,7 @@ export class YiviApi {
   }
 
   private async doSignedPostRequest(path: string, data: any, errorMsg: string) {
-    console.debug('Starting signed POST request:', path, data);
+    console.debug('Starting signed POST request:', path);
 
     try {
       const client = this.getSigningClient();
