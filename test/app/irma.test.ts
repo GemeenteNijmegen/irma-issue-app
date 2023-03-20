@@ -47,7 +47,8 @@ test('Check if yivi api adds aws4-singature and irma-authorization header and ri
     }
 
     const data = JSON.parse(request.data);
-    expect(data?.credentials[1]?.attributes?.digidlevel).toBe(loaToNumber(DigidLoa.Substantieel));
+    const loa = `${loaToNumber(DigidLoa.Substantieel)}`;
+    expect(data?.credentials[1]?.attributes?.digidlevel).toBe(loa);
 });
 
 test('Initialization', async () => {
