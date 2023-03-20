@@ -151,7 +151,7 @@ export class YiviApi {
             cityofbirth: gegevens.Geboorteplaats,
             countryofbirth: gegevens.Geboorteland,
             bsn: brpData.Persoon.BSN.BSN,
-            digidlevel: loaToNumber(loa),
+            digidlevel: `${loaToNumber(loa)}`,
             ...brpData.Persoon.ageLimits,
           },
         },

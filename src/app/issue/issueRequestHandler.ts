@@ -55,7 +55,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     if (!yiviResponse.error) {
       yiviFullSession = Buffer.from(JSON.stringify(yiviResponse), 'utf-8').toString('base64');
     } else {
-      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in YIVI. Probeer het later opnieuw';
+      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in Yivi. Probeer het later opnieuw';
     }
   }
 
