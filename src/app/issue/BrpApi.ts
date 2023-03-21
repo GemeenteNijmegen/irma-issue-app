@@ -29,6 +29,8 @@ export class BrpApi {
       let data = await this.client.requestData(this.endpoint, { bsn: aBsn.bsn }, { 'Content-type': 'application/json' });
       if (data?.Persoon) {
         return data;
+      } else if (data?.Persoon?.overleden) {
+        throw new Error('Persoon lijkt overleden');
       }
       throw new Error('Het ophalen van persoonsgegevens is misgegaan.');
     } catch (error: any) {

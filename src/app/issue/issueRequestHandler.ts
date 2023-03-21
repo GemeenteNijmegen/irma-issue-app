@@ -35,13 +35,13 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   }
 
   // BRP request
-  let naam = 'Onbekende gebruiker';
+  let naam = undefined;
   let brpData = undefined;
   if (!error) {
     const bsn = session.getValue('bsn');
     brpData = await brpApi.getBrpData(bsn);
-    naam = brpData?.Persoon?.Persoonsgegevens?.Naam ?? naam;
-    if (brpData.error) {
+    naam = brpData?.Persoon?.Persoonsgegevens?.Naam;
+    if (brpData.error || !naam) {
       error = 'Het ophalen van uw persoonsgegevens is mis gegaan. Propeer het later opnieuw.';
     }
   }
