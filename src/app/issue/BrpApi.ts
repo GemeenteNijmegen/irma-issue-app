@@ -34,7 +34,7 @@ export class BrpApi {
       }
       throw new Error('Het ophalen van persoonsgegevens is misgegaan.');
     } catch (error: any) {
-      console.log('BRP API:', error.message);
+      console.error('BRP API:', error.message);
       return { error: error.message };
     }
   }
