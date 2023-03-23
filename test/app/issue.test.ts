@@ -7,7 +7,7 @@ import { YiviApi } from '../../src/app/code/YiviApi';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
 import { DigidLoa } from '../../src/app/code/DigiDLoa';
-import { TestUtils } from './TestUtils';
+import { TestUtils } from '../other/TestUtils';
 
 const ddbMock = mockClient(DynamoDBClient);
 const axiosMock = new MockAdapter(axios);
@@ -25,7 +25,7 @@ jest.mock('@gemeentenijmegen/utils/lib/AWS', () => ({
 
 beforeAll(async () => {
     // Mock the logging functions (can be used to check for precense of logging)
-    console.log = jest.fn();
+    // console.log = jest.fn();
     console.info = jest.fn();
     console.debug = jest.fn();
     console.error = jest.fn();

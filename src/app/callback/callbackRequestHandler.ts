@@ -23,18 +23,15 @@ export async function callbackRequestHandler(params: any, dynamoDBClient: Dynamo
  * @returns
  */
 async function handleLoggedinRequest(session: Session, params: any) {
-  if (session.getValue('issued', 'BOOL')) {
-    return Response.json({ message: 'Callback already performed' });
-  }
-
   const bsn = session.getValue('bsn', 'S');
   const gemeente = session.getValue('gemeente', 'S');
+  const loa = session.getValue('loa', 'S');
   const timestamp = Date.now();
   const success = params.result == 'success';
   const error = params.error;
 
   // Log the issue event
-  await registerIssueEvent(bsn, gemeente, success, timestamp, error);
+  await registerIssueEvent(bsn, gemeente, loa, success, timestamp, error);
   if (success) {
     // Only disable the session if the issueing was successful.
     await updateSessionStatus(session, bsn);
@@ -52,6 +49,7 @@ async function handleLoggedinRequest(session: Session, params: any) {
 async function registerIssueEvent(
   bsn: string,
   gemeente: string,
+  loa: string,
   success: boolean,
   timestamp: number,
   errorMessage?: string,
@@ -69,7 +67,7 @@ async function registerIssueEvent(
     error = { error: { S: msg } };
   }
 
-  console.log({ subject, timestamp, gemeente, success, error: error?.error.S });
+  console.log({ subject, timestamp, gemeente, loa, success, error: error?.error.S });
 }
 
 /**
