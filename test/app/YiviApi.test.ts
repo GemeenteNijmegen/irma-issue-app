@@ -1,7 +1,7 @@
 import { YiviApi } from '../../src/app/code/YiviApi';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import {AWS } from '@gemeentenijmegen/utils';
+import { AWS } from '@gemeentenijmegen/utils';
 import * as dotenv from 'dotenv'
 import { DigidLoa, loaToNumber } from '../../src/app/code/DigiDLoa';
 dotenv.config()
@@ -16,7 +16,7 @@ jest.mock('@gemeentenijmegen/utils/lib/AWS', () => ({
 }));
 
 beforeAll(() => {
-   // console.log = jest.fn();
+    console.log = jest.fn();
     console.info = jest.fn();
     console.debug = jest.fn();
     console.error = jest.fn();
@@ -49,6 +49,14 @@ test('Check if yivi api adds aws4-singature and irma-authorization header and ri
     const data = JSON.parse(request.data);
     const loa = `${loaToNumber(DigidLoa.Substantieel)}`;
     expect(data?.credentials[1]?.attributes?.digidlevel).toBe(loa);
+});
+
+test('Check timeout Yivi API', async () => {
+    axiosMock.onPost('/session').timeout()
+    const client = new YiviApi();
+    client.manualInit('gw-test.nijmegen.nl', true, 'someid', 'somesecretkey', 'irma-autharizaiton-header');
+    await client.startSession(brpData, DigidLoa.Substantieel);
+    expect(console.error).toHaveBeenCalledWith('timeout of 2000ms exceeded');
 });
 
 test('Initialization', async () => {

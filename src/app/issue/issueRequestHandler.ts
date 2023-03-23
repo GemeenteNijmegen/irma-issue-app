@@ -49,6 +49,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   // Start YIVI session
   let yiviFullSession = undefined;
   if (!error) {
+    console.debug('Starting YIVI session...');
     const loa = session.getValue('loa');
     const yiviResponse = await yiviApi.startSession(brpData, loa);
     console.debug('YIVI session: ', yiviResponse);
@@ -73,7 +74,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     error: error,
     yiviFullSession: yiviFullSession,
   };
-  console.debug('Rendering page with data:', data);
+  console.log('Rendering page with data:', data);
   const html = await render(data, template.default);
   return Response.html(html, 200, session.getCookie());
 }

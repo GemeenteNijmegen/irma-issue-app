@@ -77,23 +77,20 @@ export class YiviApi {
   }
 
   private async doSignedPostRequest(path: string, data: any, errorMsg: string) {
-    console.debug('Starting signed POST request:', path);
-
     try {
       const client = this.getSigningClient();
       const resp = await client.post(path, data);
       if (resp.data) {
-        console.debug('Response data:', resp.data);
         return resp.data;
       }
       throw Error(errorMsg);
     } catch (error: any) {
+      console.error('Error while doing signed post request for endpoint', path);
       if (axios.isAxiosError(error)) {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           console.log(`http status for ${path}: ${error.response?.status}`);
-          console.debug(error.response.data);
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
