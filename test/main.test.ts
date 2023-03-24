@@ -28,6 +28,7 @@ const snapshotEnv = {
 
 const config: Configuration = {
   branchName: 'snapshot-tests',
+  pipelineStackName: 'unit-test-pipeline-stack',
   codeStarConnectionArn: 'arn:CodeStarConnection:12124253124:blablab',
   deployFromEnvironment: snapshotEnv,
   deployToEnvironment: snapshotEnv,

@@ -3,6 +3,7 @@ import { AppDomainUtil } from '../src/Util';
 test('get domain names', () => {
   const domainNames = AppDomainUtil.getDomainNames({
     branchName: "test",
+    pipelineStackName: 'unit-test-pipeline-stack',
     codeStarConnectionArn: "",
     deployFromEnvironment: { region: "", account: "" },
     deployToEnvironment: { region: "", account: "" },
@@ -19,6 +20,7 @@ test('get domain names', () => {
 test('baseurl', () => {
   const baseurl = AppDomainUtil.getBaseUrl({
     branchName: "test",
+    pipelineStackName: 'unit-test-pipeline-stack',
     codeStarConnectionArn: "",
     deployFromEnvironment: { region: "", account: "" },
     deployToEnvironment: { region: "", account: "" },
