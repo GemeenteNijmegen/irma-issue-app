@@ -9,7 +9,6 @@ export async function handleLoginRequest(params: any, dynamoDBClient: DynamoDBCl
   let session = new Session(params.cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() === true) {
-    console.debug('redirect to home');
     return Response.redirect('/');
   }
   const state = OIDC.generateState();

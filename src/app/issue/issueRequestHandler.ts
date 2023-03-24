@@ -74,7 +74,6 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     error: error,
     yiviFullSession: yiviFullSession,
   };
-  console.log('Rendering page with data:', data);
   const html = await render(data, template.default);
   return Response.html(html, 200, session.getCookie());
 }

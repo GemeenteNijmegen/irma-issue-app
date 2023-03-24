@@ -41,7 +41,7 @@ async function authenticate(session: Session, claims: IdTokenClaims, logger: Log
   if (claims && claims.hasOwnProperty('acr')) {
     const loa = claims.acr;
     if ( loa == DigidLoa.Basis) {
-      return fail(logger, 'Insufficient OIDC claims', 'loa');
+      return fail(logger, 'Authentication using DigiD loa Basis is used', 'loa');
     }
     await session.createSession({
       loggedin: { BOOL: true },

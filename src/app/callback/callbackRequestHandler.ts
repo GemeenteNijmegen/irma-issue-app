@@ -34,7 +34,7 @@ async function handleLoggedinRequest(session: Session, params: any) {
   await registerIssueEvent(bsn, gemeente, loa, success, timestamp, error);
   if (success) {
     // Only disable the session if the issueing was successful.
-    await updateSessionStatus(session, bsn);
+    await updateSessionStatus(session);
   }
   return Response.json({ message: 'success' });
 }
@@ -67,18 +67,19 @@ async function registerIssueEvent(
     error = { error: { S: msg } };
   }
 
+  // Important! This logs the issue event (success/failure) for this lambda,
+  // this log is used to construct the CloudWatch dashboard
   console.log({ subject, timestamp, gemeente, loa, success, error: error?.error.S });
 }
 
 /**
  * Clean the date for this issue request from the session after logging it
+ * Note this also destroys the users session as loggedin is not set anymore
  * @param session Session object
- * @param bsn BSN from session
  */
-async function updateSessionStatus(session: Session, bsn: string) {
+async function updateSessionStatus(session: Session) {
   try {
     await session.updateSession({
-      bsn: { S: bsn },
       issued: { BOOL: true },
     });
   } catch (err) {

@@ -79,13 +79,16 @@ export class YiviApi {
   private async doSignedPostRequest(path: string, data: any, errorMsg: string) {
     try {
       const client = this.getSigningClient();
+      console.time('request to ' + path);
       const resp = await client.post(path, data);
       if (resp.data) {
+        console.timeEnd('request to ' + path);
         return resp.data;
       }
       throw Error(errorMsg);
     } catch (error: any) {
       console.error('Error while doing signed post request for endpoint', path);
+      console.timeEnd('request to ' + path);
       if (axios.isAxiosError(error)) {
         if (error.response) {
           // The request was made and the server responded with a status code
