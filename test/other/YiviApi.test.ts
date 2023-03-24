@@ -18,6 +18,7 @@ beforeAll(() => {
     console.info = jest.fn();
     console.debug = jest.fn();
     console.error = jest.fn();
+    console.time = jest.fn();
 });
 
 beforeEach(() => {

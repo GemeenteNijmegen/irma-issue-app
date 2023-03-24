@@ -1,4 +1,3 @@
-import { Logger } from '@aws-lambda-powertools/logger';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
@@ -11,21 +10,21 @@ export async function handleRequest(
   queryStringParamCode: string,
   queryStringParamState: string,
   dynamoDBClient: DynamoDBClient,
-  logger: Logger,
   OIDC: OpenIDConnect,
 ) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.sessionId === false) {
-    logger.info('No session found');
+    console.info('No session found');
     return Response.redirect('/login');
   }
   const state = session.getValue('state');
   try {
     const claims = await OIDC.authorize(queryStringParamCode, state, queryStringParamState);
-    return await authenticate(session, claims, logger);
+    return await authenticate(session, claims);
   } catch (error: any) {
-    return fail(logger, error.message, undefined, 'error');
+    console.error(error.message);
+    return Response.redirect('/login');
   }
 }
 
@@ -37,42 +36,22 @@ export async function handleRequest(
  * @param logger logging
  * @returns
  */
-async function authenticate(session: Session, claims: IdTokenClaims, logger: Logger) {
+async function authenticate(session: Session, claims: IdTokenClaims) {
   if (claims && claims.hasOwnProperty('acr')) {
     const loa = claims.acr;
     if ( loa == DigidLoa.Basis) {
-      return fail(logger, 'Authentication using DigiD loa Basis is used', 'loa');
+      console.error('Authentication using DigiD loa Basis is used');
+      return Response.redirect('/login?loa=true');
     }
     await session.createSession({
       loggedin: { BOOL: true },
       bsn: { S: claims.sub },
       loa: { S: loa },
     });
-    logger.info('Authentication successful', { loa });
+    console.info('Authentication successful', loa);
   } else {
-    return fail(logger, 'Insufficient OIDC claims');
+    console.error('Insufficient OIDC claims');
+    return Response.redirect('/login');
   }
   return Response.redirect('/', 302, session.getCookie());
-}
-
-/**
- * Log the failed authentication attempt including the reason
- * and redirect the user to the loging page (optionally
- * with a url param flag)
- * @param logger
- * @param reason log the reason authentication failed
- * @param flag url pagameter with true value (error handling)
- * @returns
- */
-function fail(logger: Logger, reason: string, flag?: string, error?: 'error') {
-  let url = '/login';
-  if (flag) {
-    url += `?${flag}=true`;
-  }
-  if (error) {
-    logger.error('Authentication failed', { reason });
-  } else {
-    logger.info('Authentication failed', { reason });
-  }
-  return Response.redirect(url);
 }

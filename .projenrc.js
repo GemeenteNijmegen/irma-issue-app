@@ -31,7 +31,6 @@ const project = new GemeenteNijmegenCdkApp({
     '@types/cookie',
     'cookie',
     '@types/aws-lambda',
-    '@aws-lambda-powertools/logger',
   ],
   devDeps: [
     'copyfiles',
