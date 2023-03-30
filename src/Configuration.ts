@@ -50,7 +50,7 @@ export interface Configuration {
 
   /**
    * If the issue lambda uses the demo scheme or the production scheme.
-   * Note: shoud only be true in production
+   * Note: shoud never be false except in prod.
    */
   readonly useDemoScheme: boolean;
 

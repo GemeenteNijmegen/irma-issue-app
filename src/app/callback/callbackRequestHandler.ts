@@ -71,14 +71,15 @@ async function registerIssueEvent(
 }
 
 /**
- * Clean the date for this issue request from the session after logging it
- * Note this also destroys the users session as loggedin is not set anymore
+ * Remove the data for this issue request from the session after logging it
+ * Note: the user is also logged out here!
  * @param session Session object
  */
 async function updateSessionStatus(session: Session) {
   try {
     await session.updateSession({
-      issued: { BOOL: true }, // TODO explicit logout
+      loggedin: { BOOL: false },
+      issued: { BOOL: true },
     });
   } catch (err) {
     console.log('Could not update session', err);

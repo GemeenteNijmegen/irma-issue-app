@@ -41,62 +41,9 @@ export class WafStack extends Stack {
             managedRuleGroupStatement: {
               vendorName: 'AWS',
               name: 'AWSManagedRulesBotControlRuleSet',
-              // We want to be able to allow certain UA's access (internet.nl), count them here and block most later on
-              excludedRules: [
-                {
-                  name: 'SignalNonBrowserUserAgent',
-                },
-              ],
             },
           },
         },
-        // After counting the SignalNonBrowserUserAgent matches, block all except the excluded ua
-        // {
-        //   priority: 1,
-        //   name: 'BlockMostNonBrowserUserAgents',
-        //   statement: {
-        //     andStatement: {
-        //       statements: [
-        //         {
-        //           labelMatchStatement: {
-        //             scope: 'LABEL',
-        //             key: 'awswaf:managed:aws:bot-control:signal:non_browser_user_agent',
-        //           },
-        //         },
-        //         {
-        //           notStatement: {
-        //             statement: {
-        //               byteMatchStatement: {
-        //                 fieldToMatch: {
-        //                   singleHeader: {
-        //                     Name: 'user-agent',
-        //                   },
-        //                 },
-        //                 positionalConstraint: 'EXACTLY',
-        //                 searchString: 'internetnl/1.0',
-        //                 textTransformations: [
-        //                   {
-        //                     priority: 0,
-        //                     type: 'NONE',
-        //                   },
-        //                 ],
-        //               },
-        //             },
-        //           },
-        //         },
-        //       ],
-        //     },
-        //   },
-        //   ruleLabels: [],
-        //   action: {
-        //     block: {},
-        //   },
-        //   visibilityConfig: {
-        //     sampledRequestsEnabled: true,
-        //     cloudWatchMetricsEnabled: true,
-        //     metricName: 'AWS-ManagedRulesBotControlRuleSet',
-        //   },
-        // },
         {
           priority: 10,
           action: rateBasedStatementAction,

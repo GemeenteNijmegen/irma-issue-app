@@ -100,3 +100,61 @@ test('Check timeout Yivi API', async () => {
     await client.startSession(TestUtils.getBrpExampleData(), DigidLoa.Substantieel);
     expect(console.error).toHaveBeenCalledWith('timeout of 2000ms exceeded');
 });
+
+test('Mapping BRP data', () => {
+    const brpData = TestUtils.getBrpExampleData();
+
+    const client = new YiviApi();
+    client.manualInit('gw-test.nijmegen.nl', true, 'someid', 'somesecretkey', 'irma-autharizaiton-header');
+    const yiviRequest = client.constructYiviIssueRequest(brpData, DigidLoa.Midden);
+
+    // Check date calculation (valid until)
+    const currentYear = new Date().getFullYear();
+    // Date timestamp 5 years in the future in seconds
+    const date5ytd = Math.floor(new Date().setFullYear(currentYear + 5) / 1000);
+    // Date timestamp 1 year in the future in seconds
+    const date1ytd = Math.floor(new Date().setFullYear(currentYear + 1) / 1000);
+    console.info("Dates logged", date1ytd, date5ytd);
+
+    // Check request buildup and LOA
+    expect(yiviRequest.type).toBe('issuing');
+    expect(yiviRequest.credentials[1].attributes.digidlevel).toBe(`${loaToNumber(DigidLoa.Midden)}`);
+    expect(yiviRequest.credentials[0].credential).toBe('irma-demo.gemeente.address');
+    expect(yiviRequest.credentials[1].credential).toBe('irma-demo.gemeente.personalData');
+
+    // Check dates allow for a 20 second window 
+    expect(yiviRequest.credentials[0].validity).toBeGreaterThan(date1ytd - 10);
+    expect(yiviRequest.credentials[0].validity).toBeLessThan(date1ytd + 10);
+    expect(yiviRequest.credentials[1].validity).toBeGreaterThan(date5ytd - 10);
+    expect(yiviRequest.credentials[1].validity).toBeLessThan(date5ytd + 10);
+
+    // Check address brp data
+    const addressCard = yiviRequest.credentials[0].attributes;
+    expect(addressCard.street).toBe(brpData.Persoon.Adres.Straat)
+    expect(addressCard.houseNumber).toBe(brpData.Persoon.Adres.Huisnummer)
+    expect(addressCard.zipcode).toBe(brpData.Persoon.Adres.Postcode)
+    expect(addressCard.municipality).toBe(brpData.Persoon.Adres.Gemeente)
+    expect(addressCard.city).toBe(brpData.Persoon.Adres.Woonplaats)
+
+    // Check personal brp data
+    const personCard = yiviRequest.credentials[1].attributes;
+    const gegevens = brpData.Persoon.Persoonsgegevens;
+    expect(personCard.initials).toBe(gegevens.Voorletters)
+    expect(personCard.firstnames).toBe(gegevens.Voornamen)
+    expect(personCard.prefix).toBe(gegevens.Voorvoegsel)
+    expect(personCard.familyname).toBe(gegevens.Achternaam)
+    expect(personCard.fullname).toBe(gegevens.Naam)
+    expect(personCard.dateofbirth).toBe(gegevens.Geboortedatum)
+    expect(personCard.gender).toBe(gegevens.Geslacht)
+    expect(personCard.nationality).toBe('yes');
+    expect(personCard.surname).toBe(gegevens.Achternaam)
+    expect(personCard.cityofbirth).toBe(gegevens.Geboorteplaats)
+    expect(personCard.countryofbirth).toBe(gegevens.Geboorteland)
+    expect(personCard.bsn).toBe(brpData.Persoon.BSN.BSN)
+    expect(brpData.Persoon.ageLimits.over12).toBe(brpData.Persoon.ageLimits.over12);
+    expect(brpData.Persoon.ageLimits.over16).toBe(brpData.Persoon.ageLimits.over16);
+    expect(brpData.Persoon.ageLimits.over18).toBe(brpData.Persoon.ageLimits.over18);
+    expect(brpData.Persoon.ageLimits.over21).toBe(brpData.Persoon.ageLimits.over21);
+    expect(brpData.Persoon.ageLimits.over65).toBe(brpData.Persoon.ageLimits.over65);
+
+})

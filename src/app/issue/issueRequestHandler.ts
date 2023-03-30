@@ -29,12 +29,6 @@ export async function issueRequestHandler(cookies: string, brpApi: BrpApi, yiviA
 async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: YiviApi) {
   let error = undefined;
 
-  // If issuing already is completed
-  // TODO kan misschien weg omdat de callback de user al uitlogt (kan dus niet voorkomen)
-  if (session.getValue('issued', 'BOOL')) {
-    error = 'Om uw gegevens nog een keer in te laden dient u eerst uit te loggen.';
-  }
-
   // BRP request
   let naam = undefined;
   let brpData = undefined;
@@ -69,8 +63,6 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   // Render the page
   const data = {
     title: 'opladen',
-    shownav: true, // TODO check if still required
-    volledigenaam: naam, // TODO check if still required
     yiviServer: `https://${yiviApi.getHost()}`,
     error: error,
     yiviFullSession: yiviFullSession,
@@ -79,9 +71,9 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   return Response.html(html, 200, session.getCookie());
 }
 
-// TODO update docs
 /**
- * Logs the issue event for collecting statistics one usage of the yivi-issue-app
+ * Add the requred issue event data to the sessino for
+ * collecting statistics one usage of the yivi-issue-app later on
  * @param brpData the BRP-YIVI api response
  * @param session the uses session to store data in
  */
