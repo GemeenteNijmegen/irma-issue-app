@@ -8,7 +8,7 @@ const dynamoDBClient = new DynamoDBClient({});
 
 function parseEvent(event: APIGatewayProxyEventV2) {
   return {
-    loaerror: event?.queryStringParameters?.loa,
+    loaerror: event?.queryStringParameters?.loa_error,
     cookies: event?.cookies?.join(';'),
   };
 }
