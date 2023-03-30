@@ -29,12 +29,6 @@ export async function issueRequestHandler(cookies: string, brpApi: BrpApi, yiviA
 async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: YiviApi) {
   let error = undefined;
 
-  // If issuing already is completed
-  // TODO kan misschien weg omdat de callback de user al uitlogt (kan dus niet voorkomen)
-  if (session.getValue('issued', 'BOOL')) {
-    error = 'Om uw gegevens nog een keer in te laden dient u eerst uit te loggen.';
-  }
-
   // BRP request
   let naam = undefined;
   let brpData = undefined;
