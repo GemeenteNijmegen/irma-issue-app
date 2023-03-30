@@ -40,7 +40,9 @@ export class YiviApi {
     };
   }
 
-  // TODO document for testing purposes
+  /**
+   * Note: This method should only be used for testing purposes.
+   */
   manualInit(host: string, demo: boolean, accesKey: string, secretKey: string, apiKey: string) {
     this.host = host;
     this.demo = demo;
