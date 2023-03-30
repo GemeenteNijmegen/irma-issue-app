@@ -41,7 +41,7 @@ async function authenticate(session: Session, claims: IdTokenClaims) {
     const loa = claims.acr;
     if ( loa == DigidLoa.Basis) {
       console.error('Authentication using DigiD loa Basis is used');
-      return Response.redirect('/login?loa=true');
+      return Response.redirect('/login?loa=true'); // TODO fix flag name to include error
     }
     await session.createSession({
       loggedin: { BOOL: true },

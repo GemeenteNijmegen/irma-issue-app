@@ -40,6 +40,7 @@ export class YiviApi {
     };
   }
 
+  // TODO document for testing purposes
   manualInit(host: string, demo: boolean, accesKey: string, secretKey: string, apiKey: string) {
     this.host = host;
     this.demo = demo;
@@ -117,7 +118,7 @@ export class YiviApi {
 
     // Calculate validity
     const currentYear = new Date().getFullYear();
-    const date5ytd = Math.floor(new Date().setFullYear(currentYear + 5) / 1000);
+    const date5ytd = Math.floor(new Date().setFullYear(currentYear + 5) / 1000); // TODO write tests for date logic
     const date1ytd = Math.floor(new Date().setFullYear(currentYear + 1) / 1000);
 
     // Return the issue request

@@ -60,16 +60,14 @@ async function registerIssueEvent(
 
   let error = undefined;
   if (errorMessage) { // Trim errorMessage if needed
-    const msg =
-      errorMessage.length > 200
-        ? errorMessage.substring(0, 200)
-        : errorMessage;
-    error = { error: { S: msg } };
+    error = errorMessage.length > 200
+      ? errorMessage.substring(0, 200)
+      : errorMessage;
   }
 
   // Important! This logs the issue event (success/failure) for this lambda,
   // this log is used to construct the CloudWatch dashboard
-  console.log({ subject, timestamp, gemeente, loa, success, error: error?.error.S });
+  console.log({ subject, timestamp, gemeente, loa, success, error });
 }
 
 /**
@@ -80,7 +78,7 @@ async function registerIssueEvent(
 async function updateSessionStatus(session: Session) {
   try {
     await session.updateSession({
-      issued: { BOOL: true },
+      issued: { BOOL: true }, // TODO explicit logout
     });
   } catch (err) {
     console.log('Could not update session', err);

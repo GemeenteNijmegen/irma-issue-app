@@ -7,7 +7,7 @@ if (yiviFullSessionEncoded) {
     const yiviFullSession = JSON.parse(atob(yiviFullSessionEncoded));
 
     const yiviClient = yivi.newWeb({
-        debugging: true,
+        debugging: true, // TODO make false in prod
         element: '#yivi-web-form',
         session: {
             url: yiviServer,

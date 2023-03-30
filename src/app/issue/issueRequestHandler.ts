@@ -30,6 +30,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   let error = undefined;
 
   // If issuing already is completed
+  // TODO kan misschien weg omdat de callback de user al uitlogt (kan dus niet voorkomen)
   if (session.getValue('issued', 'BOOL')) {
     error = 'Om uw gegevens nog een keer in te laden dient u eerst uit te loggen.';
   }
@@ -68,8 +69,8 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   // Render the page
   const data = {
     title: 'opladen',
-    shownav: true,
-    volledigenaam: naam,
+    shownav: true, // TODO check if still required
+    volledigenaam: naam, // TODO check if still required
     yiviServer: `https://${yiviApi.getHost()}`,
     error: error,
     yiviFullSession: yiviFullSession,
@@ -78,6 +79,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   return Response.html(html, 200, session.getCookie());
 }
 
+// TODO update docs
 /**
  * Logs the issue event for collecting statistics one usage of the yivi-issue-app
  * @param brpData the BRP-YIVI api response
