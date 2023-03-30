@@ -113,14 +113,14 @@ export class YiviApi {
     }
   }
 
-  private constructYiviIssueRequest(brpData: any, loa: DigidLoa) {
+  constructYiviIssueRequest(brpData: any, loa: DigidLoa) {
 
     // Get persoonsgegevens
     const gegevens = brpData.Persoon.Persoonsgegevens;
 
     // Calculate validity
     const currentYear = new Date().getFullYear();
-    const date5ytd = Math.floor(new Date().setFullYear(currentYear + 5) / 1000); // TODO write tests for date logic
+    const date5ytd = Math.floor(new Date().setFullYear(currentYear + 5) / 1000);
     const date1ytd = Math.floor(new Date().setFullYear(currentYear + 1) / 1000);
 
     // Return the issue request
