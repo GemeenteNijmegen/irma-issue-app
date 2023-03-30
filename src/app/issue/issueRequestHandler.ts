@@ -69,8 +69,6 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   // Render the page
   const data = {
     title: 'opladen',
-    shownav: true, // TODO check if still required
-    volledigenaam: naam, // TODO check if still required
     yiviServer: `https://${yiviApi.getHost()}`,
     error: error,
     yiviFullSession: yiviFullSession,
