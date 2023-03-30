@@ -18,7 +18,6 @@ export default async (data: any, template: string, partials?: {[key: string]: st
   };
 
   data = {
-    name: 'YIVI',
     logos: false,
     ...data,
   };

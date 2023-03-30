@@ -1,0 +1,176 @@
+<html>
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            <title>Gegevens toevoegen aan YIVI</title>
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <link rel="stylesheet" href="/static/styles/main.css"/>
+            <link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+            <style>
+              :root {
+                --button-gradient: linear-gradient(80deg,  #f60440 50%, transparent 50% 60%, transparent 60% 70%, transparent 70% 80%, transparent 80% 100%),
+                linear-gradient(100deg, #f60440 40%, #cb2153   50% 60%, transparent 60% 70%, transparent 70% 80%, transparent 80% 100%),
+                linear-gradient(65deg,  #f60440 40%, #cb2153   40% 50%, #ae2651   60% 70%, transparent 70% 80%, transparent 80% 100%),
+                linear-gradient(110deg, #f60440 40%, #cb2153   40% 50%, #ae2651   50% 60%, #93294f   70% 80%, transparent 80% 100%),
+                linear-gradient(60deg,  #f60440 40%, #cb2153   40% 50%, #ae2651   50% 60%, #93294f   60% 70%, #ae2651   80% 100%);
+              }
+
+              html {
+                font-family: 'Open sans', arial, sans-serif;
+              }
+              main {
+                max-width: 70ch;
+                padding: 1em 1em;
+                margin: auto;
+                line-height: 1.75;
+                font-size: 1.125em;
+              }
+
+              header {
+                display: flex;
+                justify-content: space-between;
+                padding: .5rem;
+                gap: 1em;
+              }
+
+              header a {
+                flex-shrink: 0;
+              }
+
+              header img {
+                height: 3rem;
+              }
+
+              h1 {
+                font-size: 1.25em;
+                line-height: 1.4;
+                margin: 1.5em 0 1em;
+              }
+
+              p {
+                margin-bottom: 2em;
+                color: #1d1d1d;
+                font-family: sans-serif;
+              }
+
+              a, a:visited {
+                color: #93294f;
+              }
+
+              img { 
+                max-width: 100%;
+              }
+
+              .logo-large {
+                display: none;
+              }
+
+              @media (min-width: 600px) {
+                .logo-large {
+                  display: initial;
+                }
+                .logo-compact {
+                  display: none;
+                }
+              }
+
+              .digid {
+                gap: .5em;
+              }
+
+              .error {
+                padding: 1em .5em;
+                border-left: 4px solid #E02146;
+                background: #ffdde3;
+                color: black;
+                padding: .5em .5em .5em 1em;
+              }
+
+              .error p {
+                margin: 0;
+              }
+
+              .error p + p {
+                margin-top: 1em;
+              }
+
+              .button {
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                font-size: 1.125em;
+                padding: .5em;
+                text-decoration: none;
+                font-weight: bold;
+                text-align: center;
+                border-radius: .5em;
+              }
+
+              .button.primary {
+                color: white;
+                color: white;
+                background: var(--button-gradient);
+              }
+
+              .button.digid {
+                color: white;
+                text-indent: 2.5em;
+                background: top left url('static/img/digid.svg') no-repeat, 
+                var(--button-gradient);
+                background-size: 2em, 100%, 100%, 100%, 100%, 100%;
+                background-position: left .5em center, top left;
+              }
+
+              .button:hover {
+                text-decoration: underline;
+              }
+
+              .button.digid:hover {
+                background-size: 2em, 105%, 105%, 105%, 105%, 105%;
+              }
+              
+              .button.primary:hover {
+                background-size: 105%, 105%, 105%, 105%, 105%;
+              }
+
+              .button:active,
+              .button:active {
+                transform: translateY(2px);
+              }
+
+              #yivi-web-form {
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 20px;
+              }
+            </style>
+        </head>
+        <body>
+            <header>
+                <a href="#">
+                  <img class="logo-compact" src="static/img/yivi-logo-compact.svg" alt="Yivi - the identity wallet">
+                  <img class="logo-large" src="static/img/yivi-logo.svg" alt="Yivi - the identity wallet">
+                </a>
+                <a href="#"><img src="https://componenten.nijmegen.nl/v6.0.0/img/beeldmerklabel.svg" alt="Gemeente Nijmegen"></a>
+            </header>
+    <!-- <main>
+        <h1>Persoonsgegevens toevoegen</h1>
+        <p>Log in via Digid om je persoonsgegevens en adres aan Yivi toe te voegen.</p>
+        <p>Je gegevens worden opgehaald via de gemeente Nijmegen, ook als je daar niet woont. Je logt daarom in via Digid bij de gemeente Nijmegen.</p>
+        <a href="/" class="digid">Voeg gegevens toe</a>
+    </main> -->
+    <main>
+
+      <h1>YIVI BRP attributen laden via DigiD</h1>
+      
+      <div class="error"> 
+          <p>Er is iets misgegaan: De BRP is niet beschikbaar. Probeer het later opnieuw. Dit is een lange tekst voor het geval dat we lange tekst moeten tonen.</p>
+      </div>
+  
+      <p>Laad uw BRP attributen in de YIVI app door de QR code te scannen.</p>
+      <div id="yivi-web-form"></div>
+      <a href="/logout" class="button digid">Uitloggen bij DigiD</a>
+  
+  </main>
+        </body>
+    </html>

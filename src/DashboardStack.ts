@@ -65,7 +65,7 @@ export class DashboardStack extends Stack {
       height: 12,
       logGroupNames: [logGroup],
       view: Visualization.TABLE,
-      queryLines: [ // TODO not the best way to list this (however we are running into limitations of cloudwatch here)
+      queryLines: [ // not the best way to list this (however we are running into limitations of cloudwatch here)
         'fields gemeente',
         'filter not isempty(subject) and nr_of_issues_per_subject > 1',
         'stats count(subject) as nr_of_issues_per_subject by gemeente, subject',

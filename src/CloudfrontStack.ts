@@ -94,16 +94,18 @@ export class CloudfrontStack extends Stack {
   private addStaticResources(cloudfrontDistribution: Distribution) {
     const staticResourcesBucket = this.staticResourcesBucket();
     const originAccessIdentity = new OriginAccessIdentity(this, 'publicresourcesbucket-oia');
+
+    const origin = new S3Origin(staticResourcesBucket, {
+      originAccessIdentity: originAccessIdentity,
+    });
+
     this.allowOriginAccessIdentityAccessToBucket(originAccessIdentity, staticResourcesBucket);
-    cloudfrontDistribution.addBehavior(
-      '/static/*',
-      new S3Origin(staticResourcesBucket, {
-        originAccessIdentity: originAccessIdentity,
-      }),
-      {
-        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-      },
-    );
+    cloudfrontDistribution.addBehavior('/static/*', origin, {
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+    });
+    cloudfrontDistribution.addBehavior('/.well-known/*', origin, {
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+    });
     this.deployBucket(staticResourcesBucket, cloudfrontDistribution);
   }
 
@@ -317,7 +319,7 @@ export class CloudfrontStack extends Stack {
       sources: [aws_s3_deployment.Source.asset('./src/app/static-resources/')],
       destinationBucket: bucket,
       distribution: distribution,
-      distributionPaths: ['/static/*'],
+      distributionPaths: ['/static/*', '/.well-known/'],
     });
   }
 }

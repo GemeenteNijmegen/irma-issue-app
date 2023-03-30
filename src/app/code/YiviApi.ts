@@ -1,11 +1,12 @@
+import { AWS } from '@gemeentenijmegen/utils';
 import { aws4Interceptor } from 'aws4-axios';
 import axios, { Axios } from 'axios';
-import { AwsUtil } from './AwsUtil';
+import { DigidLoa, loaToNumber } from './DigiDLoa';
 
 export class YiviApi {
 
-  private host;
-  private demo;
+  private host: string;
+  private demo: boolean;
   private credentials: {
     accessKeyId: string;
     secretAccessKey: string;
@@ -13,8 +14,8 @@ export class YiviApi {
   private apiKey: string;
 
   constructor() {
-    this.host = process.env.YIVI_API_HOST ? process.env.YIVI_API_HOST : '';
-    this.demo = process.env.YIVI_API_DEMO == 'demo' ? true : false;
+    this.host = '';
+    this.demo = process.env.YIVI_API_DEMO != 'demo' ? false : true;
     this.credentials = {
       accessKeyId: '',
       secretAccessKey: '',
@@ -27,17 +28,19 @@ export class YiviApi {
   }
 
   async init() {
-    if (!process.env.YIVI_API_ACCESS_KEY_ID_ARN || !process.env.YIVI_API_SECRET_KEY_ARN || !process.env.YIVI_API_KEY_ARN) {
+    if (!process.env.YIVI_API_ACCESS_KEY_ID_ARN || !process.env.YIVI_API_SECRET_KEY_ARN
+          || !process.env.YIVI_API_KEY_ARN || !process.env.YIVI_API_HOST) {
       throw Error('Clould not initialize YIVI API client');
     }
-    const util = new AwsUtil();
-    this.apiKey = await util.getSecret(process.env.YIVI_API_KEY_ARN);
+    this.host = await AWS.getParameter(process.env.YIVI_API_HOST);
+    this.apiKey = await AWS.getSecret(process.env.YIVI_API_KEY_ARN);
     this.credentials = {
-      accessKeyId: await util.getSecret(process.env.YIVI_API_ACCESS_KEY_ID_ARN),
-      secretAccessKey: await util.getSecret(process.env.YIVI_API_SECRET_KEY_ARN),
+      accessKeyId: await AWS.getSecret(process.env.YIVI_API_ACCESS_KEY_ID_ARN),
+      secretAccessKey: await AWS.getSecret(process.env.YIVI_API_SECRET_KEY_ARN),
     };
   }
 
+  // TODO document for testing purposes
   manualInit(host: string, demo: boolean, accesKey: string, secretKey: string, apiKey: string) {
     this.host = host;
     this.demo = demo;
@@ -49,8 +52,8 @@ export class YiviApi {
   }
 
 
-  async startSession(brpData: any) {
-    const yiviIssueRequest = this.constructYiviIssueRequest(brpData);
+  async startSession(brpData: any, loa: DigidLoa) {
+    const yiviIssueRequest = this.constructYiviIssueRequest(brpData, loa);
     return this.doSignedPostRequest('session', yiviIssueRequest, 'De YIVI sessie kon niet worden gestart.');
   }
 
@@ -59,14 +62,14 @@ export class YiviApi {
       throw new Error('API client is not configured propperly, missing AWS signature credentials');
     }
     const interceptor = aws4Interceptor({
-      region: 'eu-west-1',
+      region: process.env.AWS_REGION ?? 'eu-west-1',
       service: 'execute-api',
     }, this.credentials);
     const client = axios.create({
       baseURL: `https://${this.host}`,
       timeout: 2000,
       headers: {
-        'yivi-authorization': this.apiKey,
+        'irma-authorization': this.apiKey,
         'Content-type': 'application/json',
       },
     });
@@ -75,23 +78,23 @@ export class YiviApi {
   }
 
   private async doSignedPostRequest(path: string, data: any, errorMsg: string) {
-    console.debug('Starting signed POST request:', path);
-
     try {
       const client = this.getSigningClient();
+      console.time('request to ' + path);
       const resp = await client.post(path, data);
       if (resp.data) {
-        console.debug('Response data:', resp.data);
+        console.timeEnd('request to ' + path);
         return resp.data;
       }
       throw Error(errorMsg);
     } catch (error: any) {
+      console.error('Error while doing signed post request for endpoint', path);
+      console.timeEnd('request to ' + path);
       if (axios.isAxiosError(error)) {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           console.log(`http status for ${path}: ${error.response?.status}`);
-          console.debug(error.response.data);
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -108,14 +111,14 @@ export class YiviApi {
     }
   }
 
-  private constructYiviIssueRequest(brpData: any) {
+  private constructYiviIssueRequest(brpData: any, loa: DigidLoa) {
 
     // Get persoonsgegevens
     const gegevens = brpData.Persoon.Persoonsgegevens;
 
     // Calculate validity
     const currentYear = new Date().getFullYear();
-    const date5ytd = Math.floor(new Date().setFullYear(currentYear + 5) / 1000);
+    const date5ytd = Math.floor(new Date().setFullYear(currentYear + 5) / 1000); // TODO write tests for date logic
     const date1ytd = Math.floor(new Date().setFullYear(currentYear + 1) / 1000);
 
     // Return the issue request
@@ -123,7 +126,7 @@ export class YiviApi {
       type: 'issuing',
       credentials: [
         {
-          credential: this.demo ? 'yivi-demo.gemeente.address' : 'yivi.gemeente.address',
+          credential: this.demo ? 'irma-demo.gemeente.address' : 'irma.gemeente.address',
           validity: date1ytd,
           attributes: {
             street: brpData.Persoon.Adres.Straat,
@@ -134,7 +137,7 @@ export class YiviApi {
           },
         },
         {
-          credential: this.demo ? 'yivi-demo.gemeente.personalData' : 'yivi.gemeente.personalData',
+          credential: this.demo ? 'irma-demo.gemeente.personalData' : 'irma.gemeente.personalData',
           validity: date5ytd,
           attributes: {
             initials: gegevens.Voorletters,
@@ -149,8 +152,8 @@ export class YiviApi {
             cityofbirth: gegevens.Geboorteplaats,
             countryofbirth: gegevens.Geboorteland,
             bsn: brpData.Persoon.BSN.BSN,
-            digidlevel: '12', // TODO check what this should be?
-            ...brpData.Persoon.ageLimits, // Set agelimits directly
+            digidlevel: `${loaToNumber(loa)}`,
+            ...brpData.Persoon.ageLimits,
           },
         },
       ],

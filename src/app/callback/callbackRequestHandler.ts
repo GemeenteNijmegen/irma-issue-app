@@ -23,19 +23,19 @@ export async function callbackRequestHandler(params: any, dynamoDBClient: Dynamo
  * @returns
  */
 async function handleLoggedinRequest(session: Session, params: any) {
-  if (session.getValue('issued', 'BOOL')) {
-    return Response.json({ message: 'Callback already performed' });
-  }
-
   const bsn = session.getValue('bsn', 'S');
   const gemeente = session.getValue('gemeente', 'S');
+  const loa = session.getValue('loa', 'S');
   const timestamp = Date.now();
   const success = params.result == 'success';
   const error = params.error;
 
   // Log the issue event
-  await registerIssueEvent(bsn, gemeente, success, timestamp, error);
-  await updateSessionStatus(session, bsn);
+  await registerIssueEvent(bsn, gemeente, loa, success, timestamp, error);
+  if (success) {
+    // Only disable the session if the issueing was successful.
+    await updateSessionStatus(session);
+  }
   return Response.json({ message: 'success' });
 }
 
@@ -49,6 +49,7 @@ async function handleLoggedinRequest(session: Session, params: any) {
 async function registerIssueEvent(
   bsn: string,
   gemeente: string,
+  loa: string,
   success: boolean,
   timestamp: number,
   errorMessage?: string,
@@ -59,26 +60,25 @@ async function registerIssueEvent(
 
   let error = undefined;
   if (errorMessage) { // Trim errorMessage if needed
-    const msg =
-      errorMessage.length > 200
-        ? errorMessage.substring(0, 200)
-        : errorMessage;
-    error = { error: { S: msg } };
+    error = errorMessage.length > 200
+      ? errorMessage.substring(0, 200)
+      : errorMessage;
   }
 
-  console.log({ subject, timestamp, gemeente, success, error: error?.error.S });
+  // Important! This logs the issue event (success/failure) for this lambda,
+  // this log is used to construct the CloudWatch dashboard
+  console.log({ subject, timestamp, gemeente, loa, success, error });
 }
 
 /**
  * Clean the date for this issue request from the session after logging it
+ * Note this also destroys the users session as loggedin is not set anymore
  * @param session Session object
- * @param bsn BSN from session
  */
-async function updateSessionStatus(session: Session, bsn: string) {
+async function updateSessionStatus(session: Session) {
   try {
     await session.updateSession({
-      bsn: { S: bsn },
-      issued: { BOOL: true },
+      issued: { BOOL: true }, // TODO explicit logout
     });
   } catch (err) {
     console.log('Could not update session', err);

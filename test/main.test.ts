@@ -28,11 +28,13 @@ const snapshotEnv = {
 
 const config: Configuration = {
   branchName: 'snapshot-tests',
+  pipelineStackName: 'unit-test-pipeline-stack',
   codeStarConnectionArn: 'arn:CodeStarConnection:12124253124:blablab',
   deployFromEnvironment: snapshotEnv,
   deployToEnvironment: snapshotEnv,
   includePipelineValidationChecks: false,
   setWafRatelimit: false,
+  useDemoScheme: true,
   nijmegenSubdomain: 'snapshot-tests',
 }
 
@@ -107,7 +109,7 @@ test('StackHasParameters', () => {
   const app = new App();
   const stack = new ParameterStack(app, 'test');
   const template = Template.fromStack(stack);
-  template.resourceCountIs('AWS::SSM::Parameter', 11);
+  template.resourceCountIs('AWS::SSM::Parameter', 10);
 });
 
 test('StackHasSecrets', () => {

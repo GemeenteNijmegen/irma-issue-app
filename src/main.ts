@@ -11,7 +11,7 @@ const configuration = getConfiguration(branchToBuild);
 
 console.log('Building branch:', branchToBuild);
 
-new PipelineStack(app, 'yivi-issue-pipeline-acceptance',
+new PipelineStack(app, configuration.pipelineStackName,
   {
     env: configuration.deployFromEnvironment,
     configuration: configuration,

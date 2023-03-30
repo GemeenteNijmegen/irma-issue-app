@@ -17,6 +17,7 @@ export interface Configuration {
   readonly deployFromEnvironment: Environment;
   readonly deployToEnvironment: Environment;
   readonly codeStarConnectionArn: string;
+  readonly pipelineStackName: string;
 
   /**
    * The branch name this configuration is used for
@@ -42,6 +43,17 @@ export interface Configuration {
    */
   readonly setWafRatelimit: boolean;
 
+  /**
+   * A list of CNAME records to register in the hosted zone
+   */
+  readonly cnameRecords?: {[key: string]: string};
+
+  /**
+   * If the issue lambda uses the demo scheme or the production scheme.
+   * Note: shoud only be true in production
+   */
+  readonly useDemoScheme: boolean;
+
 }
 
 export function getConfiguration(branchName: string): Configuration {
@@ -54,10 +66,28 @@ export function getConfiguration(branchName: string): Configuration {
 const configurations: { [name: string] : Configuration } = {
   acceptance: {
     branchName: 'acceptance',
+    pipelineStackName: 'yivi-issue-pipeline-acceptance',
     deployFromEnvironment: Statics.deploymentEnvironment,
     deployToEnvironment: Statics.acceptanceEnvironment,
     codeStarConnectionArn: Statics.codeStarConnectionArn,
     includePipelineValidationChecks: false,
-    setWafRatelimit: false,
+    setWafRatelimit: false, // False for pentesting?
+    useDemoScheme: true,
+    nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
+    cnameRecords: {
+      '_2efd09bc809f1129572f073cb0873936.yivi-issue.accp.csp-nijmegen.nl': '_37726a837615087fa929e1970e5ad7c2.hsmgrxbjqd.acm-validations.aws',
+    },
+  },
+  production: {
+    branchName: 'production',
+    pipelineStackName: 'yivi-issue-pipeline-production',
+    deployFromEnvironment: Statics.deploymentEnvironment,
+    deployToEnvironment: Statics.productionEnvironment,
+    codeStarConnectionArn: Statics.codeStarConnectionArn,
+    includePipelineValidationChecks: false,
+    setWafRatelimit: true,
+    useDemoScheme: true, // For now keep this true, so we do not issue valid attributes untill everything works
+    nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
+    cnameRecords: undefined,
   },
 };

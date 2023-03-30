@@ -5,14 +5,12 @@ import * as template from './login.mustache';
 import { OpenIDConnect } from '../code/OpenIDConnect';
 import render from '../code/Render';
 
-export async function handleLoginRequest(cookies: string, dynamoDBClient: DynamoDBClient) {
-  let session = new Session(cookies, dynamoDBClient);
+export async function handleLoginRequest(params: any, dynamoDBClient: DynamoDBClient, OIDC: OpenIDConnect) {
+  let session = new Session(params.cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() === true) {
-    console.debug('redirect to home');
     return Response.redirect('/');
   }
-  let OIDC = new OpenIDConnect();
   const state = OIDC.generateState();
   await session.createSession({
     loggedin: { BOOL: false },
@@ -24,6 +22,7 @@ export async function handleLoginRequest(cookies: string, dynamoDBClient: Dynamo
     title: 'Inloggen',
     authUrl: authUrl,
     logos: true,
+    loaerror: params.loaerror,
   };
   const html = await render(data, template.default);
   const newCookies = [session.getCookie()];

@@ -1,5 +1,4 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import { BrpApi } from './BrpApi';
@@ -10,11 +9,11 @@ import { YiviApi } from '../code/YiviApi';
 /**
  * Check login and handle request
  */
-export async function issueRequestHandler(cookies: string, brpClient: ApiClient, yiviApi: YiviApi, dynamoDBClient: DynamoDBClient) {
+export async function issueRequestHandler(cookies: string, brpApi: BrpApi, yiviApi: YiviApi, dynamoDBClient: DynamoDBClient) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() == true) {
-    return handleLoggedinRequest(session, brpClient, yiviApi);
+    return handleLoggedinRequest(session, brpApi, yiviApi);
   }
   return Response.redirect('/login');
 }
@@ -27,38 +26,38 @@ export async function issueRequestHandler(cookies: string, brpClient: ApiClient,
  * @param yiviApi
  * @returns
  */
-async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiviApi: YiviApi) {
+async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: YiviApi) {
   let error = undefined;
 
   // If issuing already is completed
+  // TODO kan misschien weg omdat de callback de user al uitlogt (kan dus niet voorkomen)
   if (session.getValue('issued', 'BOOL')) {
-    error = 'Om uw gegevens nog een keer in te laden dient u eerst uit te loggen';
+    error = 'Om uw gegevens nog een keer in te laden dient u eerst uit te loggen.';
   }
 
   // BRP request
-  let naam = 'Onbekende gebruiker';
+  let naam = undefined;
   let brpData = undefined;
   if (!error) {
     const bsn = session.getValue('bsn');
-    const brpApi = new BrpApi(brpClient);
     brpData = await brpApi.getBrpData(bsn);
-    naam = brpData?.Persoon?.Persoonsgegevens?.Naam ?? naam;
-    if (brpData.error) {
-      error = 'Het ophalen van uw persoonsgegevens is mis gegaan.';
+    naam = brpData?.Persoon?.Persoonsgegevens?.Naam;
+    if (brpData.error || !naam) {
+      error = 'Het ophalen van uw persoonsgegevens is mis gegaan. Propeer het later opnieuw.';
     }
   }
 
   // Start YIVI session
-  let yiviSession = undefined;
+  let yiviFullSession = undefined;
   if (!error) {
-    const yiviResponse = await yiviApi.startSession(brpData);
+    console.debug('Starting YIVI session...');
+    const loa = session.getValue('loa');
+    const yiviResponse = await yiviApi.startSession(brpData, loa);
+    console.debug('YIVI session: ', yiviResponse);
     if (!yiviResponse.error) {
-      yiviSession = {
-        yiviSessionPtrQr: yiviResponse.sessionPtr.yiviqr,
-        yiviSessionPtrU: yiviResponse.sessionPtr.u,
-      };
+      yiviFullSession = Buffer.from(JSON.stringify(yiviResponse), 'utf-8').toString('base64');
     } else {
-      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in YIVI.';
+      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in Yivi. Probeer het later opnieuw';
     }
   }
 
@@ -70,16 +69,17 @@ async function handleLoggedinRequest(session: Session, brpClient: ApiClient, yiv
   // Render the page
   const data = {
     title: 'opladen',
-    shownav: true,
-    volledigenaam: naam,
+    shownav: true, // TODO check if still required
+    volledigenaam: naam, // TODO check if still required
     yiviServer: `https://${yiviApi.getHost()}`,
     error: error,
-    ...yiviSession,
+    yiviFullSession: yiviFullSession,
   };
   const html = await render(data, template.default);
   return Response.html(html, 200, session.getCookie());
 }
 
+// TODO update docs
 /**
  * Logs the issue event for collecting statistics one usage of the yivi-issue-app
  * @param brpData the BRP-YIVI api response
