@@ -72,7 +72,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
 }
 
 /**
- * Add the requred issue event data to the sessino for 
+ * Add the requred issue event data to the sessino for
  * collecting statistics one usage of the yivi-issue-app later on
  * @param brpData the BRP-YIVI api response
  * @param session the uses session to store data in
