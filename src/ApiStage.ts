@@ -26,7 +26,9 @@ export class ApiStage extends Stage {
 
     const keyStack = new KeyStack(this, 'key-stack');
     const sessionsStack = new SessionsStack(this, 'sessions-stack', { key: keyStack.key }); // TODO fix this stack dependency
-    const dnsStack = new DNSStack(this, 'dns-stack');
+    const dnsStack = new DNSStack(this, 'dns-stack', {
+      configuration: this.configuration,
+    });
 
     const usEastCertificateStack = new UsEastCertificateStack(this, 'us-cert-stack', {
       env: { region: 'us-east-1' },
@@ -41,7 +43,7 @@ export class ApiStage extends Stage {
     dnssecStack.addDependency(dnsStack);
 
     const apistack = new ApiStack(this, 'api-stack', {
-      sessionsTable: sessionsStack.sessionsTable,
+      sessionsTable: sessionsStack.sessionsTable, // TODO fix this stack dependency?
       configuration: this.configuration,
     });
 
