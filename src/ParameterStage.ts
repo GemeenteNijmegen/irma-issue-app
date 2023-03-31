@@ -86,11 +86,6 @@ export class ssmParamsConstruct extends Construct {
       parameterName: Statics.ssmBrpApiEndpointUrl,
     });
 
-    new SSM.StringParameter(this, 'ssm_slack_1', {
-      stringValue: '-',
-      parameterName: Statics.ssmSlackWebhookUrl,
-    });
-
     new SSM.StringParameter(this, 'ssm_api_1', {
       stringValue: '-',
       parameterName: Statics.ssmYiviApiHost,
@@ -109,11 +104,6 @@ export class ssmParamsConstruct extends Construct {
     new SecretsManager.Secret(this, 'secret_api_3', {
       secretName: Statics.secretYiviApiKey,
       description: 'YIVI API key',
-    });
-
-    new SSM.StringParameter(this, 'ssm_statistics_1', {
-      stringValue: '-',
-      parameterName: Statics.ssmYiviStatisticsRecipients,
     });
 
     new SSM.StringParameter(this, 'ssm_statistics_2', {
