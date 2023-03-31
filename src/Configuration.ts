@@ -76,7 +76,7 @@ const configurations: { [name: string] : Configuration } = {
     useDemoScheme: true,
     nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
     cnameRecords: {
-      '_2efd09bc809f1129572f073cb0873936': '_37726a837615087fa929e1970e5ad7c2.hsmgrxbjqd.acm-validations.aws',
+      _2efd09bc809f1129572f073cb0873936: '_37726a837615087fa929e1970e5ad7c2.hsmgrxbjqd.acm-validations.aws',
     },
   },
   production: {
@@ -90,7 +90,7 @@ const configurations: { [name: string] : Configuration } = {
     useDemoScheme: true, // For now keep this true, so we do not issue valid attributes untill everything works
     nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
     cnameRecords: {
-      '_988b6a082afeb2260ef3a85673b887c8': '_e38b4911aa3741d5dda4456d86105c4e.btsqtkxpyp.acm-validations.aws',
+      _988b6a082afeb2260ef3a85673b887c8: '_e38b4911aa3741d5dda4456d86105c4e.btsqtkxpyp.acm-validations.aws',
     },
   },
 };
