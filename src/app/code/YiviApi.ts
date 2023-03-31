@@ -1,7 +1,7 @@
 import { AWS } from '@gemeentenijmegen/utils';
 import { aws4Interceptor } from 'aws4-axios';
 import axios, { Axios } from 'axios';
-import { DigidLoa, loaToNumber } from './DigiDLoa';
+import { DigidLoa, loaToString } from './DigiDLoa';
 
 export class YiviApi {
 
@@ -154,7 +154,7 @@ export class YiviApi {
             cityofbirth: gegevens.Geboorteplaats,
             countryofbirth: gegevens.Geboorteland,
             bsn: brpData.Persoon.BSN.BSN,
-            digidlevel: `${loaToNumber(loa)}`,
+            digidlevel: `${loaToString(loa)}`,
             ...brpData.Persoon.ageLimits,
           },
         },
