@@ -106,8 +106,6 @@ export abstract class Statics {
   static readonly secretYiviApiSecretKey: string = '/cdk/yivi-issue-app/yivi-api-secret-key';
   static readonly secretYiviApiKey: string = '/cdk/yivi-issue-app/yivi-api-key';
 
-  static readonly ssmYiviStatisticsRecipients: string = '/cdk/yivi-issue-app/yivi-statistics/recipients';
-
   static readonly codeStarConnectionArn: string = 'arn:aws:codestar-connections:eu-west-1:418648875085:connection/4f647929-c982-4f30-94f4-24ff7dbf9766';
 
 

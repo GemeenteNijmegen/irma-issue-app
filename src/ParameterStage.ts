@@ -111,11 +111,6 @@ export class ssmParamsConstruct extends Construct {
       description: 'YIVI API key',
     });
 
-    new SSM.StringParameter(this, 'ssm_statistics_1', {
-      stringValue: '-',
-      parameterName: Statics.ssmYiviStatisticsRecipients,
-    });
-
     new SSM.StringParameter(this, 'ssm_statistics_2', {
       stringValue: '-',
       parameterName: Statics.ssmSubjectHashDiversifier,
