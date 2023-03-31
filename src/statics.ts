@@ -93,7 +93,6 @@ export abstract class Statics {
   static readonly ssmWafAclArn: string = '/cdk/yivi-issue-app/waf/acl-arn';
 
   static readonly ssmMonitoringLambdaArn: string = '/cdk/yivi-issue-app/monitoring-lambda-arn';
-  static readonly ssmSlackWebhookUrl: string = '/cdk/yivi-issue-app/slack-webhook-url';
 
   static readonly ssmSubjectHashDiversifier: string = '/cdk/yivi-issue-app/subject/diversifier';
 

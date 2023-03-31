@@ -86,11 +86,6 @@ export class ssmParamsConstruct extends Construct {
       parameterName: Statics.ssmBrpApiEndpointUrl,
     });
 
-    new SSM.StringParameter(this, 'ssm_slack_1', {
-      stringValue: '-',
-      parameterName: Statics.ssmSlackWebhookUrl,
-    });
-
     new SSM.StringParameter(this, 'ssm_api_1', {
       stringValue: '-',
       parameterName: Statics.ssmYiviApiHost,
