@@ -1,10 +1,6 @@
-import * as crypto from 'crypto';
 import {
-  aws_certificatemanager as CertificateManager,
-  Stack,
+  aws_certificatemanager as CertificateManager, aws_ssm as SSM, Stack,
   StackProps,
-  aws_ssm as SSM,
-  aws_route53 as route53,
 } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Configurable, Configuration } from './Configuration';
@@ -45,26 +41,6 @@ export class UsEastCertificateStack extends Stack {
       parameterName: Statics.certificateArn,
     });
 
-    if (configuration.cnameRecords) {
-      this.addCnameRecords(hostedZone, configuration.cnameRecords);
-    }
-
   }
 
-  /**
-   * Add the CNAME records to the hosted zone that are
-   * provided in the branch specific configuration
-   * @param hostedZone the hosted zone to add the records to
-   * @param cnameRecords configruation property containing the records
-   */
-  addCnameRecords(hostedZone: route53.IHostedZone, cnameRecords: { [key: string]: string }) {
-    Object.entries(cnameRecords).forEach(entry => {
-      const logicalId = crypto.createHash('md5').update(entry[0]).digest('hex').substring(0, 10);
-      new route53.CnameRecord(this, `record-${logicalId}`, {
-        zone: hostedZone,
-        recordName: entry[0],
-        domainName: entry[1],
-      });
-    });
-  }
 }
