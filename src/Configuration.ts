@@ -86,7 +86,7 @@ const configurations: { [name: string] : Configuration } = {
     codeStarConnectionArn: Statics.codeStarConnectionArn,
     includePipelineValidationChecks: false,
     setWafRatelimit: true,
-    useDemoScheme: true, // For now keep this true, so we do not issue valid attributes untill everything works
+    useDemoScheme: false,
     nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
     cnameRecords: {
       '_988b6a082afeb2260ef3a85673b887c8.yivi-issue.auth-prod.csp-nijmegen.nl': '_e38b4911aa3741d5dda4456d86105c4e.btsqtkxpyp.acm-validations.aws',
