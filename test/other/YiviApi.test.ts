@@ -2,7 +2,7 @@ import { YiviApi } from '../../src/app/code/YiviApi';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { AWS } from '@gemeentenijmegen/utils';
-import { DigidLoa, loaToNumber } from '../../src/app/code/DigiDLoa';
+import { DigidLoa, loaToString } from '../../src/app/code/DigiDLoa';
 import { TestUtils } from './TestUtils';
 
 const axiosMock = new MockAdapter(axios);
@@ -89,7 +89,7 @@ test('Check if yivi api adds aws4-singature and irma-authorization header and ri
     }
 
     const data = JSON.parse(request.data);
-    const loa = `${loaToNumber(DigidLoa.Substantieel)}`;
+    const loa = `${loaToString(DigidLoa.Substantieel)}`;
     expect(data?.credentials[1]?.attributes?.digidlevel).toBe(loa);
 });
 
@@ -118,7 +118,7 @@ test('Mapping BRP data', () => {
 
     // Check request buildup and LOA
     expect(yiviRequest.type).toBe('issuing');
-    expect(yiviRequest.credentials[1].attributes.digidlevel).toBe(`${loaToNumber(DigidLoa.Midden)}`);
+    expect(yiviRequest.credentials[1].attributes.digidlevel).toBe(loaToString(DigidLoa.Midden));
     expect(yiviRequest.credentials[0].credential).toBe('irma-demo.gemeente.address');
     expect(yiviRequest.credentials[1].credential).toBe('irma-demo.gemeente.personalData');
 

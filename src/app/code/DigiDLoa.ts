@@ -32,3 +32,29 @@ export function loaToNumber(loa: DigidLoa) {
       return 0;
   }
 }
+
+
+/**
+ * Given a DigiD LOA, proved a value that can be used to issue
+ * the Yivi DigiDLevel attribute.
+ * From the old issue app (https://github.com/GemeenteNijmegen/irma-brp-opladen) we know that
+ * there are 4 valid values:
+ * - 10 = Basis
+ * - 20 = Midden
+ * - 25 = Substantieel
+ * - 30 = Hoog
+ */
+export function loaToString(loa: DigidLoa) {
+  switch (loa) {
+    case DigidLoa.Hoog:
+      return 'Hoog';
+    case DigidLoa.Substantieel:
+      return 'Substantieel';
+    case DigidLoa.Midden:
+      return 'Midden';
+    case DigidLoa.Basis:
+      return 'Basis';
+    default:
+      return '';
+  }
+}
