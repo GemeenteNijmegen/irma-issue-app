@@ -45,12 +45,13 @@ export interface Configuration {
 
   /**
    * A list of CNAME records to register in the hosted zone
+   * Note: key should be withou domain suffix (only subdomain).
    */
   readonly cnameRecords?: {[key: string]: string};
 
   /**
    * If the issue lambda uses the demo scheme or the production scheme.
-   * Note: shoud only be true in production
+   * Note: shoud never be false except in prod.
    */
   readonly useDemoScheme: boolean;
 
@@ -75,7 +76,7 @@ const configurations: { [name: string] : Configuration } = {
     useDemoScheme: true,
     nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
     cnameRecords: {
-      '_2efd09bc809f1129572f073cb0873936.yivi-issue.accp.csp-nijmegen.nl': '_37726a837615087fa929e1970e5ad7c2.hsmgrxbjqd.acm-validations.aws',
+      _2efd09bc809f1129572f073cb0873936: '_37726a837615087fa929e1970e5ad7c2.hsmgrxbjqd.acm-validations.aws',
     },
   },
   production: {
@@ -89,7 +90,7 @@ const configurations: { [name: string] : Configuration } = {
     useDemoScheme: false,
     nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
     cnameRecords: {
-      '_988b6a082afeb2260ef3a85673b887c8.yivi-issue.auth-prod.csp-nijmegen.nl': '_e38b4911aa3741d5dda4456d86105c4e.btsqtkxpyp.acm-validations.aws',
+      _988b6a082afeb2260ef3a85673b887c8: '_e38b4911aa3741d5dda4456d86105c4e.btsqtkxpyp.acm-validations.aws',
     },
   },
 };

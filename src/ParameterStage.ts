@@ -57,7 +57,7 @@ export class ssmParamsConstruct extends Construct {
     });
 
     new SSM.StringParameter(this, 'ssm_auth_3', {
-      stringValue: 'openid idp_scoping:simulator service:DigiD_Midden idp_scoping:https://was-preprod1.digid.nl/saml/idp/metadata',
+      stringValue: 'openid idp_scoping:simulator service:DigiD_Midden idp_scoping:digid',
       parameterName: Statics.ssmOIDCScope,
     });
 
@@ -86,11 +86,6 @@ export class ssmParamsConstruct extends Construct {
       parameterName: Statics.ssmBrpApiEndpointUrl,
     });
 
-    new SSM.StringParameter(this, 'ssm_slack_1', {
-      stringValue: '-',
-      parameterName: Statics.ssmSlackWebhookUrl,
-    });
-
     new SSM.StringParameter(this, 'ssm_api_1', {
       stringValue: '-',
       parameterName: Statics.ssmYiviApiHost,
@@ -109,11 +104,6 @@ export class ssmParamsConstruct extends Construct {
     new SecretsManager.Secret(this, 'secret_api_3', {
       secretName: Statics.secretYiviApiKey,
       description: 'YIVI API key',
-    });
-
-    new SSM.StringParameter(this, 'ssm_statistics_1', {
-      stringValue: '-',
-      parameterName: Statics.ssmYiviStatisticsRecipients,
     });
 
     new SSM.StringParameter(this, 'ssm_statistics_2', {

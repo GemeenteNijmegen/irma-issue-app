@@ -82,7 +82,9 @@ test('StackHasApiGateway', () => {
   const app = new App();
   const keyStack = new KeyStack(app, 'keystack');
   const sessionsStack = new SessionsStack(app, 'test', { key: keyStack.key});
-  new DNSStack(app, 'dns');
+  new DNSStack(app, 'dns', {
+    configuration: config,
+  });
   const stack = new ApiStack(app, 'api', { 
     sessionsTable: sessionsStack.sessionsTable, 
     configuration: config,
@@ -96,7 +98,9 @@ test('StackHasLambdas', () => {
   const app = new App();
   const keyStack = new KeyStack(app, 'keystack');
   const sessionsStack = new SessionsStack(app, 'test', { key: keyStack.key});
-  new DNSStack(app, 'dns');
+  new DNSStack(app, 'dns', {
+    configuration: config,
+  });
   const stack = new ApiStack(app, 'api', { 
     sessionsTable: sessionsStack.sessionsTable, 
     configuration: config,
@@ -109,7 +113,7 @@ test('StackHasParameters', () => {
   const app = new App();
   const stack = new ParameterStack(app, 'test');
   const template = Template.fromStack(stack);
-  template.resourceCountIs('AWS::SSM::Parameter', 10);
+  template.resourceCountIs('AWS::SSM::Parameter', 8);
 });
 
 test('StackHasSecrets', () => {
