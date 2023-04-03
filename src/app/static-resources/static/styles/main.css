@@ -99,6 +99,11 @@ img {
   margin-bottom: 20px;
 }
 
+.button.secondary {
+  border: .15rem #363e6a solid;
+  color: #363e6a;
+}
+
 .button.primary {
   color: white;
   text-indent: 2.5em;
