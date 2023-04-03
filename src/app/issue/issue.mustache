@@ -14,8 +14,12 @@
     <p>Laad uw persoonsgegevens in de Yivi app door de QR code te scannen.</p>
     <div id="yivi-web-form"></div>
     
-    <a href="" id="retry-button" class="button primary {{^error}}hidden{{/error}}">Opnieuw proberen</a> {{!--   TODO make button? and change styling --}}
-    <a href="/logout" class="button primary">Uitloggen bij DigiD</a>
+    <button 
+        id="retry-button" 
+        onClick="window.location.reload();" 
+        class="button secondary {{^error}}hidden{{/error}}"
+    >Opnieuw proberen</button>
+    <a href="/logout" class="button secondary">Uitloggen bij DigiD</a>
 
 </main>
 
