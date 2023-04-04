@@ -18,6 +18,7 @@ const project = new GemeenteNijmegenCdkApp({
     '@aws-sdk/client-secrets-manager',
     '@aws-sdk/client-ssm',
     '@aws-sdk/client-ses',
+    '@aws-sdk/client-cloudwatch-logs',
     '@gemeentenijmegen/apiclient',
     '@gemeentenijmegen/session',
     '@gemeentenijmegen/utils',
