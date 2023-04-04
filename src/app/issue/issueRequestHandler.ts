@@ -93,7 +93,8 @@ async function storeIssueEventInSession(brpData: any, session: Session) {
   const gemeente = brpData?.Persoon?.Adres?.Gemeente;
   const loggedin = session.getValue('loggedin', 'BOOL') ?? false;
   const loa = session.getValue('loa');
-  const issueAttempt = (session.getValue('issueAttempt', 'N') ?? 0) + 1;
+  let issueAttempt = session.getValue('issueAttempt', 'N') ?? '0';
+  const incrementedIssueAttempt = parseInt(issueAttempt) + 1;
 
   try {
     await session.updateSession({
@@ -101,7 +102,7 @@ async function storeIssueEventInSession(brpData: any, session: Session) {
       bsn: { S: brpData.Persoon.BSN.BSN },
       gemeente: { S: gemeente },
       loa: { S: loa },
-      issueAttempt: { N: issueAttempt + 1 }, // Increment
+      issueAttempt: { N: incrementedIssueAttempt.toString() },
     });
   } catch (err) {
     console.log('Could not add issue statistics to session', err);
