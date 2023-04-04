@@ -65,12 +65,11 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   }
 
   // Log the issue event
-  if (!error) {
-    logIssueEvent(logsClient, brpData, session)
-      .then(() => console.debug('Logged issue event') )
-      .catch(err => console.error('Could not log issue event', err));
-    await storeIssueEventInSession(brpData, session);
-  }
+  logIssueEvent(logsClient, session, brpData, error) // Logs do not show in the console as we do not await
+    .then(() => console.debug('Logged issue event') )
+    .catch(err => console.error('Could not log issue event', err));
+
+  await storeIssueEventInSession(brpData, session);
 
   // Render the page
   const data = {
@@ -90,9 +89,10 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
  * @param session the uses session to store data in
  */
 async function storeIssueEventInSession(brpData: any, session: Session) {
-  const gemeente = brpData.Persoon.Adres.Gemeente;
+  const gemeente = brpData?.Persoon?.Adres?.Gemeente;
   const loggedin = session.getValue('loggedin', 'BOOL') ?? false;
   const loa = session.getValue('loa');
+  const issueAttempt = session.getValue('attempt', 'N') ?? 0;
 
   try {
     await session.updateSession({
@@ -100,29 +100,42 @@ async function storeIssueEventInSession(brpData: any, session: Session) {
       bsn: { S: brpData.Persoon.BSN.BSN },
       gemeente: { S: gemeente },
       loa: { S: loa },
+      issueAttempt: { N: issueAttempt + 1 }, // Increment
     });
   } catch (err) {
     console.log('Could not add issue statistics to session', err);
   }
 }
 
-
-async function logIssueEvent(client: CloudWatchLogsClient, brpData: any, session: Session) {
+/**
+ * Log the issue event to a separate log group
+ * @param client
+ * @param session
+ * @param brpData
+ * @param error
+ */
+async function logIssueEvent(client: CloudWatchLogsClient, session: Session, brpData: any, error?: string) {
 
   // Setup statistics data
   const bsn = session.getValue('bsn', 'S');
   const loa = session.getValue('loa');
+  const issueAttempt = session.getValue('attempt', 'N') ?? 0;
   const gemeente = brpData.Persoon.Adres.Gemeente;
   const timestamp = Date.now();
   const diversify = `${bsn}/${gemeente}/${process.env.DIVERSIFYER}`;
   const subject = crypto.createHash('sha256').update(diversify).digest('hex');
 
+  let message = JSON.stringify({ timestamp, gemeente, subject, loa, issueAttempt });
+  if (error) {
+    message = JSON.stringify({ timestamp, loa, issueAttempt, error });
+  }
+
   const input = {
-    logGroupName: process.env.STATISTICS_LOG_GROUP_ARN,
-    logStreamName: process.env.STATISTICS_LOG_STREAM,
+    logGroupName: process.env.STATISTICS_LOG_GROUP_NAME,
+    logStreamName: process.env.STATISTICS_LOG_STREAM_NAME,
     logEvents: [{
       timestamp: timestamp,
-      message: JSON.stringify({ timestamp, gemeente, subject, loa }),
+      message: message,
     }],
   };
   const command = new PutLogEventsCommand(input);
