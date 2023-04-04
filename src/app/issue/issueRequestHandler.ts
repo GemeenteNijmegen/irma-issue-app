@@ -1,3 +1,5 @@
+import * as crypto from 'crypto';
+import { CloudWatchLogsClient, PutLogEventsCommand } from '@aws-sdk/client-cloudwatch-logs';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
@@ -9,11 +11,18 @@ import { YiviApi } from '../code/YiviApi';
 /**
  * Check login and handle request
  */
-export async function issueRequestHandler(cookies: string, brpApi: BrpApi, yiviApi: YiviApi, dynamoDBClient: DynamoDBClient) {
+export async function issueRequestHandler(
+  cookies: string,
+  brpApi: BrpApi,
+  yiviApi: YiviApi,
+  dynamoDBClient: DynamoDBClient,
+  logsClient: CloudWatchLogsClient,
+) {
+
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
   if (session.isLoggedIn() == true) {
-    return handleLoggedinRequest(session, brpApi, yiviApi);
+    return handleLoggedinRequest(session, brpApi, yiviApi, logsClient);
   }
   return Response.redirect('/login');
 }
@@ -26,7 +35,7 @@ export async function issueRequestHandler(cookies: string, brpApi: BrpApi, yiviA
  * @param yiviApi
  * @returns
  */
-async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: YiviApi) {
+async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: YiviApi, logsClient: CloudWatchLogsClient) {
   let error = undefined;
 
   // BRP request
@@ -57,6 +66,9 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
 
   // Log the issue event
   if (!error) {
+    logIssueEvent(logsClient, brpData, session)
+      .then(() => console.debug('Logged issue event') )
+      .catch(err => console.error('Could not log issue event', err));
     await storeIssueEventInSession(brpData, session);
   }
 
@@ -80,14 +92,40 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
 async function storeIssueEventInSession(brpData: any, session: Session) {
   const gemeente = brpData.Persoon.Adres.Gemeente;
   const loggedin = session.getValue('loggedin', 'BOOL') ?? false;
+  const loa = session.getValue('loa');
 
   try {
     await session.updateSession({
       loggedin: { BOOL: loggedin },
       bsn: { S: brpData.Persoon.BSN.BSN },
       gemeente: { S: gemeente },
+      loa: { S: loa },
     });
   } catch (err) {
     console.log('Could not add issue statistics to session', err);
   }
+}
+
+
+async function logIssueEvent(client: CloudWatchLogsClient, brpData: any, session: Session) {
+
+  // Setup statistics data
+  const bsn = session.getValue('bsn', 'S');
+  const loa = session.getValue('loa');
+  const gemeente = brpData.Persoon.Adres.Gemeente;
+  const timestamp = Date.now();
+  const diversify = `${bsn}/${gemeente}/${process.env.DIVERSIFYER}`;
+  const subject = crypto.createHash('sha256').update(diversify).digest('hex');
+
+  const input = {
+    logGroupName: process.env.STATISTICS_LOG_GROUP_ARN,
+    logStreamName: process.env.STATISTICS_LOG_STREAM,
+    logEvents: [{
+      timestamp: timestamp,
+      message: JSON.stringify({ timestamp, gemeente, subject, loa }),
+    }],
+  };
+  const command = new PutLogEventsCommand(input);
+  await client.send(command);
+
 }

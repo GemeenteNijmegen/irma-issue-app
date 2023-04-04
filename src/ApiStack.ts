@@ -1,6 +1,6 @@
 import * as apigatewayv2 from '@aws-cdk/aws-apigatewayv2-alpha';
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
-import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM } from 'aws-cdk-lib';
+import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM, aws_logs as logs } from 'aws-cdk-lib';
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
 import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
@@ -63,9 +63,12 @@ export class ApiStack extends Stack {
    */
   setFunctions(props: ApiStackProps, baseUrl: string, readOnlyRole: Role) {
 
+    const diversifiyer = SSM.StringParameter.valueForStringParameter(this, Statics.ssmSubjectHashDiversifier);
+    const statisticsLogGroup = this.setupStatisticsLogGroup();
+    const statisticsLogStream = this.setupStatisticsLogGroupStream(statisticsLogGroup);
+
     // See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html
     const insightsArn = `arn:aws:lambda:${this.region}:580247275435:layer:LambdaInsightsExtension:16`;
-
 
     const authBaseUrl = SSM.StringParameter.fromStringParameterName(this, 'ssm-auth-base-url', Statics.ssmAuthUrlBaseParameter);
     const odicClientId = SSM.StringParameter.fromStringParameterName(this, 'ssm-odic-client-id', Statics.ssmOIDCClientID);
@@ -137,10 +140,13 @@ export class ApiStack extends Stack {
         MTLS_ROOT_CA_NAME: Statics.ssmMTLSRootCA,
         BRP_API_URL: Statics.ssmBrpApiEndpointUrl,
         YIVI_API_HOST: Statics.ssmYiviApiHost,
-        YIVI_API_DEMO: props.configuration.useDemoScheme ? 'demo': '',
+        YIVI_API_DEMO: props.configuration.useDemoScheme ? 'demo' : '',
         YIVI_API_ACCESS_KEY_ID_ARN: secretYiviApiAccessKeyId.secretArn,
         YIVI_API_SECRET_KEY_ARN: secretYiviApiSecretKey.secretArn,
         YIVI_API_KEY_ARN: secretYiviApiKey.secretArn,
+        STATISTICS_LOG_GROUP_ARN: statisticsLogGroup.logGroupArn,
+        STATISTICS_LOG_STREAM: statisticsLogStream.logStreamName,
+        DIVERSIFYER: diversifiyer,
       },
       lambdaInsightsExtensionArn: insightsArn,
     }, IssueFunction);
@@ -152,8 +158,8 @@ export class ApiStack extends Stack {
     secretYiviApiAccessKeyId.grantRead(issueFunction.lambda);
     secretYiviApiSecretKey.grantRead(issueFunction.lambda);
     secretYiviApiKey.grantRead(issueFunction.lambda);
+    statisticsLogGroup.grantWrite(issueFunction.lambda);
 
-    const diversifiyer = SSM.StringParameter.valueForStringParameter(this, Statics.ssmSubjectHashDiversifier);
     const callbackFunction = new ApiFunction(this, 'yivi-issue-callback-function', {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
@@ -248,4 +254,20 @@ export class ApiStack extends Stack {
       }),
     );
   }
+
+  setupStatisticsLogGroup() {
+    const group = new logs.LogGroup(this, 'statistics-logs', {
+      logGroupName: 'yivi-statistics-logs',
+      retention: logs.RetentionDays.EIGHTEEN_MONTHS,
+    });
+    return group;
+  }
+
+  setupStatisticsLogGroupStream(group: logs.LogGroup) {
+    return new logs.LogStream(this, 'statistics-log-stream', {
+      logGroup: group,
+      logStreamName: 'yivi-statistics-logs-stream',
+    });
+  }
+
 }
