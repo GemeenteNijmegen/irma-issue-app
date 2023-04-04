@@ -5,6 +5,7 @@ import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import { BrpApi } from './BrpApi';
 import * as template from './issue.mustache';
+import { loaToString } from '../code/DigiDLoa';
 import render from '../code/Render';
 import { YiviApi } from '../code/YiviApi';
 
@@ -92,7 +93,7 @@ async function storeIssueEventInSession(brpData: any, session: Session) {
   const gemeente = brpData?.Persoon?.Adres?.Gemeente;
   const loggedin = session.getValue('loggedin', 'BOOL') ?? false;
   const loa = session.getValue('loa');
-  const issueAttempt = session.getValue('attempt', 'N') ?? 0;
+  const issueAttempt = session.getValue('issueAttempt', 'N') ?? 0;
 
   try {
     await session.updateSession({
@@ -118,8 +119,8 @@ async function logIssueEvent(client: CloudWatchLogsClient, session: Session, brp
 
   // Setup statistics data
   const bsn = session.getValue('bsn', 'S');
-  const loa = session.getValue('loa');
-  const issueAttempt = session.getValue('attempt', 'N') ?? 0;
+  const loa = loaToString(session.getValue('loa'));
+  const issueAttempt = session.getValue('issueAttempt', 'N') ?? 0;
   const gemeente = brpData.Persoon.Adres.Gemeente;
   const timestamp = Date.now();
   const diversify = `${bsn}/${gemeente}/${process.env.DIVERSIFYER}`;
