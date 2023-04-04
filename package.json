@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@gemeentenijmegen/projen-project-type": "^1.4.0",
-    "@playwright/test": "^1.32.1",
+    "@playwright/test": "^1.32.2",
     "@types/jest": "^27.5.2",
     "@types/node": "^16",
     "@typescript-eslint/eslint-plugin": "^5",
@@ -58,7 +58,7 @@
     "jest-junit": "^15",
     "jest-raw-loader": "^1.0.1",
     "npm-check-updates": "^16",
-    "projen": "^0.70.6",
+    "projen": "^0.70.9",
     "standard-version": "^9",
     "ts-jest": "^27.1.5",
     "ts-node": "^10.9.1",
