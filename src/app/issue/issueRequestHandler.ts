@@ -109,10 +109,10 @@ async function storeIssueEventInSession(brpData: any, session: Session) {
 
 /**
  * Log the issue event to a separate log group
- * @param client 
- * @param session 
- * @param brpData 
- * @param error 
+ * @param client
+ * @param session
+ * @param brpData
+ * @param error
  */
 async function logIssueEvent(client: CloudWatchLogsClient, session: Session, brpData: any, error?: string) {
 
