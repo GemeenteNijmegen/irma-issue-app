@@ -65,12 +65,12 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     }
   }
 
+  await storeIssueEventInSession(brpData, session);
+
   // Log the issue event
   logIssueEvent(logsClient, session, brpData, error) // Logs do not show in the console as we do not await
     .then(() => console.debug('Logged issue event') )
     .catch(err => console.error('Could not log issue event', err));
-
-  await storeIssueEventInSession(brpData, session);
 
   // Render the page
   const data = {
@@ -93,7 +93,7 @@ async function storeIssueEventInSession(brpData: any, session: Session) {
   const gemeente = brpData?.Persoon?.Adres?.Gemeente;
   const loggedin = session.getValue('loggedin', 'BOOL') ?? false;
   const loa = session.getValue('loa');
-  const issueAttempt = session.getValue('issueAttempt', 'N') ?? 0;
+  const issueAttempt = (session.getValue('issueAttempt', 'N') ?? 0) + 1;
 
   try {
     await session.updateSession({
