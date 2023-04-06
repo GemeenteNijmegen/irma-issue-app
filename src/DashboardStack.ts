@@ -19,8 +19,9 @@ export class DashboardStack extends Stack {
 
     // Create the widgets
     const timeLine = this.createTimeLineWidget(logGroup);
-    const piePerGemeente = this.createIssuePerGemeente(logGroup, Visualization.PIE);
-    const tablePerGemeente = this.createIssuePerGemeente(logGroup, Visualization.TABLE);
+    const piePerGemeente = this.createIssuePiePerGemeente(logGroup);
+    const tablePerGemeente = this.createIssueTablePerGemeente(logGroup);
+    const tableTotalIssued = this.createTotalIssued(logGroup);
     const tableDuplicateIssues = this.createDuplicateIssueWidget(logGroup);
     const errorOccurences = this.createErrorOccurencesWidget(logGroup);
 
@@ -28,7 +29,7 @@ export class DashboardStack extends Stack {
     const layout = [
       [timeLine],
       [piePerGemeente, tablePerGemeente, tableDuplicateIssues],
-      [errorOccurences],
+      [errorOccurences, tableTotalIssued],
     ];
 
     // Create the dashboard
@@ -69,6 +70,7 @@ export class DashboardStack extends Stack {
         'fields gemeente',
         'filter not isempty(subject) and nr_of_issues_per_subject > 1',
         'stats count(subject) as nr_of_issues_per_subject by gemeente, subject',
+        'sort gemeente',
       ],
     });
   }
@@ -88,18 +90,47 @@ export class DashboardStack extends Stack {
     });
   }
 
-  createIssuePerGemeente(logGroup: string, view: cloudwatch.LogQueryVisualizationType) {
+  createIssuePiePerGemeente(logGroup: string) {
     return new cloudwatch.LogQueryWidget({
       title: 'Issue events per gemeente',
       width: 8,
       height: 12,
       logGroupNames: [logGroup],
-      view,
+      view: cloudwatch.LogQueryVisualizationType.PIE,
       queryLines: [
         'fields subject, gemeente',
         'filter not isempty(subject)',
         'stats count(subject) as counts by gemeente',
         'sort gemeente',
+      ],
+    });
+  }
+
+  createIssueTablePerGemeente(logGroup: string ) {
+    return new cloudwatch.LogQueryWidget({
+      title: 'Issue events per gemeente',
+      width: 8,
+      height: 12,
+      logGroupNames: [logGroup],
+      view: cloudwatch.LogQueryVisualizationType.TABLE,
+      queryLines: [
+        'filter not isempty(subject)',
+        'stats count(subject) as issued by gemeente',
+        'sort issued desc',
+      ],
+    });
+  }
+
+  createTotalIssued(logGroup: string ) {
+    return new cloudwatch.LogQueryWidget({
+      title: 'Total issued in time range',
+      width: 8,
+      height: 4,
+      logGroupNames: [logGroup],
+      view: cloudwatch.LogQueryVisualizationType.TABLE,
+      queryLines: [
+        'filter not isempty(subject)',
+        'stats count(subject) as issued',
       ],
     });
   }
