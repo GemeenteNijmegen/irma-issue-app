@@ -295,20 +295,4 @@ export class ApiStack extends Stack {
     });
   }
 
-  setupCustomMetrics(authLambdaLogGroup: logs.LogGroup, issueLambdaLogGroup: logs.LogGroup) {
-    new logs.MetricFilter(this, 'metric-authentications', {
-      metricNamespace: 'yivi-issue-app',
-      metricName: 'successful-authentications',
-      filterPattern: logs.FilterPattern.allTerms('Authentication successful'),
-      logGroup: authLambdaLogGroup,
-    });
-
-    new logs.MetricFilter(this, 'metric-issue-events', {
-      metricNamespace: 'yivi-issue-app',
-      metricName: 'issue-events',
-      filterPattern: logs.FilterPattern.allTerms('Authentication successful'),
-      logGroup: issueLambdaLogGroup,
-    });
-  }
-
 }
