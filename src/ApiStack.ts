@@ -64,8 +64,12 @@ export class ApiStack extends Stack {
   setFunctions(props: ApiStackProps, baseUrl: string, readOnlyRole: Role) {
 
     const diversifiyer = SSM.StringParameter.valueForStringParameter(this, Statics.ssmSubjectHashDiversifier);
+
     const statisticsLogGroup = this.setupStatisticsLogGroup();
     const statisticsLogStream = this.setupStatisticsLogGroupStream(statisticsLogGroup);
+
+    const tickenLogGroup = this.setupTickenLogGroup();
+    const tickenLogStream = this.setupTickenLogGroupStream(tickenLogGroup);
 
     // See https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-extension-versionsx86-64.html
     const insightsArn = `arn:aws:lambda:${this.region}:580247275435:layer:LambdaInsightsExtension:16`;
@@ -112,6 +116,8 @@ export class ApiStack extends Stack {
         AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
         OIDC_CLIENT_ID_SSM: Statics.ssmOIDCClientID,
         OIDC_SCOPE_SSM: Statics.ssmOIDCScope,
+        TICKEN_LOG_GROUP_NAME: tickenLogGroup.logGroupName,
+        TICKEN_LOG_STREAM_NAME: tickenLogStream.logStreamName,
       },
       lambdaInsightsExtensionArn: insightsArn,
     }, AuthFunction);
@@ -119,6 +125,8 @@ export class ApiStack extends Stack {
     authBaseUrl.grantRead(authFunction.lambda);
     odicClientId.grantRead(authFunction.lambda);
     oidcScope.grantRead(authFunction.lambda);
+    tickenLogGroup.grantWrite(loginFunction.lambda);
+
 
     const secretMTLSPrivateKey = aws_secretsmanager.Secret.fromSecretNameV2(this, 'tls-key-secret', Statics.secretMTLSPrivateKey);
     const tlskeyParam = SSM.StringParameter.fromStringParameterName(this, 'tlskey', Statics.ssmMTLSClientCert);
@@ -146,6 +154,8 @@ export class ApiStack extends Stack {
         YIVI_API_KEY_ARN: secretYiviApiKey.secretArn,
         STATISTICS_LOG_GROUP_NAME: statisticsLogGroup.logGroupName,
         STATISTICS_LOG_STREAM_NAME: statisticsLogStream.logStreamName,
+        TICKEN_LOG_GROUP_NAME: tickenLogGroup.logGroupName,
+        TICKEN_LOG_STREAM_NAME: tickenLogStream.logStreamName,
         DIVERSIFYER: diversifiyer,
       },
       lambdaInsightsExtensionArn: insightsArn,
@@ -159,6 +169,7 @@ export class ApiStack extends Stack {
     secretYiviApiSecretKey.grantRead(issueFunction.lambda);
     secretYiviApiKey.grantRead(issueFunction.lambda);
     statisticsLogGroup.grantWrite(issueFunction.lambda);
+    tickenLogGroup.grantWrite(issueFunction.lambda);
 
     const callbackFunction = new ApiFunction(this, 'yivi-issue-callback-function', {
       table: this.sessionsTable,
@@ -267,6 +278,20 @@ export class ApiStack extends Stack {
     return new logs.LogStream(this, 'statistics-log-stream', {
       logGroup: group,
       logStreamName: 'yivi-statistics-logs-stream',
+    });
+  }
+
+  setupTickenLogGroup() {
+    return new logs.LogGroup(this, 'ticken-logs', {
+      logGroupName: 'yivi-ticken-logs',
+      retention: logs.RetentionDays.EIGHTEEN_MONTHS,
+    });
+  }
+
+  setupTickenLogGroupStream(group: logs.LogGroup) {
+    return new logs.LogStream(this, 'ticken-log-stream', {
+      logGroup: group,
+      logStreamName: 'yivi-ticken-logs-stream',
     });
   }
 

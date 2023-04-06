@@ -1,11 +1,12 @@
 import * as crypto from 'crypto';
-import { CloudWatchLogsClient, PutLogEventsCommand } from '@aws-sdk/client-cloudwatch-logs';
+import { CloudWatchLogsClient } from '@aws-sdk/client-cloudwatch-logs';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import { BrpApi } from './BrpApi';
 import * as template from './issue.mustache';
 import { loaToString } from '../code/DigiDLoa';
+import { LogsUtil } from '../code/LogsUtil';
 import render from '../code/Render';
 import { YiviApi } from '../code/YiviApi';
 
@@ -45,6 +46,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   if (!error) {
     const bsn = session.getValue('bsn');
     brpData = await brpApi.getBrpData(bsn);
+    await LogsUtil.logToCloudWatch(logsClient, 'TICK: BRP', process.env.TICKEN_LOG_GROUP_NAME, process.env.TICKEN_LOG_STREAM_NAME);
     naam = brpData?.Persoon?.Persoonsgegevens?.Naam;
     if (brpData.error || !naam) {
       error = 'Het ophalen van uw persoonsgegevens is mis gegaan. Propeer het later opnieuw.';
@@ -66,11 +68,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
   }
 
   await storeIssueEventInSession(brpData, session);
-
-  // Log the issue event
-  logIssueEvent(logsClient, session, brpData, error) // Logs do not show in the console as we do not await
-    .then(() => console.debug('Logged issue event') )
-    .catch(err => console.error('Could not log issue event', err));
+  await logIssueEvent(logsClient, session, brpData, error);
 
   // Render the page
   const data = {
@@ -93,13 +91,14 @@ async function storeIssueEventInSession(brpData: any, session: Session) {
   const gemeente = brpData?.Persoon?.Adres?.Gemeente;
   const loggedin = session.getValue('loggedin', 'BOOL') ?? false;
   const loa = session.getValue('loa');
+  const bsn = session.getValue('bsn');
   let issueAttempt = session.getValue('issueAttempt', 'N') ?? '0';
   const incrementedIssueAttempt = parseInt(issueAttempt) + 1;
 
   try {
     await session.updateSession({
       loggedin: { BOOL: loggedin },
-      bsn: { S: brpData.Persoon.BSN.BSN },
+      bsn: { S: bsn },
       gemeente: { S: gemeente },
       loa: { S: loa },
       issueAttempt: { N: incrementedIssueAttempt.toString() },
@@ -122,7 +121,7 @@ async function logIssueEvent(client: CloudWatchLogsClient, session: Session, brp
   const bsn = session.getValue('bsn', 'S');
   const loa = loaToString(session.getValue('loa'));
   const issueAttempt = session.getValue('issueAttempt', 'N') ?? 0;
-  const gemeente = brpData.Persoon.Adres.Gemeente;
+  const gemeente = brpData?.Persoon?.Adres?.Gemeente;
   const timestamp = Date.now();
   const diversify = `${bsn}/${gemeente}/${process.env.DIVERSIFYER}`;
   const subject = crypto.createHash('sha256').update(diversify).digest('hex');
@@ -132,15 +131,8 @@ async function logIssueEvent(client: CloudWatchLogsClient, session: Session, brp
     message = JSON.stringify({ timestamp, loa, issueAttempt, error });
   }
 
-  const input = {
-    logGroupName: process.env.STATISTICS_LOG_GROUP_NAME,
-    logStreamName: process.env.STATISTICS_LOG_STREAM_NAME,
-    logEvents: [{
-      timestamp: timestamp,
-      message: message,
-    }],
-  };
-  const command = new PutLogEventsCommand(input);
-  await client.send(command);
+  const group = process.env.STATISTICS_LOG_GROUP_NAME;
+  const stream = process.env.STATISTICS_LOG_STREAM_NAME;
+  await LogsUtil.logToCloudWatch(client, message, group, stream);
 
 }

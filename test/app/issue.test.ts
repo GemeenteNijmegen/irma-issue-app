@@ -33,6 +33,11 @@ beforeAll(async () => {
     console.error = jest.fn();
     console.time = jest.fn();
 
+    process.env.STATISTICS_LOG_GROUP_NAME = 'statistics-group';
+    process.env.STATISTICS_LOG_STREAM_NAME = 'statistics-stream',
+    process.env.TICKEN_LOG_GROUP_NAME= 'ticken-group'
+    process.env.TICKEN_LOG_STREAM_NAME = 'ticken-stream';
+
     // Setup BRP and Yivi client
     process.env.BRP_API_URL = 'https://example.com/brp/api/test';
     await brpApi.init();
