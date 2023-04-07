@@ -49,9 +49,6 @@
           "spawn": "bundle:app/auth/auth.lambda"
         },
         {
-          "spawn": "bundle:app/callback/callback.lambda"
-        },
-        {
           "spawn": "bundle:app/issue/issue.lambda"
         },
         {
@@ -77,24 +74,6 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/app/auth/auth.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/auth/auth.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
-        }
-      ]
-    },
-    "bundle:app/callback/callback.lambda": {
-      "name": "bundle:app/callback/callback.lambda",
-      "description": "Create a JavaScript bundle from src/app/callback/callback.lambda.ts",
-      "steps": [
-        {
-          "exec": "esbuild --bundle src/app/callback/callback.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/callback/callback.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
-        }
-      ]
-    },
-    "bundle:app/callback/callback.lambda:watch": {
-      "name": "bundle:app/callback/callback.lambda:watch",
-      "description": "Continuously update the JavaScript bundle from src/app/callback/callback.lambda.ts",
-      "steps": [
-        {
-          "exec": "esbuild --bundle src/app/callback/callback.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/callback/callback.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
         }
       ]
     },
