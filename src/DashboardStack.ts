@@ -16,7 +16,7 @@ export class DashboardStack extends Stack {
 
     // Import the log group containing the statistics logging through ssm
     const statisticsLogGroup = ssm.StringParameter.valueForStringParameter(this, Statics.ssmStatisticsLogGroup);
-    const tickenLogGroup = ssm.StringParameter.valueForStringParameter(this, Statics.ssmStatisticsLogGroup);
+    const tickenLogGroup = ssm.StringParameter.valueForStringParameter(this, Statics.ssmTickenLogGroup);
 
     // Create the widgets
     const timeLine = this.createTimeLineWidget(statisticsLogGroup);
