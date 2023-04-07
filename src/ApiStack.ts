@@ -1,13 +1,11 @@
 import * as apigatewayv2 from '@aws-cdk/aws-apigatewayv2-alpha';
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
-import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM, aws_logs as logs } from 'aws-cdk-lib';
+import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM, aws_logs as logs, aws_ssm as ssm } from 'aws-cdk-lib';
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
 import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
-import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
 import { AuthFunction } from './app/auth/auth-function';
-import { CallbackFunction } from './app/callback/callback-function';
 import { IssueFunction } from './app/issue/issue-function';
 import { LoginFunction } from './app/login/login-function';
 import { LogoutFunction } from './app/logout/logout-function';
@@ -171,20 +169,6 @@ export class ApiStack extends Stack {
     statisticsLogGroup.grantWrite(issueFunction.lambda);
     tickenLogGroup.grantWrite(issueFunction.lambda);
 
-    const callbackFunction = new ApiFunction(this, 'yivi-issue-callback-function', {
-      table: this.sessionsTable,
-      tablePermissions: 'ReadWrite',
-      applicationUrlBase: baseUrl,
-      readOnlyRole,
-      description: 'Callback-lambda voor de YIVI issue-applicatie.',
-      logRetention: RetentionDays.EIGHTEEN_MONTHS, // Keep track of statistics for 1.5 year
-      ssmLogGroup: Statics.ssmStatisticsLogGroup,
-      environment: {
-        DIVERSIFYER: diversifiyer,
-      },
-      lambdaInsightsExtensionArn: insightsArn,
-    }, CallbackFunction);
-
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('yivi-issue-login', loginFunction.lambda),
       path: '/login',
@@ -209,11 +193,6 @@ export class ApiStack extends Stack {
       methods: [apigatewayv2.HttpMethod.GET],
     });
 
-    this.api.addRoutes({
-      integration: new HttpLambdaIntegration('yivi-issue-success', callbackFunction.lambda),
-      path: '/callback',
-      methods: [apigatewayv2.HttpMethod.GET],
-    });
   }
 
   /**
@@ -271,6 +250,12 @@ export class ApiStack extends Stack {
       logGroupName: 'yivi-statistics-logs',
       retention: logs.RetentionDays.EIGHTEEN_MONTHS,
     });
+
+    new ssm.StringParameter(this, 'statistics-logs-ssm', {
+      parameterName: Statics.ssmStatisticsLogGroup,
+      stringValue: group.logGroupName,
+    });
+
     return group;
   }
 

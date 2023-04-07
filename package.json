@@ -6,8 +6,6 @@
     "bundle": "npx projen bundle",
     "bundle:app/auth/auth.lambda": "npx projen bundle:app/auth/auth.lambda",
     "bundle:app/auth/auth.lambda:watch": "npx projen bundle:app/auth/auth.lambda:watch",
-    "bundle:app/callback/callback.lambda": "npx projen bundle:app/callback/callback.lambda",
-    "bundle:app/callback/callback.lambda:watch": "npx projen bundle:app/callback/callback.lambda:watch",
     "bundle:app/issue/issue.lambda": "npx projen bundle:app/issue/issue.lambda",
     "bundle:app/issue/issue.lambda:watch": "npx projen bundle:app/issue/issue.lambda:watch",
     "bundle:app/login/login.lambda": "npx projen bundle:app/login/login.lambda",
