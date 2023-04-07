@@ -15,48 +15,27 @@ export class DashboardStack extends Stack {
     super(scope, id, props);
 
     // Import the log group containing the statistics logging through ssm
-    const logGroup = ssm.StringParameter.valueForStringParameter(this, Statics.ssmStatisticsLogGroup);
+    const statisticsLogGroup = ssm.StringParameter.valueForStringParameter(this, Statics.ssmStatisticsLogGroup);
+    const tickenLogGroup = ssm.StringParameter.valueForStringParameter(this, Statics.ssmStatisticsLogGroup);
 
     // Create the widgets
-    const timeLine = this.createTimeLineWidget(logGroup);
-    const piePerGemeente = this.createIssuePiePerGemeente(logGroup);
-    const tablePerGemeente = this.createIssueTablePerGemeente(logGroup);
-    const tableTotalIssued = this.createTotalIssued(logGroup);
-    const tableDuplicateIssues = this.createDuplicateIssueWidget(logGroup);
-    const errorOccurences = this.createErrorOccurencesWidget(logGroup);
+    const timeLine = this.createTimeLineWidget(statisticsLogGroup);
+    const piePerGemeente = this.createIssuePiePerGemeente(statisticsLogGroup);
+    const tablePerGemeente = this.createIssueTablePerGemeente(statisticsLogGroup);
+    const tableTotalIssued = this.createTotalIssued(statisticsLogGroup);
+    const tableDuplicateIssues = this.createDuplicateIssueWidget(statisticsLogGroup);
+    const tickenTimeLine = this.createTimelineTickenWidget(tickenLogGroup);
 
     // Create the layout
     const layout = [
       [timeLine],
+      [tableTotalIssued, tickenTimeLine],
       [piePerGemeente, tablePerGemeente, tableDuplicateIssues],
-      [errorOccurences, tableTotalIssued],
     ];
 
     // Create the dashboard
     this.createDashboard(layout);
 
-  }
-
-  /**
-   * Note: this includes front-end error (from yivi.js) that are send
-   * using the callback function only. Other lambdas have their own logging
-   * and are not included in this widget.
-   * @param logGroup
-   * @returns
-   */
-  createErrorOccurencesWidget(logGroup: string) {
-    return new cloudwatch.LogQueryWidget({
-      title: 'Errors and occurences',
-      width: 8,
-      height: 12,
-      logGroupNames: [logGroup],
-      view: Visualization.TABLE,
-      queryLines: [
-        'fields error, nr_of_occurences',
-        'stats count(error) as nr_of_occurences by error',
-        'filter not isempty(subject) and not isempty(error) and error not like "undefined"',
-      ],
-    });
   }
 
   createDuplicateIssueWidget(logGroup: string) {
@@ -83,9 +62,22 @@ export class DashboardStack extends Stack {
       logGroupNames: [logGroup],
       view: Visualization.LINE,
       queryLines: [
-        'fields success =  1 as r1, success = 0 as r2',
         'filter not isempty(subject)',
-        'stats sum(r1) as successful, sum(r2) as failed by bin(1h)',
+        'stats count(subject) as issued by bin(1h)',
+      ],
+    });
+  }
+
+  createTimelineTickenWidget(logGroup: string) {
+    return new cloudwatch.LogQueryWidget({
+      title: 'BRP and DigiD requests per hour',
+      width: 16,
+      height: 6,
+      logGroupNames: [logGroup],
+      view: Visualization.LINE,
+      queryLines: [
+        'fields @message like /TICK\: BRP/ as brp, @message like /TICK\: DigiD/ as digid',
+        'stats count(brp) as BRP, count(digid) as DigiD by bin(1h)',
       ],
     });
   }
