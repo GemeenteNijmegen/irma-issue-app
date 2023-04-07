@@ -267,10 +267,17 @@ export class ApiStack extends Stack {
   }
 
   setupTickenLogGroup() {
-    return new logs.LogGroup(this, 'ticken-logs', {
+    const group = new logs.LogGroup(this, 'ticken-logs', {
       logGroupName: 'yivi-ticken-logs',
       retention: logs.RetentionDays.EIGHTEEN_MONTHS,
     });
+
+    new ssm.StringParameter(this, 'ticken-logs-ssm', {
+      parameterName: Statics.ssmTickenLogGroup,
+      stringValue: group.logGroupName,
+    })
+
+    return group;
   }
 
   setupTickenLogGroupStream(group: logs.LogGroup) {

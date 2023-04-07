@@ -4,6 +4,7 @@ export abstract class Statics {
 
   // Statistics
   static readonly ssmStatisticsLogGroup: string = '/cdk/yivi-issue-app/statistics/log-group-name';
+  static readonly ssmTickenLogGroup: string = '/cdk/yivi-issue-app/ticken/log-group-name';
 
   /**
    * IAM params
