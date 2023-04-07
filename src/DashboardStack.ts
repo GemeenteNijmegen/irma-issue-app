@@ -45,10 +45,10 @@ export class DashboardStack extends Stack {
       height: 12,
       logGroupNames: [logGroup],
       view: Visualization.TABLE,
-      queryLines: [ // not the best way to list this (however we are running into limitations of cloudwatch here)
-        'fields gemeente',
-        'filter not isempty(subject) and nr_of_issues_per_subject > 1',
-        'stats count(subject) as nr_of_issues_per_subject by gemeente, subject',
+      queryLines: [
+        'filter not isempty(subject) and issueAttempt = 1', // Filter before count
+        'stats count(subject) as nr_of_issues_per_subject by gemeente, subject', // count
+        'filter nr_of_issues_per_subject > 1', // Filter after count
         'sort gemeente',
       ],
     });
@@ -77,7 +77,7 @@ export class DashboardStack extends Stack {
       view: Visualization.LINE,
       queryLines: [
         'fields @message like /TICK\: BRP/ as brp, @message like /TICK\: DigiD/ as digid',
-        'stats count(brp) as BRP, count(digid) as DigiD by bin(1h)',
+        'stats sum(brp) as BRP, sum(digid) as DigiD by bin(1h)',
       ],
     });
   }
