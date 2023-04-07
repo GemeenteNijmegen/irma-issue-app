@@ -35,15 +35,9 @@ if (yiviFullSessionEncoded) {
     });
 
     yiviClient.start()
-        .then(() => {
-            fetch('/callback?result=success')
-                .then(() => console.log('Callback succesfull'))
-                .catch(err => console.log('Callback failed', err));
-        })
+        .then(() => console.log('Issuing completed!'))
         .catch((err) => {
             document.getElementById('retry-button').classList.remove('hidden');
-            fetch(encodeURI('/callback?result=failure&error=' + err))
-                .then(() => console.log('Callback succesfull'))
-                .catch(err => console.log('Callback failed', err));
+            console.error("Could not complete issuing session", err);
         });
 }

@@ -1,8 +1,10 @@
+import { CloudWatchLogsClient } from '@aws-sdk/client-cloudwatch-logs';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import { Session } from '@gemeentenijmegen/session';
 import { IdTokenClaims } from 'openid-client';
 import { DigidLoa } from '../code/DigiDLoa';
+import { LogsUtil } from '../code/LogsUtil';
 import { OpenIDConnect } from '../code/OpenIDConnect';
 
 export async function handleRequest(
@@ -11,6 +13,7 @@ export async function handleRequest(
   queryStringParamState: string,
   dynamoDBClient: DynamoDBClient,
   OIDC: OpenIDConnect,
+  logsClient: CloudWatchLogsClient,
 ) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
@@ -21,6 +24,7 @@ export async function handleRequest(
   const state = session.getValue('state');
   try {
     const claims = await OIDC.authorize(queryStringParamCode, state, queryStringParamState);
+    await LogsUtil.logToCloudWatch(logsClient, 'TICK: DigiD', process.env.TICKEN_LOG_GROUP_NAME, process.env.TICKEN_LOG_STREAM_NAME);
     return await authenticate(session, claims);
   } catch (error: any) {
     console.error(error.message);

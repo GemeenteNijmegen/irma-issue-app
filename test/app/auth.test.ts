@@ -1,6 +1,8 @@
+import { CloudWatchLogsClient, PutLogEventsCommand } from '@aws-sdk/client-cloudwatch-logs';
 import { DynamoDBClient, GetItemCommand, GetItemCommandOutput } from '@aws-sdk/client-dynamodb';
 import { SecretsManagerClient, GetSecretValueCommandOutput, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import { mockClient } from 'aws-sdk-client-mock';
+import { randomUUID } from 'crypto';
 import { handleRequest } from '../../src/app/auth/handleRequest';
 import { OpenIDConnect } from '../../src/app/code/OpenIDConnect';
 
@@ -30,6 +32,9 @@ beforeAll( async () => {
   process.env.OIDC_CLIENT_ID_SSM = '1234';
   process.env.OIDC_SCOPE_SSM = 'openid';
 
+  process.env.TICKEN_LOG_GROUP_NAME= 'ticken-group'
+  process.env.TICKEN_LOG_STREAM_NAME = 'ticken-stream';
+
   await OIDC.init();
 
   const output: GetSecretValueCommandOutput = {
@@ -40,6 +45,7 @@ beforeAll( async () => {
 
 });
 
+const logsMock = mockClient(CloudWatchLogsClient);
 const ddbMock = mockClient(DynamoDBClient);
 const secretsMock = mockClient(SecretsManagerClient);
 
@@ -75,10 +81,12 @@ jest.mock('openid-client', () => {
 
 beforeEach(() => {
   ddbMock.reset();
+  logsMock.reset();
 });
 
 test('Successful auth redirects to home', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
+  const logsClient = new CloudWatchLogsClient({ region: 'eu-west-1' });
   const sessionId = '12345';
   const getItemOutput: Partial<GetItemCommandOutput> = {
     Item: {
@@ -92,8 +100,13 @@ test('Successful auth redirects to home', async () => {
     },
   };
   ddbMock.on(GetItemCommand).resolves(getItemOutput);
+  logsMock.on(PutLogEventsCommand).resolves({
+    $metadata: {
+      requestId: randomUUID()
+    }
+  });
 
-  const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient, OIDC);
+  const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient, OIDC, logsClient);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/');
 });
@@ -101,6 +114,8 @@ test('Successful auth redirects to home', async () => {
 
 test('Successful auth creates new session', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
+  const logsClient = new CloudWatchLogsClient({ region: 'eu-west-1' });
+
   const sessionId = '12345';
   const getItemOutput: Partial<GetItemCommandOutput> = {
     Item: {
@@ -113,9 +128,9 @@ test('Successful auth creates new session', async () => {
     },
   };
   ddbMock.on(GetItemCommand).resolves(getItemOutput);
+  logsMock.on(PutLogEventsCommand).resolves({});
 
-
-  const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient, OIDC);
+  const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient, OIDC, logsClient);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/');
   expect(result.cookies).toContainEqual(expect.stringContaining('session='));
@@ -123,7 +138,9 @@ test('Successful auth creates new session', async () => {
 
 test('No session redirects to login', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
-  const result = await handleRequest('', 'state', 'state', dynamoDBClient, OIDC);
+  const logsClient = new CloudWatchLogsClient({ region: 'eu-west-1' });
+  logsMock.on(PutLogEventsCommand).resolves({});
+  const result = await handleRequest('', 'state', 'state', dynamoDBClient, OIDC, logsClient);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/login');
 });
@@ -131,6 +148,7 @@ test('No session redirects to login', async () => {
 
 test('Incorrect state errors', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
+  const logsClient = new CloudWatchLogsClient({ region: 'eu-west-1' });
   const sessionId = '12345';
   const getItemOutput: Partial<GetItemCommandOutput> = {
     Item: {
@@ -143,7 +161,9 @@ test('Incorrect state errors', async () => {
     },
   };
   ddbMock.on(GetItemCommand).resolves(getItemOutput);
-  const result = await handleRequest(`session=${sessionId}`, '12345', 'returnedstate', dynamoDBClient, OIDC);
+  mockClient(logsClient).resolves({});
+
+  const result = await handleRequest(`session=${sessionId}`, '12345', 'returnedstate', dynamoDBClient, OIDC, logsClient);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/login');
   expect(console.error).toHaveBeenCalled();
