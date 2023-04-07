@@ -3,8 +3,8 @@ export abstract class Statics {
   static readonly sessionTableName: string = 'yivi-issue-sessions';
 
   // Statistics
-  static readonly ssmStatisticsLogGroup: string = '/cdk/yivi-issue-app/statistics/log-group-name';
-  static readonly ssmTickenLogGroup: string = '/cdk/yivi-issue-app/ticken/log-group-name';
+  static readonly ssmStatisticsLogGroup: string = '/cdk/yivi-issue-app/statistics/logs/log-group-name';
+  static readonly ssmTickenLogGroup: string = '/cdk/yivi-issue-app/ticken/logs/log-group-name';
 
   /**
    * IAM params
