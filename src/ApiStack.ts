@@ -193,6 +193,12 @@ export class ApiStack extends Stack {
       methods: [apigatewayv2.HttpMethod.GET],
     });
 
+    this.createCloudWatchInsightsQueries([
+      loginFunction.lambda.logGroup,
+      logoutFunction.lambda.logGroup,
+      authFunction.lambda.logGroup,
+      issueFunction.lambda.logGroup,
+    ]);
   }
 
   /**
@@ -285,6 +291,29 @@ export class ApiStack extends Stack {
       logGroup: group,
       logStreamName: 'yivi-ticken-logs-stream',
     });
+  }
+
+  createCloudWatchInsightsQueries(logGroups: logs.ILogGroup[]) {
+
+    new logs.QueryDefinition(this, 'error-logs-query', {
+      queryDefinitionName: 'Yivi/Erros in issue app',
+      logGroups,
+      queryString: new logs.QueryString({
+        fields: ['@timestamp', '@message'],
+        filterStatements: ['@message like /ERROR/'],
+        sort: '@timestamp desc',
+      }),
+    });
+
+    new logs.QueryDefinition(this, 'all-logs-query', {
+      queryDefinitionName: 'Yivi/Logging in issue app',
+      logGroups,
+      queryString: new logs.QueryString({
+        fields: ['@timestamp', '@message'],
+        sort: '@timestamp desc',
+      }),
+    });
+
   }
 
 }

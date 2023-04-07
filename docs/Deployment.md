@@ -9,6 +9,7 @@ Steps:
 4. Set the CLI to the correct deployment/build account to deploy to
 5. run `npx cdk deploy -a cdk.out --all`
 6. After deployment the application parameters and secrets should be configured as below.
+7. Make sure the devirsivier ssm parameter has a random value
 
 ## Parameters
 
