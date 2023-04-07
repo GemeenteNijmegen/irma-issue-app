@@ -84,14 +84,14 @@ export class DashboardStack extends Stack {
     });
   }
 
-  createLoaPie(logGroup: string){
+  createLoaPie(logGroup: string) {
     return new cloudwatch.LogQueryWidget({
       title: 'Gebruikt betrouwbaarheidsniveau',
       width: 8,
       height: 12,
       logGroupNames: [logGroup],
       view: cloudwatch.LogQueryVisualizationType.PIE,
-      queryLines: [ 'stats count(subject) as Betrouwbaarheidsniveau by loa' ],
+      queryLines: ['stats count(subject) as Betrouwbaarheidsniveau by loa'],
     });
   }
 
