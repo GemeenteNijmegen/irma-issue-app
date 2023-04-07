@@ -68,7 +68,7 @@ export class DashboardStack extends Stack {
     });
   }
 
-  createTimelineTickenWidget(logGroup: string){
+  createTimelineTickenWidget(logGroup: string) {
     return new cloudwatch.LogQueryWidget({
       title: 'BRP and DigiD requests per hour',
       width: 16,

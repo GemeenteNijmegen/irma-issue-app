@@ -275,7 +275,7 @@ export class ApiStack extends Stack {
     new ssm.StringParameter(this, 'ticken-logs-ssm', {
       parameterName: Statics.ssmTickenLogGroup,
       stringValue: group.logGroupName,
-    })
+    });
 
     return group;
   }
