@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@gemeentenijmegen/projen-project-type": "^1.4.0",
-    "@playwright/test": "^1.32.2",
+    "@playwright/test": "^1.32.3",
     "@types/jest": "^27.5.2",
     "@types/node": "^16",
     "@typescript-eslint/eslint-plugin": "^5",
@@ -70,7 +70,7 @@
     "@aws-sdk/client-secrets-manager": "^3.310.0",
     "@aws-sdk/client-ses": "^3.310.0",
     "@aws-sdk/client-ssm": "^3.310.0",
-    "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.36.0",
+    "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.37.0",
     "@gemeentenijmegen/apiclient": "^0.0.4",
     "@gemeentenijmegen/apigateway-http": "^0.0.4",
     "@gemeentenijmegen/dnssec-record": "^0.0.5",
