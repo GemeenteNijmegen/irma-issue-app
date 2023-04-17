@@ -93,4 +93,18 @@ const configurations: { [name: string] : Configuration } = {
       _988b6a082afeb2260ef3a85673b887c8: '_e38b4911aa3741d5dda4456d86105c4e.btsqtkxpyp.acm-validations.aws',
     },
   },
+  'acceptance-new-lz': {
+    branchName: 'acceptance-new-lz',
+    pipelineStackName: 'yivi-issue-pipeline-acceptance',
+    deployFromEnvironment: Statics.gnBuildEnvironment,
+    deployToEnvironment: Statics.gnYiviAccpEnvironment,
+    codeStarConnectionArn: Statics.codeStarConnectionArnNewLz,
+    includePipelineValidationChecks: false,
+    setWafRatelimit: false, // False for pentesting?
+    useDemoScheme: true,
+    nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
+    cnameRecords: {
+      _2efd09bc809f1129572f073cb0873936: '_37726a837615087fa929e1970e5ad7c2.hsmgrxbjqd.acm-validations.aws',
+    },
+  },
 };
