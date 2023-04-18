@@ -36,6 +36,7 @@ const config: Configuration = {
   setWafRatelimit: false,
   useDemoScheme: true,
   nijmegenSubdomain: 'snapshot-tests',
+  issueServerRegion: 'eu-west-1',
 }
 
 beforeAll(() => {

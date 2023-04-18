@@ -64,7 +64,7 @@ export class YiviApi {
       throw new Error('API client is not configured propperly, missing AWS signature credentials');
     }
     const interceptor = aws4Interceptor({
-      region: process.env.AWS_REGION ?? 'eu-west-1',
+      region: process.env.YIVI_API_REGION ?? 'eu-west-1',
       service: 'execute-api',
     }, this.credentials);
     const client = axios.create({

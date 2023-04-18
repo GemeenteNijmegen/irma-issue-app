@@ -146,6 +146,7 @@ export class ApiStack extends Stack {
         MTLS_ROOT_CA_NAME: Statics.ssmMTLSRootCA,
         BRP_API_URL: Statics.ssmBrpApiEndpointUrl,
         YIVI_API_HOST: Statics.ssmYiviApiHost,
+        YIVI_API_REGION: props.configuration.issueServerRegion,
         YIVI_API_DEMO: props.configuration.useDemoScheme ? 'demo' : '',
         YIVI_API_ACCESS_KEY_ID_ARN: secretYiviApiAccessKeyId.secretArn,
         YIVI_API_SECRET_KEY_ARN: secretYiviApiSecretKey.secretArn,
