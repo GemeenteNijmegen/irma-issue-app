@@ -90,7 +90,7 @@ export class YiviApi {
       }
       throw Error(errorMsg);
     } catch (error: any) {
-      console.error('Error while doing signed post request for endpoint:', path, error?.response?.data);
+      console.error('Error while doing signed post request for endpoint:', path);
       console.timeEnd('request to ' + path);
       if (axios.isAxiosError(error)) {
         if (error.response) {
