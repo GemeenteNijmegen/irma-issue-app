@@ -19,8 +19,8 @@ const OIDC = new OpenIDConnect();
 const init = OIDC.init();
 
 exports.handler = async (event: any) => {
-  await init;
   try {
+    await init;
     const params = parseEvent(event);
     return await handleRequest(params.cookies, params.code, params.state, dynamoDBClient, OIDC, logsClient);
   } catch (err) {
