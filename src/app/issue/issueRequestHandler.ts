@@ -67,7 +67,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     }
   }
 
-  await storeIssueEventInSession(brpData, session);
+  await storeIssueEventInSession(session);
   await logIssueEvent(logsClient, session, brpData, error);
 
   // Render the page
@@ -84,11 +84,9 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
 /**
  * Add the requred issue event data to the sessino for
  * collecting statistics one usage of the yivi-issue-app later on
- * @param brpData the BRP-YIVI api response
  * @param session the uses session to store data in
  */
-async function storeIssueEventInSession(brpData: any, session: Session) {
-  const gemeente = brpData?.Persoon?.Adres?.Gemeente;
+async function storeIssueEventInSession(session: Session) {
   const loggedin = session.getValue('loggedin', 'BOOL') ?? false;
   const loa = session.getValue('loa');
   const bsn = session.getValue('bsn');
@@ -99,7 +97,6 @@ async function storeIssueEventInSession(brpData: any, session: Session) {
     await session.updateSession({
       loggedin: { BOOL: loggedin },
       bsn: { S: bsn },
-      gemeente: { S: gemeente },
       loa: { S: loa },
       issueAttempt: { N: incrementedIssueAttempt.toString() },
     });

@@ -24,6 +24,7 @@ export class DashboardStack extends Stack {
     const tablePerGemeente = this.createIssueTablePerGemeente(statisticsLogGroup);
     const tableTotalIssued = this.createTotalIssued(statisticsLogGroup);
     const tableDuplicateIssues = this.createDuplicateIssueWidget(statisticsLogGroup);
+    const pieLoa = this.createLoaPie(statisticsLogGroup);
     const tickenTimeLine = this.createTimelineTickenWidget(tickenLogGroup);
 
     // Create the layout
@@ -31,6 +32,7 @@ export class DashboardStack extends Stack {
       [timeLine],
       [tableTotalIssued, tickenTimeLine],
       [piePerGemeente, tablePerGemeente, tableDuplicateIssues],
+      [pieLoa],
     ];
 
     // Create the dashboard
@@ -79,6 +81,17 @@ export class DashboardStack extends Stack {
         'fields @message like /TICK\: BRP/ as brp, @message like /TICK\: DigiD/ as digid',
         'stats sum(brp) as BRP, sum(digid) as DigiD by bin(1h)',
       ],
+    });
+  }
+
+  createLoaPie(logGroup: string) {
+    return new cloudwatch.LogQueryWidget({
+      title: 'Gebruikt betrouwbaarheidsniveau',
+      width: 8,
+      height: 12,
+      logGroupNames: [logGroup],
+      view: cloudwatch.LogQueryVisualizationType.PIE,
+      queryLines: ['stats count(subject) as Betrouwbaarheidsniveau by loa'],
     });
   }
 
