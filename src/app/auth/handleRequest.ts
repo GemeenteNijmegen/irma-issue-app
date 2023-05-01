@@ -17,18 +17,18 @@ export async function handleRequest(
 ) {
   let session = new Session(cookies, dynamoDBClient);
   await session.init();
-  console.debug("Session initialized...");
+  console.debug('Session initialized...');
   if (session.sessionId === false) {
     console.info('No session found');
     return Response.redirect('/login');
   }
   const state = session.getValue('state');
-  console.debug("Starting validation of claims");
+  console.debug('Starting validation of claims');
   try {
     const claims = await OIDC.authorize(queryStringParamCode, state, queryStringParamState);
-    console.debug("Obtained claims...");
+    console.debug('Obtained claims...');
     await LogsUtil.logToCloudWatch(logsClient, 'TICK: DigiD', process.env.TICKEN_LOG_GROUP_NAME, process.env.TICKEN_LOG_STREAM_NAME);
-    console.debug("Logged digid tick...");
+    console.debug('Logged digid tick...');
     return await authenticate(session, claims);
   } catch (error: any) {
     console.error(error.message);
@@ -51,7 +51,7 @@ async function authenticate(session: Session, claims: IdTokenClaims) {
       console.error('Authentication using DigiD loa Basis is used');
       return Response.redirect('/login?loa_error=true');
     }
-    console.debug("Verified LOA...");
+    console.debug('Verified LOA...');
     await session.createSession({
       loggedin: { BOOL: true },
       bsn: { S: claims.sub },
