@@ -275,7 +275,7 @@ export class CloudfrontStack extends Stack {
       blockPublicAccess: S3.BlockPublicAccess.BLOCK_ALL,
       eventBridgeEnabled: true,
       enforceSSL: true,
-      encryption: S3.BucketEncryption.UNENCRYPTED,
+      encryption: S3.BucketEncryption.S3_MANAGED,
     });
 
     return bucket;

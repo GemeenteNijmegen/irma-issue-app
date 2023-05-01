@@ -209,6 +209,7 @@
     },
     {
       "name": "openid-client",
+      "version": "^5.4.2",
       "type": "runtime"
     }
   ],
