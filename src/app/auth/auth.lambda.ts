@@ -17,11 +17,14 @@ function parseEvent(event: any) {
 
 const OIDC = new OpenIDConnect();
 const init = OIDC.init();
+console.debug("OIDC init called...")
 
 exports.handler = async (event: any) => {
   try {
     await init;
+    console.debug("OIDC init completed...");
     const params = parseEvent(event);
+    console.debug("Event params parsed...");
     return await handleRequest(params.cookies, params.code, params.state, dynamoDBClient, OIDC, logsClient);
   } catch (err) {
     console.error(err);
