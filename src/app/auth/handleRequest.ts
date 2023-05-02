@@ -15,7 +15,9 @@ export async function handleRequest(
   OIDC: OpenIDConnect,
   logsClient: CloudWatchLogsClient,
 ) {
+  console.debug('Creating session object...');
   let session = new Session(cookies, dynamoDBClient);
+  console.debug('Starting session initialization...');
   await session.init();
   console.debug('Session initialized...');
   if (session.sessionId === false) {
@@ -26,9 +28,7 @@ export async function handleRequest(
   console.debug('Starting validation of claims');
   try {
     const claims = await OIDC.authorize(queryStringParamCode, state, queryStringParamState);
-    console.debug('Obtained claims...');
     await LogsUtil.logToCloudWatch(logsClient, 'TICK: DigiD', process.env.TICKEN_LOG_GROUP_NAME, process.env.TICKEN_LOG_STREAM_NAME);
-    console.debug('Logged digid tick...');
     return await authenticate(session, claims);
   } catch (error: any) {
     console.error(error.message);
