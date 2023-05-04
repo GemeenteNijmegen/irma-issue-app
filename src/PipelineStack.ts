@@ -75,8 +75,6 @@ export class PipelineStack extends Stack {
 
     const pipeline = new pipelines.CodePipeline(this, `yivi-issue-app-${this.configuration.branchName}`, {
       pipelineName: `yivi-issue-app-${this.configuration.branchName}`,
-      dockerEnabledForSelfMutation: true,
-      dockerEnabledForSynth: true,
       crossAccountKeys: true,
       synth: synthStep,
     });
