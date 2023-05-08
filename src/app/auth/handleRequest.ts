@@ -15,7 +15,7 @@ export async function handleRequest(
   OIDC: OpenIDConnect,
   logsClient: CloudWatchLogsClient,
 ) {
-  console.debug('Creating session object...');
+  console.debug('Creating session object...', cookies, dynamoDBClient);
   let session = new Session(cookies, dynamoDBClient);
   console.debug('Starting session initialization...');
   await session.init();
