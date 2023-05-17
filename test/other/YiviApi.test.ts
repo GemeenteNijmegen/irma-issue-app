@@ -142,7 +142,7 @@ test('Mapping BRP data', () => {
     expect(personCard.initials).toBe(gegevens.Voorletters)
     expect(personCard.firstnames).toBe(gegevens.Voornamen)
     expect(personCard.prefix).toBe(gegevens.Voorvoegsel)
-    expect(personCard.familyname).toBe(gegevens.Achternaam)
+    expect(personCard.familyname).toBe(gegevens.Geslachtsnaam)
     expect(personCard.fullname).toBe(gegevens.Naam)
     expect(personCard.dateofbirth).toBe(gegevens.Geboortedatum)
     expect(personCard.gender).toBe(gegevens.Geslacht)
