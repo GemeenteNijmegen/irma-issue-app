@@ -115,12 +115,14 @@ async function storeIssueEventInSession(session: Session) {
 async function logIssueEvent(client: CloudWatchLogsClient, session: Session, brpData: any, error?: string) {
 
   // Setup statistics data
-  const bsn = session.getValue('bsn', 'S');
   const loa = loaToString(session.getValue('loa'));
   const issueAttempt = session.getValue('issueAttempt', 'N') ?? 0;
   const gemeente = brpData?.Persoon?.Adres?.Gemeente;
   const timestamp = Date.now();
-  const diversify = `${bsn}/${gemeente}/${process.env.DIVERSIFYER}`;
+
+  // Construct the subject and make it as specific as possible so it cannot be bruteforced
+  const brpDataAsJson = JSON.stringify(brpData ?? { unknown: 'faild to get brp data' });
+  const diversify = `${brpDataAsJson}/${process.env.DIVERSIFYER}`;
   const subject = crypto.createHash('sha256').update(diversify).digest('hex');
 
   let message = JSON.stringify({ timestamp, gemeente, subject, loa, issueAttempt });
