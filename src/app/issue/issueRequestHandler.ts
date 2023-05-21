@@ -59,7 +59,6 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     console.debug('Starting YIVI session...');
     const loa = session.getValue('loa');
     const yiviResponse = await yiviApi.startSession(brpData, loa);
-    console.debug('YIVI session: ', yiviResponse);
     if (!yiviResponse.error) {
       yiviFullSession = Buffer.from(JSON.stringify(yiviResponse), 'utf-8').toString('base64');
     } else {
