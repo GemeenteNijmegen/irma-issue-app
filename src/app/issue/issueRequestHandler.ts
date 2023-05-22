@@ -59,7 +59,6 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     console.debug('Starting YIVI session...');
     const loa = session.getValue('loa');
     const yiviResponse = await yiviApi.startSession(brpData, loa);
-    console.debug('YIVI session: ', yiviResponse);
     if (!yiviResponse.error) {
       yiviFullSession = Buffer.from(JSON.stringify(yiviResponse), 'utf-8').toString('base64');
     } else {
@@ -115,12 +114,14 @@ async function storeIssueEventInSession(session: Session) {
 async function logIssueEvent(client: CloudWatchLogsClient, session: Session, brpData: any, error?: string) {
 
   // Setup statistics data
-  const bsn = session.getValue('bsn', 'S');
   const loa = loaToString(session.getValue('loa'));
   const issueAttempt = session.getValue('issueAttempt', 'N') ?? 0;
   const gemeente = brpData?.Persoon?.Adres?.Gemeente;
   const timestamp = Date.now();
-  const diversify = `${bsn}/${gemeente}/${process.env.DIVERSIFYER}`;
+
+  // Construct the subject and make it as specific as possible so it cannot be bruteforced
+  const brpDataAsJson = JSON.stringify(brpData ?? { unknown: 'faild to get brp data' });
+  const diversify = `${brpDataAsJson}/${process.env.DIVERSIFYER}`;
   const subject = crypto.createHash('sha256').update(diversify).digest('hex');
 
   let message = JSON.stringify({ timestamp, gemeente, subject, loa, issueAttempt });
