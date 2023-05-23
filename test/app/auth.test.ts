@@ -106,7 +106,7 @@ test('Successful auth redirects to home', async () => {
     }
   });
 
-  const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient, OIDC, logsClient);
+  const result = await handleRequest(params(`session=${sessionId}`, 'state', '12345'), dynamoDBClient, OIDC, logsClient);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/');
 });
@@ -130,7 +130,7 @@ test('Successful auth creates new session', async () => {
   ddbMock.on(GetItemCommand).resolves(getItemOutput);
   logsMock.on(PutLogEventsCommand).resolves({});
 
-  const result = await handleRequest(`session=${sessionId}`, 'state', '12345', dynamoDBClient, OIDC, logsClient);
+  const result = await handleRequest(params(`session=${sessionId}`, 'state', '12345'), dynamoDBClient, OIDC, logsClient);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/');
   expect(result.cookies).toContainEqual(expect.stringContaining('session='));
@@ -140,7 +140,16 @@ test('No session redirects to login', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
   const logsClient = new CloudWatchLogsClient({ region: 'eu-west-1' });
   logsMock.on(PutLogEventsCommand).resolves({});
-  const result = await handleRequest('', 'state', 'state', dynamoDBClient, OIDC, logsClient);
+  const result = await handleRequest(params('', 'state', 'state'), dynamoDBClient, OIDC, logsClient);
+  expect(result.statusCode).toBe(302);
+  expect(result.headers?.Location).toBe('/login');
+});
+
+test('Error does not start authentication', async () => {
+  const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
+  const logsClient = new CloudWatchLogsClient({ region: 'eu-west-1' });
+  logsMock.on(PutLogEventsCommand).resolves({});
+  const result = await handleRequest(params('', 'state', 'state', 'access_denied', 'User cancelled authentication'), dynamoDBClient, OIDC, logsClient);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/login');
 });
@@ -163,8 +172,18 @@ test('Incorrect state errors', async () => {
   ddbMock.on(GetItemCommand).resolves(getItemOutput);
   mockClient(logsClient).resolves({});
 
-  const result = await handleRequest(`session=${sessionId}`, '12345', 'returnedstate', dynamoDBClient, OIDC, logsClient);
+  const result = await handleRequest(params(`session=${sessionId}`, '12345', 'returnedstate'), dynamoDBClient, OIDC, logsClient);
   expect(result.statusCode).toBe(302);
   expect(result.headers?.Location).toBe('/login');
   expect(console.error).toHaveBeenCalled();
 });
+
+function params(cookies: string, code: string, state: string, error?: string, error_description?: string){
+  return {
+    cookies,
+    code,
+    state,
+    error,
+    error_description,
+  };
+}

@@ -7,27 +7,39 @@ import { DigidLoa } from '../code/DigiDLoa';
 import { LogsUtil } from '../code/LogsUtil';
 import { OpenIDConnect } from '../code/OpenIDConnect';
 
+export interface HandlerParameters {
+  cookies?: string;
+  code?: string;
+  state?: string;
+  error?: string;
+  error_description?: string;
+}
+
 export async function handleRequest(
-  cookies: string,
-  queryStringParamCode: string,
-  queryStringParamState: string,
+  params: HandlerParameters,
   dynamoDBClient: DynamoDBClient,
   OIDC: OpenIDConnect,
   logsClient: CloudWatchLogsClient,
 ) {
-  console.debug('Creating session object...');
-  let session = new Session(cookies, dynamoDBClient);
-  console.debug('Starting session initialization...');
+  if (params.error) {
+    console.log('Not starting authentication: ', params.error, params.error_description);
+    return Response.redirect('/login');
+  }
+
+  let session = new Session(params.cookies ?? '', dynamoDBClient);
   await session.init();
-  console.debug('Session initialized...');
+
   if (session.sessionId === false) {
     console.info('No session found');
     return Response.redirect('/login');
   }
   const state = session.getValue('state');
-  console.debug('Starting validation of claims');
+
   try {
-    const claims = await OIDC.authorize(queryStringParamCode, state, queryStringParamState);
+    if (!params.code || !params.state) {
+      throw Error('Invalid request: code or state missing in request');
+    }
+    const claims = await OIDC.authorize(params.code, state, params.state);
     await LogsUtil.logToCloudWatch(logsClient, 'TICK: DigiD', process.env.TICKEN_LOG_GROUP_NAME, process.env.TICKEN_LOG_STREAM_NAME);
     return await authenticate(session, claims);
   } catch (error: any) {
@@ -47,11 +59,10 @@ export async function handleRequest(
 async function authenticate(session: Session, claims: IdTokenClaims) {
   if (claims && claims.hasOwnProperty('acr')) {
     const loa = claims.acr;
-    if ( loa == DigidLoa.Basis) {
+    if (loa == DigidLoa.Basis) {
       console.error('Authentication using DigiD loa Basis is used');
       return Response.redirect('/login?loa_error=true');
     }
-    console.debug('Verified LOA...');
     await session.createSession({
       loggedin: { BOOL: true },
       bsn: { S: claims.sub },
