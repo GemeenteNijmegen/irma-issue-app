@@ -70,7 +70,7 @@
     "@aws-sdk/client-secrets-manager": "^3.345.0",
     "@aws-sdk/client-ses": "^3.345.0",
     "@aws-sdk/client-ssm": "^3.345.0",
-    "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.39.0",
+    "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.40.0",
     "@gemeentenijmegen/apiclient": "^0.0.4",
     "@gemeentenijmegen/apigateway-http": "^0.0.5",
     "@gemeentenijmegen/dnssec-record": "^0.0.5",
