@@ -109,7 +109,7 @@ const configurations: { [name: string] : Configuration } = {
     includePipelineValidationChecks: false,
     setWafRatelimit: false, // False for pentesting?
     useDemoScheme: true,
-    //nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
+    nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
     issueServerRegion: 'eu-west-1',
     cnameRecords: {
       _9699982ccd3555be4d8f02a487a0287e: '_1d0dce24777d3d1257367aa28e6816c7.fgsdscwdjl.acm-validations.aws',
