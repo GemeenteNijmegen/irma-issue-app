@@ -145,7 +145,7 @@ export class YiviApi {
             initials: gegevens.Voorletters,
             firstnames: gegevens.Voornamen,
             prefix: gegevens.Voorvoegsel,
-            familyname: gegevens.Achternaam,
+            familyname: gegevens.Geslachtsnaam,
             fullname: gegevens.Naam,
             dateofbirth: gegevens.Geboortedatum,
             gender: gegevens.Geslacht,
