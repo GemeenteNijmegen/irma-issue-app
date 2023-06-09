@@ -144,4 +144,10 @@ export abstract class Statics {
     region: 'eu-central-1',
   };
 
+  // New LZ
+  static readonly gnYiviProdEnvironment = {
+    account: '185512167111',
+    region: 'eu-central-1',
+  };
+
 }

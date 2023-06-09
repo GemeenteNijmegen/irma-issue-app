@@ -119,7 +119,7 @@ const configurations: { [name: string] : Configuration } = {
     branchName: 'production-new-lz',
     pipelineStackName: 'yivi-issue-pipeline-production',
     deployFromEnvironment: Statics.deploymentEnvironment,
-    deployToEnvironment: Statics.productionEnvironment,
+    deployToEnvironment: Statics.gnYiviProdEnvironment,
     codeStarConnectionArn: Statics.codeStarConnectionArn,
     includePipelineValidationChecks: false,
     setWafRatelimit: true,
