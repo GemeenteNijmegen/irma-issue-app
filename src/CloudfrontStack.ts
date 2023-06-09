@@ -63,7 +63,6 @@ export class CloudfrontStack extends Stack {
     const parameters = new RemoteParameters(this, 'params', {
       path: `${Statics.certificatePath}/`,
       region: 'us-east-1',
-      alwaysUpdate: false,
     });
     const certificateArn = parameters.get(Statics.certificateArn);
     return certificateArn;
