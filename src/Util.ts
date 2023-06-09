@@ -58,7 +58,7 @@ export class AppDomainUtil {
     return `https://${zoneName}/`;
   }
 
-  private static getNijmegenDomainName(configuration: Configuration) {
+  public static getNijmegenDomainName(configuration: Configuration) {
     if (configuration.nijmegenSubdomain) {
       return `${configuration.nijmegenSubdomain}.nijmegen.nl`;
     }

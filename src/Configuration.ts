@@ -60,6 +60,12 @@ export interface Configuration {
    */
   readonly issueServerRegion: string;
 
+
+  /**
+   * Use nijmegen record in CloudFront
+   */
+  readonly useNijmegenRecordInCloudFront: boolean;
+
 }
 
 export function getConfiguration(branchName: string): Configuration {
@@ -70,36 +76,6 @@ export function getConfiguration(branchName: string): Configuration {
 }
 
 const configurations: { [name: string] : Configuration } = {
-  'acceptance': {
-    branchName: 'acceptance',
-    pipelineStackName: 'yivi-issue-pipeline-acceptance',
-    deployFromEnvironment: Statics.deploymentEnvironment,
-    deployToEnvironment: Statics.acceptanceEnvironment,
-    codeStarConnectionArn: Statics.codeStarConnectionArn,
-    includePipelineValidationChecks: false,
-    setWafRatelimit: false, // False for pentesting?
-    useDemoScheme: true,
-    nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
-    issueServerRegion: 'eu-west-1',
-    cnameRecords: {
-      _2efd09bc809f1129572f073cb0873936: '_37726a837615087fa929e1970e5ad7c2.hsmgrxbjqd.acm-validations.aws',
-    },
-  },
-  'production': {
-    branchName: 'production',
-    pipelineStackName: 'yivi-issue-pipeline-production',
-    deployFromEnvironment: Statics.deploymentEnvironment,
-    deployToEnvironment: Statics.productionEnvironment,
-    codeStarConnectionArn: Statics.codeStarConnectionArn,
-    includePipelineValidationChecks: false,
-    setWafRatelimit: true,
-    useDemoScheme: false,
-    nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
-    issueServerRegion: 'eu-west-1',
-    cnameRecords: {
-      _988b6a082afeb2260ef3a85673b887c8: '_e38b4911aa3741d5dda4456d86105c4e.btsqtkxpyp.acm-validations.aws',
-    },
-  },
   'acceptance-new-lz': {
     branchName: 'acceptance-new-lz',
     pipelineStackName: 'yivi-issue-pipeline-acceptance',
@@ -114,6 +90,7 @@ const configurations: { [name: string] : Configuration } = {
     cnameRecords: {
       _9699982ccd3555be4d8f02a487a0287e: '_1d0dce24777d3d1257367aa28e6816c7.fgsdscwdjl.acm-validations.aws',
     },
+    useNijmegenRecordInCloudFront: false, // Otherwise we cannot deploy the CF dist
   },
   'production-new-lz': {
     branchName: 'production-new-lz',
@@ -124,10 +101,11 @@ const configurations: { [name: string] : Configuration } = {
     includePipelineValidationChecks: false,
     setWafRatelimit: true,
     useDemoScheme: false,
-    //nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
+    nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
     issueServerRegion: 'eu-west-1',
     // cnameRecords: {
-    //   _988b6a082afeb2260ef3a85673b887c8: '_e38b4911aa3741d5dda4456d86105c4e.btsqtkxpyp.acm-validations.aws',
+    //   '': '',
     // },
+    useNijmegenRecordInCloudFront: false, // Otherwise we cannot deploy the CF dist
   },
 };
