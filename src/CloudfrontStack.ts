@@ -208,6 +208,7 @@ export class CloudfrontStack extends Stack {
   logBucket() {
     const cfLogBucket = new S3.Bucket(this, 'CloudfrontLogs', {
       blockPublicAccess: S3.BlockPublicAccess.BLOCK_ALL,
+      accessControl: S3.BucketAccessControl.LOG_DELIVERY_WRITE,
       eventBridgeEnabled: true,
       enforceSSL: true,
       encryption: S3.BucketEncryption.S3_MANAGED,
