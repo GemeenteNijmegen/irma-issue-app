@@ -103,9 +103,9 @@ const configurations: { [name: string] : Configuration } = {
     useDemoScheme: false,
     nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
     issueServerRegion: 'eu-west-1',
-    // cnameRecords: {
-    //   '': '',
-    // },
+    cnameRecords: {
+      '_e573bcd00b0f468178ff502aeb92eae3': '_df939a5caaba3eef9055e611864019d2.yghrkwvzvz.acm-validations.aws.',
+    },
     useNijmegenRecordInCloudFront: false, // Otherwise we cannot deploy the CF dist
   },
 };
