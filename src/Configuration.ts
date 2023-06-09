@@ -115,4 +115,19 @@ const configurations: { [name: string] : Configuration } = {
       _9699982ccd3555be4d8f02a487a0287e: '_1d0dce24777d3d1257367aa28e6816c7.fgsdscwdjl.acm-validations.aws',
     },
   },
+  'production-new-lz': {
+    branchName: 'production-new-lz',
+    pipelineStackName: 'yivi-issue-pipeline-production',
+    deployFromEnvironment: Statics.deploymentEnvironment,
+    deployToEnvironment: Statics.productionEnvironment,
+    codeStarConnectionArn: Statics.codeStarConnectionArn,
+    includePipelineValidationChecks: false,
+    setWafRatelimit: true,
+    useDemoScheme: false,
+    //nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
+    issueServerRegion: 'eu-west-1',
+    // cnameRecords: {
+    //   _988b6a082afeb2260ef3a85673b887c8: '_e38b4911aa3741d5dda4456d86105c4e.btsqtkxpyp.acm-validations.aws',
+    // },
+  },
 };
