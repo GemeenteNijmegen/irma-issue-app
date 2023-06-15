@@ -52,7 +52,7 @@ export class AppDomainUtil {
    * @returns
    */
   static getBaseUrl(configuration: Configuration, zoneName: string) {
-    if (configuration.nijmegenSubdomain) {
+    if (configuration.nijmegenSubdomain && configuration.useNijmegenRecordInCloudFront) {
       return `https://${configuration.nijmegenSubdomain}.nijmegen.nl/`;
     }
     return `https://${zoneName}/`;
