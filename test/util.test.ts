@@ -12,7 +12,6 @@ test('get domain names', () => {
     issueServerRegion: 'eu-west-1',
     useDemoScheme: true,
     nijmegenSubdomain: "test",
-    useNijmegenRecordInCloudFront: true,
   }, "test.csp-nijmegen.nl");
   expect(domainNames).toContain('test.nijmegen.nl');
   expect(domainNames).toContain('test.csp-nijmegen.nl');
@@ -31,7 +30,6 @@ test('baseurl', () => {
     useDemoScheme: true,
     issueServerRegion: 'eu-west-1',
     nijmegenSubdomain: "test",
-    useNijmegenRecordInCloudFront: true,
   }, "test.csp-nijmegen.nl");
   expect(baseurl).toContain('https://test.nijmegen.nl/');
 });

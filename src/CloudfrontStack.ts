@@ -48,7 +48,7 @@ export class CloudfrontStack extends Stack {
     const zoneName = SSM.StringParameter.valueForStringParameter(this, Statics.ssmZoneName);
     const nijmegenDomain = AppDomainUtil.getNijmegenDomainName(props.configuration);
     const domains = [zoneName];
-    if (props.configuration.useNijmegenRecordInCloudFront && nijmegenDomain) {
+    if (nijmegenDomain) {
       domains.push(nijmegenDomain);
     }
 

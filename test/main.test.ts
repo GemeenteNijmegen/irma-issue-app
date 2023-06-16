@@ -37,7 +37,6 @@ const config: Configuration = {
   useDemoScheme: true,
   nijmegenSubdomain: 'snapshot-tests',
   issueServerRegion: 'eu-west-1',
-  useNijmegenRecordInCloudFront: false,
 }
 
 beforeAll(() => {
