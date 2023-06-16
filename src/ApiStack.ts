@@ -1,6 +1,6 @@
 import * as apigatewayv2 from '@aws-cdk/aws-apigatewayv2-alpha';
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
-import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM, aws_logs as logs, aws_ssm as ssm } from 'aws-cdk-lib';
+import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM, aws_logs as logs, aws_ssm as ssm, aws_iam as iam} from 'aws-cdk-lib';
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
 import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
@@ -170,6 +170,15 @@ export class ApiStack extends Stack {
     secretYiviApiKey.grantRead(issueFunction.lambda);
     statisticsLogGroup.grantWrite(issueFunction.lambda);
     tickenLogGroup.grantWrite(issueFunction.lambda);
+
+    // Allow lambda role to invoke the API in a different account
+    issueFunction.lambda.addToRolePolicy(new iam.PolicyStatement({
+      actions: ['execute-api:Invoke'],
+      effect: iam.Effect.ALLOW,
+      resources: [
+        `arn:aws:execute-api:eu-central-1:*:*/prod/POST/session`
+      ],
+    }));
 
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('yivi-issue-login', loginFunction.lambda),
