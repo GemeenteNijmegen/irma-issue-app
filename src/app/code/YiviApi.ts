@@ -34,10 +34,18 @@ export class YiviApi {
     }
     this.host = await AWS.getParameter(process.env.YIVI_API_HOST);
     this.apiKey = await AWS.getSecret(process.env.YIVI_API_KEY_ARN);
-    this.credentials = {
-      accessKeyId: await AWS.getSecret(process.env.YIVI_API_ACCESS_KEY_ID_ARN),
-      secretAccessKey: await AWS.getSecret(process.env.YIVI_API_SECRET_KEY_ARN),
-    };
+
+    if (process.env.USE_LAMBDA_ROLE_FOR_YIVI_SERVER === 'yes') {
+      this.credentials = {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
+      };
+    } else {
+      this.credentials = {
+        accessKeyId: await AWS.getSecret(process.env.YIVI_API_ACCESS_KEY_ID_ARN),
+        secretAccessKey: await AWS.getSecret(process.env.YIVI_API_SECRET_KEY_ARN),
+      };
+    }
   }
 
   /**

@@ -60,6 +60,11 @@ export interface Configuration {
    */
   readonly issueServerRegion: string;
 
+  /**
+   * Flag to indicate if the issue server should be accessed
+   * using the lambda role or other IAM credentials configured in the secretsmanager.
+   */
+  readonly useLambdaRoleForYiviServer: boolean;
 }
 
 export function getConfiguration(branchName: string): Configuration {
@@ -80,7 +85,8 @@ const configurations: { [name: string] : Configuration } = {
     setWafRatelimit: false, // False for pentesting?
     useDemoScheme: true,
     nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
-    issueServerRegion: 'eu-west-1',
+    issueServerRegion: 'eu-central-1',
+    useLambdaRoleForYiviServer: true,
     cnameRecords: {
       _9699982ccd3555be4d8f02a487a0287e: '_1d0dce24777d3d1257367aa28e6816c7.fgsdscwdjl.acm-validations.aws',
     },
@@ -96,6 +102,7 @@ const configurations: { [name: string] : Configuration } = {
     useDemoScheme: false,
     nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
     issueServerRegion: 'eu-west-1',
+    useLambdaRoleForYiviServer: false,
     cnameRecords: {
       _e573bcd00b0f468178ff502aeb92eae3: '_df939a5caaba3eef9055e611864019d2.yghrkwvzvz.acm-validations.aws.',
     },

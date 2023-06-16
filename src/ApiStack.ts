@@ -156,6 +156,7 @@ export class ApiStack extends Stack {
         TICKEN_LOG_GROUP_NAME: tickenLogGroup.logGroupName,
         TICKEN_LOG_STREAM_NAME: tickenLogStream.logStreamName,
         DIVERSIFYER: diversifiyer,
+        USE_LAMBDA_ROLE_FOR_YIVI_SERVER: props.configuration.useLambdaRoleForYiviServer ? 'yes' : 'no',
       },
       lambdaInsightsExtensionArn: insightsArn,
     }, IssueFunction);
