@@ -49,9 +49,7 @@ export class ApiStack extends Stack {
     const baseUrl = AppDomainUtil.getBaseUrl(props.configuration, zoneName);
 
     // this.monitoringLambda();
-    const readOnlyRole = this.readOnlyRole();
-    this.setFunctions(props, baseUrl, readOnlyRole);
-    this.allowReadAccessToTable(readOnlyRole, this.sessionsTable);
+    this.setFunctions(props, baseUrl);
   }
 
   /**
@@ -59,7 +57,7 @@ export class ApiStack extends Stack {
    * add routes to the gateway.
    * @param {string} baseUrl the application url
    */
-  setFunctions(props: ApiStackProps, baseUrl: string, readOnlyRole: Role) {
+  setFunctions(props: ApiStackProps, baseUrl: string) {
 
     const diversifiyer = SSM.StringParameter.valueForStringParameter(this, Statics.ssmSubjectHashDiversifier);
 
@@ -81,7 +79,6 @@ export class ApiStack extends Stack {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
-      readOnlyRole,
       lambdaInsightsExtensionArn: insightsArn,
       environment: {
         AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
@@ -98,7 +95,6 @@ export class ApiStack extends Stack {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
-      readOnlyRole,
       lambdaInsightsExtensionArn: insightsArn,
     }, LogoutFunction);
 
@@ -108,7 +104,6 @@ export class ApiStack extends Stack {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
-      readOnlyRole,
       environment: {
         CLIENT_SECRET_ARN: oidcSecret.secretArn,
         AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
@@ -138,7 +133,6 @@ export class ApiStack extends Stack {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
-      readOnlyRole,
       description: 'Home-lambda voor de YIVI issue-applicatie.',
       environment: {
         MTLS_PRIVATE_KEY_ARN: secretMTLSPrivateKey.secretArn,
@@ -238,7 +232,7 @@ export class ApiStack extends Stack {
       roleName: 'yivi-issue-full-read',
       description: 'Read-only role for YIVI issue app with access to lambdas, logging, session store',
       assumedBy: new PrincipalWithConditions(
-        new AccountPrincipal(Statics.iamAccountId), //IAM account
+        new AccountPrincipal(''), //IAM account ID in statics file.
         {
           Bool: {
             'aws:MultiFactorAuthPresent': true,

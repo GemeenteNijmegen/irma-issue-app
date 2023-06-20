@@ -75,12 +75,12 @@ export function getConfiguration(branchName: string): Configuration {
 }
 
 const configurations: { [name: string] : Configuration } = {
-  'acceptance-new-lz': {
-    branchName: 'acceptance-new-lz',
+  'acceptance': {
+    branchName: 'acceptance',
     pipelineStackName: 'yivi-issue-pipeline-acceptance',
     deployFromEnvironment: Statics.gnBuildEnvironment,
     deployToEnvironment: Statics.gnYiviAccpEnvironment,
-    codeStarConnectionArn: Statics.codeStarConnectionArnNewLz,
+    codeStarConnectionArn: Statics.codeStarConnectionArn,
     includePipelineValidationChecks: false,
     setWafRatelimit: false, // False for pentesting?
     useDemoScheme: true,
@@ -91,10 +91,10 @@ const configurations: { [name: string] : Configuration } = {
       _9699982ccd3555be4d8f02a487a0287e: '_1d0dce24777d3d1257367aa28e6816c7.fgsdscwdjl.acm-validations.aws',
     },
   },
-  'production-new-lz': {
-    branchName: 'production-new-lz',
+  'production': {
+    branchName: 'production',
     pipelineStackName: 'yivi-issue-pipeline-production',
-    deployFromEnvironment: Statics.deploymentEnvironment,
+    deployFromEnvironment: Statics.gnBuildEnvironment,
     deployToEnvironment: Statics.gnYiviProdEnvironment,
     codeStarConnectionArn: Statics.codeStarConnectionArn,
     includePipelineValidationChecks: false,
