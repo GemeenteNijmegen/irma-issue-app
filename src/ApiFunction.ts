@@ -13,7 +13,7 @@ export interface ApiFunctionProps {
   applicationUrlBase?: string;
   environment?: {[key: string]: string};
   monitorFilterPattern?: IFilterPattern;
-  readOnlyRole: Role;
+  readOnlyRole?: Role;
   logRetention?: RetentionDays;
   ssmLogGroup?: string;
   lambdaInsightsExtensionArn: string;
@@ -56,7 +56,9 @@ export class ApiFunction<T extends Lambda.Function> extends Construct {
     }
 
     this.monitor(props.monitorFilterPattern);
-    this.allowAccessToReadOnlyRole(props.readOnlyRole);
+    if (props.readOnlyRole) {
+      this.allowAccessToReadOnlyRole(props.readOnlyRole);
+    }
   }
 
   /**

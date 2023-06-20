@@ -46,7 +46,11 @@ export class CloudfrontStack extends Stack {
     super(scope, id);
 
     const zoneName = SSM.StringParameter.valueForStringParameter(this, Statics.ssmZoneName);
-    const domains = AppDomainUtil.getDomainNames(props.configuration, zoneName);
+    const nijmegenDomain = AppDomainUtil.getNijmegenDomainName(props.configuration);
+    const domains = [zoneName];
+    if (nijmegenDomain) {
+      domains.push(nijmegenDomain);
+    }
 
     const certificateArn = this.certificateArn();
 
@@ -63,7 +67,6 @@ export class CloudfrontStack extends Stack {
     const parameters = new RemoteParameters(this, 'params', {
       path: `${Statics.certificatePath}/`,
       region: 'us-east-1',
-      alwaysUpdate: false,
     });
     const certificateArn = parameters.get(Statics.certificateArn);
     return certificateArn;
@@ -77,7 +80,6 @@ export class CloudfrontStack extends Stack {
     const parameters = new RemoteParameters(this, 'waf-params', {
       path: `${Statics.wafPath}/`,
       region: 'us-east-1',
-      alwaysUpdate: false,
     });
     const wafAclId = parameters.get(Statics.ssmWafAclArn);
     return wafAclId;
@@ -209,6 +211,7 @@ export class CloudfrontStack extends Stack {
   logBucket() {
     const cfLogBucket = new S3.Bucket(this, 'CloudfrontLogs', {
       blockPublicAccess: S3.BlockPublicAccess.BLOCK_ALL,
+      accessControl: S3.BucketAccessControl.LOG_DELIVERY_WRITE,
       eventBridgeEnabled: true,
       enforceSSL: true,
       encryption: S3.BucketEncryption.S3_MANAGED,

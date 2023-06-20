@@ -1,4 +1,5 @@
-import { Stage, StageProps } from 'aws-cdk-lib';
+import { PermissionsBoundaryAspect } from '@gemeentenijmegen/aws-constructs';
+import { Aspects, Stage, StageProps, Tags } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { ApiStack } from './ApiStack';
 import { CloudfrontStack } from './CloudfrontStack';
@@ -8,6 +9,7 @@ import { DNSSECStack } from './DNSSECStack';
 import { DNSStack } from './DNSStack';
 import { KeyStack } from './keystack';
 import { SessionsStack } from './SessionsStack';
+import { Statics } from './statics';
 import { UsEastCertificateStack } from './UsEastCertificateStack';
 import { WafStack } from './WafStack';
 
@@ -22,6 +24,11 @@ export class ApiStage extends Stage {
 
   constructor(scope: Construct, id: string, props: ApiStageProps) {
     super(scope, id, props);
+
+    Tags.of(this).add('cdkManaged', 'yes');
+    Tags.of(this).add('Project', Statics.projectName);
+    Aspects.of(this).add(new PermissionsBoundaryAspect());
+
     this.configuration = props.configuration;
 
     const keyStack = new KeyStack(this, 'key-stack');

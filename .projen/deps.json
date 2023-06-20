@@ -149,6 +149,10 @@
       "type": "runtime"
     },
     {
+      "name": "@gemeentenijmegen/aws-constructs",
+      "type": "runtime"
+    },
+    {
       "name": "@gemeentenijmegen/dnssec-record",
       "type": "runtime"
     },
