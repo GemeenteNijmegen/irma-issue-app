@@ -75,7 +75,7 @@ export function getConfiguration(branchName: string): Configuration {
 }
 
 const configurations: { [name: string] : Configuration } = {
-  'acceptance': {
+  acceptance: {
     branchName: 'acceptance',
     pipelineStackName: 'yivi-issue-pipeline-acceptance',
     deployFromEnvironment: Statics.gnBuildEnvironment,
@@ -91,7 +91,7 @@ const configurations: { [name: string] : Configuration } = {
       _9699982ccd3555be4d8f02a487a0287e: '_1d0dce24777d3d1257367aa28e6816c7.fgsdscwdjl.acm-validations.aws',
     },
   },
-  'production': {
+  production: {
     branchName: 'production',
     pipelineStackName: 'yivi-issue-pipeline-production',
     deployFromEnvironment: Statics.gnBuildEnvironment,

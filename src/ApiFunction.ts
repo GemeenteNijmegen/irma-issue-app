@@ -56,7 +56,7 @@ export class ApiFunction<T extends Lambda.Function> extends Construct {
     }
 
     this.monitor(props.monitorFilterPattern);
-    if(props.readOnlyRole){
+    if (props.readOnlyRole) {
       this.allowAccessToReadOnlyRole(props.readOnlyRole);
     }
   }
