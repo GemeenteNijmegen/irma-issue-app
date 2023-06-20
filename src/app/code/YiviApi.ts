@@ -34,10 +34,19 @@ export class YiviApi {
     }
     this.host = await AWS.getParameter(process.env.YIVI_API_HOST);
     this.apiKey = await AWS.getSecret(process.env.YIVI_API_KEY_ARN);
-    this.credentials = {
-      accessKeyId: await AWS.getSecret(process.env.YIVI_API_ACCESS_KEY_ID_ARN),
-      secretAccessKey: await AWS.getSecret(process.env.YIVI_API_SECRET_KEY_ARN),
-    };
+
+    if (process.env.USE_LAMBDA_ROLE_FOR_YIVI_SERVER === 'yes') {
+      console.info('Using lambda role credentials for YIVI API');
+      this.credentials = {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
+      };
+    } else {
+      this.credentials = {
+        accessKeyId: await AWS.getSecret(process.env.YIVI_API_ACCESS_KEY_ID_ARN),
+        secretAccessKey: await AWS.getSecret(process.env.YIVI_API_SECRET_KEY_ARN),
+      };
+    }
   }
 
   /**
@@ -64,7 +73,7 @@ export class YiviApi {
       throw new Error('API client is not configured propperly, missing AWS signature credentials');
     }
     const interceptor = aws4Interceptor({
-      region: process.env.AWS_REGION ?? 'eu-west-1',
+      region: process.env.YIVI_API_REGION ?? 'eu-west-1',
       service: 'execute-api',
     }, this.credentials);
     const client = axios.create({
@@ -97,6 +106,7 @@ export class YiviApi {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           console.log(`http status for ${path}: ${error.response?.status}`);
+          console.log('Error data:', error.response?.data);
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of

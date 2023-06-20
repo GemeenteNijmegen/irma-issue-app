@@ -106,6 +106,7 @@ export abstract class Statics {
   static readonly secretYiviApiKey: string = '/cdk/yivi-issue-app/yivi-api-key';
 
   static readonly codeStarConnectionArn: string = 'arn:aws:codestar-connections:eu-west-1:418648875085:connection/4f647929-c982-4f30-94f4-24ff7dbf9766';
+  static readonly codeStarConnectionArnNewLz: string = 'arn:aws:codestar-connections:eu-central-1:836443378780:connection/9d20671d-91bc-49e2-8680-59ff96e2ab11';
 
 
   /**
@@ -129,6 +130,24 @@ export abstract class Statics {
   static readonly productionEnvironment = {
     account: '196212984627',
     region: 'eu-west-1',
+  };
+
+  // New LZ
+  static readonly gnBuildEnvironment = {
+    account: '836443378780',
+    region: 'eu-central-1',
+  };
+
+  // New LZ
+  static readonly gnYiviAccpEnvironment = {
+    account: '699363516011',
+    region: 'eu-central-1',
+  };
+
+  // New LZ
+  static readonly gnYiviProdEnvironment = {
+    account: '185512167111',
+    region: 'eu-central-1',
   };
 
 }

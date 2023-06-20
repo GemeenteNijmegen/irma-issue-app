@@ -1,4 +1,5 @@
-import { Stack, StackProps, Tags, pipelines } from 'aws-cdk-lib';
+import { PermissionsBoundaryAspect } from '@gemeentenijmegen/aws-constructs';
+import { Stack, StackProps, Tags, pipelines, Aspects } from 'aws-cdk-lib';
 import { ShellStep } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
 import { ApiStage } from './ApiStage';
@@ -17,6 +18,7 @@ export class PipelineStack extends Stack {
 
     Tags.of(this).add('cdkManaged', 'yes');
     Tags.of(this).add('Project', Statics.projectName);
+    Aspects.of(this).add(new PermissionsBoundaryAspect());
 
     this.configuration = props.configuration;
 
@@ -73,8 +75,6 @@ export class PipelineStack extends Stack {
 
     const pipeline = new pipelines.CodePipeline(this, `yivi-issue-app-${this.configuration.branchName}`, {
       pipelineName: `yivi-issue-app-${this.configuration.branchName}`,
-      dockerEnabledForSelfMutation: true,
-      dockerEnabledForSynth: true,
       crossAccountKeys: true,
       synth: synthStep,
     });

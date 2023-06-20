@@ -12,6 +12,7 @@ const project = new GemeenteNijmegenCdkApp({
     '@aws-solutions-constructs/aws-lambda-dynamodb',
     'cdk-remote-stack',
     '@gemeentenijmegen/dnssec-record',
+    '@gemeentenijmegen/aws-constructs',
 
     // Lambda packages
     '@aws-sdk/client-dynamodb',
