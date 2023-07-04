@@ -49,7 +49,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     await LogsUtil.logToCloudWatch(logsClient, 'TICK: BRP', process.env.TICKEN_LOG_GROUP_NAME, process.env.TICKEN_LOG_STREAM_NAME);
     naam = brpData?.Persoon?.Persoonsgegevens?.Naam;
     if (brpData.error || !naam) {
-      error = 'Het ophalen van uw persoonsgegevens is mis gegaan. Propeer het later opnieuw.';
+      error = 'Het ophalen van uw persoonsgegevens is mis gegaan. Probeer het later opnieuw.';
     }
   }
 

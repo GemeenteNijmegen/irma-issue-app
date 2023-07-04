@@ -1,4 +1,4 @@
-import { DynamoDBClient, GetItemCommand, GetItemCommandOutput, ServiceInputTypes, ServiceOutputTypes } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, DynamoDBClientResolvedConfig, GetItemCommand, GetItemCommandOutput, ServiceInputTypes, ServiceOutputTypes } from "@aws-sdk/client-dynamodb";
 import { ApiClient } from "@gemeentenijmegen/apiclient";
 import { AwsStub } from "aws-sdk-client-mock";
 import { DigidLoa } from "../../src/app/code/DigiDLoa";
@@ -18,7 +18,7 @@ export class TestUtils {
   }
 
   static getSessionStoreMock(
-    ddMock: AwsStub<ServiceInputTypes, ServiceOutputTypes>,
+    ddMock: AwsStub<ServiceInputTypes, ServiceOutputTypes, DynamoDBClientResolvedConfig>,
     loggedin: boolean = true,
     bsn: string = '900026236',
     state: string = '12345',
