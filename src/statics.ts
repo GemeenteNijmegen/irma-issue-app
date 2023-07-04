@@ -100,7 +100,7 @@ export abstract class Statics {
    * Access to the yivi issue server
    */
   static readonly ssmYiviApiHost: string = '/cdk/yivi-issue-app/yivi-api-host';
-  static readonly ssmYiviApiRegion: string = '/cdk/yivi-issue-app/yivi-api-regopm';
+  static readonly ssmYiviApiRegion: string = '/cdk/yivi-issue-app/yivi-api-region';
   static readonly ssmYiviApiDemo: string = '/cdk/yivi-issue-app/yivi-api-demo';
   static readonly secretYiviApiAccessKeyId: string = '/cdk/yivi-issue-app/yivi-api-access-key-id';
   static readonly secretYiviApiSecretKey: string = '/cdk/yivi-issue-app/yivi-api-secret-key';
