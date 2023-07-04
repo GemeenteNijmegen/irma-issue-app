@@ -31,6 +31,7 @@ test('Initialization', async () => {
     process.env.YIVI_API_SECRET_KEY_ARN = 'secret-arn';
     process.env.YIVI_API_KEY_ARN = 'key-arn';
     process.env.YIVI_API_HOST = '/yivi/api/host';
+    process.env.YIVI_API_REGION = '/yivi/api/region';
     process.env.YIVI_API_DEMO = 'demo';
 
     const api = new YiviApi();
@@ -44,6 +45,7 @@ test('Initialization and check intialization', async () => {
     process.env.YIVI_API_SECRET_KEY_ARN = 'secret-arn';
     process.env.YIVI_API_KEY_ARN = 'key-arn';
     process.env.YIVI_API_HOST = 'gw-test.nijmegen.nl';
+    process.env.YIVI_API_REGION = 'eu-central-1';
     process.env.YIVI_API_DEMO = 'demo';
 
     axiosMock.onPost('/session').reply(200, TestUtils.getYiviSessionExampleResponse());

@@ -36,7 +36,6 @@ const config: Configuration = {
   setWafRatelimit: false,
   useDemoScheme: true,
   nijmegenSubdomain: 'snapshot-tests',
-  issueServerRegion: 'eu-west-1',
   useLambdaRoleForYiviServer: true,
 }
 
@@ -115,7 +114,7 @@ test('StackHasParameters', () => {
   const app = new App();
   const stack = new ParameterStack(app, 'test');
   const template = Template.fromStack(stack);
-  template.resourceCountIs('AWS::SSM::Parameter', 8);
+  template.resourceCountIs('AWS::SSM::Parameter', 9);
 });
 
 test('StackHasSecrets', () => {

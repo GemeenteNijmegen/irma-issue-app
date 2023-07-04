@@ -6,6 +6,7 @@ import { DigidLoa, loaToString } from './DigiDLoa';
 export class YiviApi {
 
   private host: string;
+  private region: string;
   private demo: boolean;
   private credentials: {
     accessKeyId: string;
@@ -15,6 +16,7 @@ export class YiviApi {
 
   constructor() {
     this.host = '';
+    this.region = 'eu-central-1';
     this.demo = process.env.YIVI_API_DEMO != 'demo' ? false : true;
     this.credentials = {
       accessKeyId: '',
@@ -29,10 +31,11 @@ export class YiviApi {
 
   async init() {
     if (!process.env.YIVI_API_ACCESS_KEY_ID_ARN || !process.env.YIVI_API_SECRET_KEY_ARN
-          || !process.env.YIVI_API_KEY_ARN || !process.env.YIVI_API_HOST) {
+          || !process.env.YIVI_API_KEY_ARN || !process.env.YIVI_API_HOST || !process.env.YIVI_API_REGION) {
       throw Error('Clould not initialize YIVI API client');
     }
     this.host = await AWS.getParameter(process.env.YIVI_API_HOST);
+    this.region = await AWS.getParameter(process.env.YIVI_API_REGION);
     this.apiKey = await AWS.getSecret(process.env.YIVI_API_KEY_ARN);
 
     if (process.env.USE_LAMBDA_ROLE_FOR_YIVI_SERVER === 'yes') {
@@ -73,7 +76,7 @@ export class YiviApi {
       throw new Error('API client is not configured propperly, missing AWS signature credentials');
     }
     const interceptor = aws4Interceptor({
-      region: process.env.YIVI_API_REGION ?? 'eu-west-1',
+      region: this.region,
       service: 'execute-api',
     }, this.credentials);
     const client = axios.create({
