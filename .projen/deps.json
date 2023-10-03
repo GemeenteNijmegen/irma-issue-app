@@ -5,6 +5,10 @@
       "type": "build"
     },
     {
+      "name": "@glen/jest-raw-loader",
+      "type": "build"
+    },
+    {
       "name": "@playwright/test",
       "type": "build"
     },
@@ -76,10 +80,6 @@
     {
       "name": "jest-junit",
       "version": "^15",
-      "type": "build"
-    },
-    {
-      "name": "jest-raw-loader",
       "type": "build"
     },
     {
@@ -187,7 +187,6 @@
     },
     {
       "name": "axios",
-      "version": "^0.27.2",
       "type": "runtime"
     },
     {
