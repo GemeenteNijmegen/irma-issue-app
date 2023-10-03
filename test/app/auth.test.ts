@@ -55,7 +55,9 @@ jest.mock('openid-client', () => {
   return {
     ...originalClient,
     Issuer: jest.fn(() => {
-      const originalIssuer = jest.requireActual('openid-client/lib/issuer');
+      // If we do not comment this out tests fail. However not sure of the impact of it
+      // See: https://jestjs.io/docs/jest-object#jestrequireactualmodulename
+      //const originalIssuer = jest.requireActual('openid-client/lib/issuer'); 
       return {
         Client: jest.fn(() => {
           return {
@@ -73,7 +75,7 @@ jest.mock('openid-client', () => {
             callbackParams: jest.fn(() => {}),
           };
         }),
-        ...originalIssuer,
+        //...originalIssuer,
       };
     }),
   };

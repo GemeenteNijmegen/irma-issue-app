@@ -25,7 +25,7 @@ const project = new GemeenteNijmegenCdkApp({
     '@gemeentenijmegen/utils',
     '@gemeentenijmegen/apigateway-http',
     //'@privacybydesign/yivi-frontend', // YIVI check if this package is actually used in the code
-    'axios@^0.27.2', // TODO upgrade however https://github.com/jamesmbourne/aws4-axios/issues/701
+    'axios',
     'mustache',
     '@types/mustache',
     'aws4-axios',
@@ -38,7 +38,7 @@ const project = new GemeenteNijmegenCdkApp({
     'copyfiles',
     '@playwright/test',
     'aws-sdk-client-mock',
-    'jest-raw-loader',
+    '@glen/jest-raw-loader',
     'axios-mock-adapter',
     'jest-aws-client-mock',
     '@gemeentenijmegen/projen-project-type',
@@ -51,7 +51,7 @@ const project = new GemeenteNijmegenCdkApp({
       ],
       transform: {
         '\\.[jt]sx?$': 'ts-jest',
-        '^.+\\.mustache$': 'jest-raw-loader',
+        '^.+\\.mustache$': '@glen/jest-raw-loader',
       },
       testPathIgnorePatterns: ['/node_modules/', '/cdk.out', '/test/playwright'],
       roots: ['src', 'test'],
