@@ -25,7 +25,7 @@ const project = new GemeenteNijmegenCdkApp({
     '@gemeentenijmegen/utils',
     '@gemeentenijmegen/apigateway-http',
     //'@privacybydesign/yivi-frontend', // YIVI check if this package is actually used in the code
-    'axios', // TODO upgrade however https://github.com/jamesmbourne/aws4-axios/issues/701
+    'axios',
     'mustache',
     '@types/mustache',
     'aws4-axios',
