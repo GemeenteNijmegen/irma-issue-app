@@ -211,6 +211,8 @@ export class CloudfrontStack extends Stack {
   logBucket() {
     const cfLogBucket = new S3.Bucket(this, 'CloudfrontLogs', {
       blockPublicAccess: S3.BlockPublicAccess.BLOCK_ALL,
+      // We do prefere ACL to be disabled. But: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html#AccessLogsBucketAndFileOwnership
+      // TODO remove W3045 form cfn-lint script once we are not forced to use ALC for log receiving
       accessControl: S3.BucketAccessControl.LOG_DELIVERY_WRITE,
       eventBridgeEnabled: true,
       enforceSSL: true,
@@ -223,6 +225,7 @@ export class CloudfrontStack extends Stack {
         },
       ],
     });
+
     return cfLogBucket;
   }
 
