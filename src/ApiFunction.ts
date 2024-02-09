@@ -32,7 +32,7 @@ export class ApiFunction<T extends Lambda.Function> extends Construct {
     super(scope, id);
     const retention = props.logRetention ? props.logRetention : RetentionDays.ONE_MONTH;
     this.lambda = new apiFunction(this, 'lambda', {
-      runtime: Lambda.Runtime.NODEJS_14_X, // Overwritten
+      runtime: Lambda.Runtime.NODEJS_20_X, // Overwritten
       code: Lambda.Code.fromInline('empty'), // Overwritten
       handler: 'index.handler', // Overwritten by apiFunction constructor
       memorySize: 512,

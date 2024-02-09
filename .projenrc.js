@@ -71,6 +71,9 @@ const project = new GemeenteNijmegenCdkApp({
       mustache: 'text',
     },
   },
+  scripts: {
+    lint: 'cfn-lint cdk.out/**/*.template.json -i W3005 W2001 W3045', // W3045: zie CloudFront logs bucket
+  },
 });
 
 project.synth();
