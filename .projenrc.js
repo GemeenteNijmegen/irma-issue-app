@@ -7,8 +7,6 @@ const project = new GemeenteNijmegenCdkApp({
   name: 'yivi-issue-app',
   deps: [
     'dotenv',
-    '@aws-cdk/aws-apigatewayv2-alpha',
-    '@aws-cdk/aws-apigatewayv2-integrations-alpha',
     '@aws-solutions-constructs/aws-lambda-dynamodb',
     'cdk-remote-stack',
     '@gemeentenijmegen/dnssec-record',

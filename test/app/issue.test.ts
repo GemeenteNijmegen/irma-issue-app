@@ -86,8 +86,9 @@ test('Yivi API timeout', async () => {
     axiosMock.onPost('https://example.com/brp/api/test').reply(200, TestUtils.getBrpExampleData());
 
     // Call issue request handler
-    await issueRequestHandler('session=12345', brpApi, yiviApi, dynamoDBClient, logsClient);
-    expect(console.error).toHaveBeenCalledWith('timeout of 2000ms exceeded');
+    const response = await issueRequestHandler('session=12345', brpApi, yiviApi, dynamoDBClient, logsClient);
+    expect(response.body).toContain('Er is iets mis gegaan bij het inladen van uw persoonsgegevens in Yivi. Probeer het later opnieuw');
+    
 });
 
 
@@ -98,6 +99,7 @@ test('BRP API timeout', async () => {
     axiosMock.onPost('https://example.com/brp/api/test').timeout();
 
     // Call issue request handler
-    await issueRequestHandler('session=12345', brpApi, yiviApi, dynamoDBClient, logsClient);
-    expect(console.error).toHaveBeenCalledWith('timeout of 2000ms exceeded');
+    const response = await issueRequestHandler('session=12345', brpApi, yiviApi, dynamoDBClient, logsClient);
+    expect(console.error).toHaveBeenCalledWith('BRP API:', 'Het ophalen van gegevens duurt te lang.');
+    expect(response.body).toContain('duurde te lang');
 });

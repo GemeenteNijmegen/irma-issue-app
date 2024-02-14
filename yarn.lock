@@ -30,16 +30,6 @@
   resolved "https://registry.yarnpkg.com/@aws-cdk/asset-node-proxy-agent-v6/-/asset-node-proxy-agent-v6-2.0.1.tgz#6dc9b7cdb22ff622a7176141197962360c33e9ac"
   integrity sha512-DDt4SLdLOwWCjGtltH4VCST7hpOI5DzieuhGZsBpZ+AgJdSI2GCjklCXm0GCTwJG/SolkL5dtQXyUKgg9luBDg==
 
-"@aws-cdk/aws-apigatewayv2-alpha@^2.114.1-alpha.0":
-  version "2.114.1-alpha.0"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-apigatewayv2-alpha/-/aws-apigatewayv2-alpha-2.114.1-alpha.0.tgz#831f9c448f6e5d4244d312f85ac73a2a434201d7"
-  integrity sha512-+urpw7rGrtdGvnHQlDXVfpI3TmQJpjuT9jTOeuuG5dNDczLJrUokBvQdj6H6KsngdmBC07WfWU+yL2MBp71ozA==
-
-"@aws-cdk/aws-apigatewayv2-integrations-alpha@^2.114.1-alpha.0":
-  version "2.114.1-alpha.0"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-apigatewayv2-integrations-alpha/-/aws-apigatewayv2-integrations-alpha-2.114.1-alpha.0.tgz#38b94fa36c4ee4b8f417c1430f7f7b4f0c5bd72c"
-  integrity sha512-iB7vHoTguDKLeatJS4p/8OBqH4oLCG2xBn1toUFwMD9iWoRGahGiK0pYuq24baab3SuNS1LFThJw5Zu0R+cZGA==
-
 "@aws-cdk/integ-tests-alpha@2.127.0-alpha.0":
   version "2.127.0-alpha.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/integ-tests-alpha/-/integ-tests-alpha-2.127.0-alpha.0.tgz#f3d353eaa98da365bc1e182469320c08b074d2ef"
@@ -1252,10 +1242,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.56.0.tgz#ef20350fec605a7f7035a01764731b2de0f3782b"
   integrity sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==
 
-"@gemeentenijmegen/apiclient@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@gemeentenijmegen/apiclient/-/apiclient-0.0.11.tgz#13f6666824cb19baf616b9aea1a08e35581f01d0"
-  integrity sha512-h7tz1oIMd9KLfUCIB4ADGRchB7reab3xT313navIA+u9pL67d/f3qRR25uM7aMCf3DflIBLey5+l+5JSefI0yA==
+"@gemeentenijmegen/apiclient@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@gemeentenijmegen/apiclient/-/apiclient-0.0.12.tgz#0d646d071cb312fee78738b129499b7da5c5cb26"
+  integrity sha512-C/3u2Phpa+ycS1hl8M5KjPrN9BxUkvbHprossCaPR6WE4pC4cNRpIVqgSNXutvNahiW7FNOSKUdfEh+DK9nMpw==
   dependencies:
     "@aws-sdk/client-secrets-manager" "^3.509.0"
     "@aws-sdk/client-ssm" "^3.509.0"
