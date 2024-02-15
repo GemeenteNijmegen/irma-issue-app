@@ -26,7 +26,7 @@ const project = new GemeenteNijmegenCdkApp({
     'axios',
     'mustache',
     '@types/mustache',
-    'aws4-axios',
+    'aws4-axios@3.3.0',
     'openid-client',
     '@types/cookie',
     'cookie',

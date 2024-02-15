@@ -166,6 +166,7 @@
     },
     {
       "name": "aws4-axios",
+      "version": "3.3.0",
       "type": "runtime"
     },
     {
