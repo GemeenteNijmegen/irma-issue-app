@@ -48,7 +48,7 @@ export class DashboardStack extends Stack {
       logGroupNames: [logGroup],
       view: Visualization.TABLE,
       queryLines: [
-        'filter not isempty(subject) and issueAttempt = 1', // Filter before count
+        'filter not isempty(subject) and issueAttempt == 1', // Filter before count
         'stats count(subject) as nr_of_issues_per_subject by gemeente, subject', // count
         'filter nr_of_issues_per_subject > 1', // Filter after count
         'sort gemeente',
@@ -64,7 +64,7 @@ export class DashboardStack extends Stack {
       logGroupNames: [logGroup],
       view: Visualization.LINE,
       queryLines: [
-        'filter not isempty(subject)',
+        'filter not isempty(subject) and issueAttempt == 1',
         'stats count(subject) as issued by bin(1h)',
       ],
     });
@@ -104,7 +104,7 @@ export class DashboardStack extends Stack {
       view: cloudwatch.LogQueryVisualizationType.PIE,
       queryLines: [
         'fields subject, gemeente',
-        'filter not isempty(subject)',
+        'filter not isempty(subject) and issueAttempt == 1',
         'stats count(subject) as counts by gemeente',
         'sort gemeente',
       ],
@@ -119,7 +119,7 @@ export class DashboardStack extends Stack {
       logGroupNames: [logGroup],
       view: cloudwatch.LogQueryVisualizationType.TABLE,
       queryLines: [
-        'filter not isempty(subject)',
+        'filter not isempty(subject) and issueAttempt == 1',
         'stats count(subject) as issued by gemeente',
         'sort issued desc',
       ],
@@ -134,7 +134,7 @@ export class DashboardStack extends Stack {
       logGroupNames: [logGroup],
       view: cloudwatch.LogQueryVisualizationType.TABLE,
       queryLines: [
-        'filter not isempty(subject)',
+        'filter not isempty(subject) and issueAttempt == 1',
         'stats count(subject) as issued',
       ],
     });
