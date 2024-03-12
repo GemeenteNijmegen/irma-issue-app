@@ -101,6 +101,7 @@ export class CloudfrontStack extends Stack {
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       cachePolicy: this.cachePolicy(),
       responseHeadersPolicy: this.responseHeadersPolicy(),
+      originRequestPolicy: this.originRequestPolicy(),
       allowedMethods: AllowedMethods.ALLOW_ALL,
     });
   }

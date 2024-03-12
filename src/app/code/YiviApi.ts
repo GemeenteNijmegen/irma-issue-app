@@ -83,7 +83,7 @@ export class YiviApi {
       credentials: this.credentials,
     });
     const client = axios.create({
-      baseURL: `https://${this.host}`,
+      baseURL: `https://${this.host.replace('https://', '')}`,
       timeout: 2000,
       headers: {
         'irma-authorization': this.apiKey,
