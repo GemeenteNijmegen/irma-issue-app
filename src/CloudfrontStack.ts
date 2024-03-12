@@ -45,6 +45,7 @@ export interface CloudFrontStackProps extends StackProps, Configurable {
 export class CloudfrontStack extends Stack {
   private _cachePolicy?: CachePolicy;
   private _responseHeadersPolicy?: ResponseHeadersPolicy;
+  private _originRequestPolicy?: OriginRequestPolicy;
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id);
 
@@ -100,6 +101,7 @@ export class CloudfrontStack extends Stack {
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       cachePolicy: this.cachePolicy(),
       responseHeadersPolicy: this.responseHeadersPolicy(),
+      allowedMethods: AllowedMethods.ALLOW_ALL,
     });
   }
 
@@ -151,18 +153,7 @@ export class CloudfrontStack extends Stack {
       webAclId,
       defaultBehavior: {
         origin: new HttpOrigin(apiGatewayDomain),
-        originRequestPolicy: new OriginRequestPolicy(this, 'cf-originrequestpolicy', {
-          originRequestPolicyName: 'cfOriginRequestPolicyYiviIssueApp',
-          headerBehavior: OriginRequestHeaderBehavior.allowList(
-            'Accept-Charset',
-            'Origin',
-            'Accept',
-            'Referer',
-            'Accept-Language',
-            'Accept-Datetime',
-            'Authoriz',
-          ),
-        }),
+        originRequestPolicy: this.originRequestPolicy(),
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: AllowedMethods.ALLOW_ALL,
         cachePolicy: this.cachePolicy(),
@@ -291,6 +282,26 @@ export class CloudfrontStack extends Stack {
       this._responseHeadersPolicy = responseHeadersPolicy;
     }
     return this._responseHeadersPolicy;
+  }
+
+  originRequestPolicy(): OriginRequestPolicy {
+    if (!this._originRequestPolicy) {
+      this._originRequestPolicy = new OriginRequestPolicy(this, 'cf-originrequestpolicy', {
+        originRequestPolicyName: 'cfOriginRequestPolicyYiviIssueApp',
+        headerBehavior: OriginRequestHeaderBehavior.allowList(
+          'Accept-Charset',
+          'Origin',
+          'Accept',
+          'Referer',
+          'Accept-Language',
+          'Accept-Datetime',
+          'Authoriz',
+          'irma-authorization',
+          'Content-type',
+        ),
+      });
+    }
+    return this._originRequestPolicy;
   }
 
   /**
