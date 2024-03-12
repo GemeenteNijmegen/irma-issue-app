@@ -97,7 +97,7 @@ export class CloudfrontStack extends Stack {
   private addIssueServerConfiguration(cloudfrontDistribution: Distribution) {
     const url = StringParameter.valueForStringParameter(this, Statics.ssmYiviApiHost);
     const origin = new HttpOrigin(url);
-    cloudfrontDistribution.addBehavior('/issue/*', origin, {
+    cloudfrontDistribution.addBehavior('/api/*', origin, {
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       cachePolicy: this.cachePolicy(),
       responseHeadersPolicy: this.responseHeadersPolicy(),
