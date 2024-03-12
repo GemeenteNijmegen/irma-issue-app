@@ -28,6 +28,7 @@ import {
   OriginAccessIdentity,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { HttpOrigin, S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { RemoteParameters } from 'cdk-remote-stack';
 import { Construct } from 'constructs';
 import { Configurable } from './Configuration';
@@ -42,6 +43,8 @@ export interface CloudFrontStackProps extends StackProps, Configurable {
 }
 
 export class CloudfrontStack extends Stack {
+  private _cachePolicy?: CachePolicy;
+  private _responseHeadersPolicy?: ResponseHeadersPolicy;
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id);
 
@@ -56,6 +59,7 @@ export class CloudfrontStack extends Stack {
 
     const cloudfrontDistribution = this.setCloudfrontStack(props.apiGatewayDomain, domains, certificateArn);
     this.addStaticResources(cloudfrontDistribution);
+    this.addIssueServerConfiguration(cloudfrontDistribution);
     this.addDnsRecords(cloudfrontDistribution);
   }
 
@@ -83,6 +87,20 @@ export class CloudfrontStack extends Stack {
     });
     const wafAclId = parameters.get(Statics.ssmWafAclArn);
     return wafAclId;
+  }
+
+  /**
+   * Adds the brp issuer to the cloudfront origin, so we can route traffic through this endpoint,
+   * and pass through custom error responses.
+   */
+  private addIssueServerConfiguration(cloudfrontDistribution: Distribution) {
+    const url = StringParameter.valueForStringParameter(this, Statics.ssmYiviApiHost);
+    const origin = new HttpOrigin(url);
+    cloudfrontDistribution.addBehavior('/issue/*', origin, {
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      cachePolicy: this.cachePolicy(),
+      responseHeadersPolicy: this.responseHeadersPolicy(),
+    });
   }
 
   /**
@@ -147,15 +165,7 @@ export class CloudfrontStack extends Stack {
         }),
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: AllowedMethods.ALLOW_ALL,
-        cachePolicy: new CachePolicy(this, 'cf-caching', {
-          cachePolicyName: 'cfCachingSessionsYiviIssueApp',
-          cookieBehavior: CacheCookieBehavior.all(),
-          headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
-          queryStringBehavior: CacheQueryStringBehavior.all(),
-          defaultTtl: Duration.seconds(0),
-          minTtl: Duration.seconds(0),
-          maxTtl: Duration.seconds(1),
-        }),
+        cachePolicy: this.cachePolicy(),
         responseHeadersPolicy: this.responseHeadersPolicy(),
       },
       errorResponses: this.errorResponses(),
@@ -229,42 +239,58 @@ export class CloudfrontStack extends Stack {
     return cfLogBucket;
   }
 
+  cachePolicy() {
+    if (!this._cachePolicy) {
+      this._cachePolicy = new CachePolicy(this, 'cf-caching', {
+        cachePolicyName: 'cfCachingSessionsYiviIssueApp',
+        cookieBehavior: CacheCookieBehavior.all(),
+        headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
+        queryStringBehavior: CacheQueryStringBehavior.all(),
+        defaultTtl: Duration.seconds(0),
+        minTtl: Duration.seconds(0),
+        maxTtl: Duration.seconds(1),
+      });
+    } return this._cachePolicy;
+  }
+
 
   /**
    * Get a set of (security) response headers to inject into the response
    * @returns {ResponseHeadersPolicy} cloudfront responseHeadersPolicy
    */
   responseHeadersPolicy(): ResponseHeadersPolicy {
-
-    const responseHeadersPolicy = new ResponseHeadersPolicy(this, 'headers', {
-      securityHeadersBehavior: {
-        contentSecurityPolicy: { contentSecurityPolicy: this.cspHeaderValue(), override: true },
-        contentTypeOptions: { override: true },
-        frameOptions: { frameOption: HeadersFrameOption.DENY, override: true },
-        referrerPolicy: { referrerPolicy: HeadersReferrerPolicy.NO_REFERRER, override: true },
-        strictTransportSecurity: { accessControlMaxAge: Duration.days(366), includeSubdomains: true, override: true },
-      },
-      customHeadersBehavior: {
-        customHeaders: [
-          {
-            header: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
-            override: false,
-          },
-          {
-            header: 'Pragma',
-            value: 'no-cache',
-            override: false,
-          },
-          {
-            header: 'Expires',
-            value: '0',
-            override: false,
-          },
-        ],
-      },
-    });
-    return responseHeadersPolicy;
+    if (!this._responseHeadersPolicy) {
+      const responseHeadersPolicy = new ResponseHeadersPolicy(this, 'headers', {
+        securityHeadersBehavior: {
+          contentSecurityPolicy: { contentSecurityPolicy: this.cspHeaderValue(), override: true },
+          contentTypeOptions: { override: true },
+          frameOptions: { frameOption: HeadersFrameOption.DENY, override: true },
+          referrerPolicy: { referrerPolicy: HeadersReferrerPolicy.NO_REFERRER, override: true },
+          strictTransportSecurity: { accessControlMaxAge: Duration.days(366), includeSubdomains: true, override: true },
+        },
+        customHeadersBehavior: {
+          customHeaders: [
+            {
+              header: 'Cache-Control',
+              value: 'no-cache, no-store, must-revalidate',
+              override: false,
+            },
+            {
+              header: 'Pragma',
+              value: 'no-cache',
+              override: false,
+            },
+            {
+              header: 'Expires',
+              value: '0',
+              override: false,
+            },
+          ],
+        },
+      });
+      this._responseHeadersPolicy = responseHeadersPolicy;
+    }
+    return this._responseHeadersPolicy;
   }
 
   /**
