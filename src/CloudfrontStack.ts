@@ -28,7 +28,6 @@ import {
   OriginAccessIdentity,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { HttpOrigin, S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins';
-import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { RemoteParameters } from 'cdk-remote-stack';
 import { Construct } from 'constructs';
 import { Configurable } from './Configuration';
@@ -60,7 +59,6 @@ export class CloudfrontStack extends Stack {
 
     const cloudfrontDistribution = this.setCloudfrontStack(props.apiGatewayDomain, domains, certificateArn);
     this.addStaticResources(cloudfrontDistribution);
-    this.addIssueServerConfiguration(cloudfrontDistribution);
     this.addDnsRecords(cloudfrontDistribution);
   }
 
@@ -88,22 +86,6 @@ export class CloudfrontStack extends Stack {
     });
     const wafAclId = parameters.get(Statics.ssmWafAclArn);
     return wafAclId;
-  }
-
-  /**
-   * Adds the brp issuer to the cloudfront origin, so we can route traffic through this endpoint,
-   * and pass through custom error responses.
-   */
-  private addIssueServerConfiguration(cloudfrontDistribution: Distribution) {
-    const url = StringParameter.valueForStringParameter(this, Statics.ssmYiviApiHost);
-    const origin = new HttpOrigin(url);
-    cloudfrontDistribution.addBehavior('/api/*', origin, {
-      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-      cachePolicy: this.cachePolicy(),
-      responseHeadersPolicy: this.responseHeadersPolicy(),
-      originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
-      allowedMethods: AllowedMethods.ALLOW_ALL,
-    });
   }
 
   /**
@@ -297,8 +279,6 @@ export class CloudfrontStack extends Stack {
           'Accept-Language',
           'Accept-Datetime',
           'Authoriz',
-          'irma-authorization',
-          'Content-type',
         ),
       });
     }
