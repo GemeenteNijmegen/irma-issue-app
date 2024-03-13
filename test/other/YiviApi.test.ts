@@ -36,7 +36,7 @@ test('Initialization', async () => {
 
   const api = new YiviApi();
   await api.init();
-  expect(api.getHost()).toBe('https://localhost/yivi');
+  expect(api.getHost()).toBe('param-https://localhost/yivi');
   expect(AWS.getSecret).toHaveBeenCalledTimes(3);
 });
 
