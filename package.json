@@ -47,7 +47,7 @@
     "aws-sdk-client-mock": "^3.0.1",
     "axios-mock-adapter": "^1.22.0",
     "copyfiles": "^2.4.1",
-    "esbuild": "^0.20.1",
+    "esbuild": "^0.20.2",
     "eslint": "^8",
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-import": "^2.29.1",
@@ -63,7 +63,7 @@
   "dependencies": {
     "@aws-sdk/client-cloudwatch-logs": "^3.533.0",
     "@aws-sdk/client-dynamodb": "^3.533.0",
-    "@aws-sdk/client-secrets-manager": "^3.533.0",
+    "@aws-sdk/client-secrets-manager": "^3.534.0",
     "@aws-sdk/client-ses": "^3.533.0",
     "@aws-sdk/client-ssm": "^3.533.0",
     "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.54.0",
