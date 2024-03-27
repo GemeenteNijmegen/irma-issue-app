@@ -50,6 +50,9 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     naam = brpData?.Persoon?.Persoonsgegevens?.Naam;
     if (brpData.error || !naam) {
       error = 'Het ophalen van uw persoonsgegevens is mis gegaan. Probeer het later opnieuw.';
+      if (brpData.error?.includes('duurt te lang')) {
+        error = 'Het ophalen van uw persoonsgegevens duurde te lang. Probeer het later opnieuw.';
+      }
     }
   }
 
@@ -61,7 +64,7 @@ async function handleLoggedinRequest(session: Session, brpApi: BrpApi, yiviApi: 
     if (!yiviResponse.error) {
       yiviFullSession = Buffer.from(JSON.stringify(yiviResponse), 'utf-8').toString('base64');
     } else {
-      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in Yivi. Probeer het later opnieuw';
+      error = 'Er is iets mis gegaan bij het inladen van uw persoonsgegevens in Yivi. Probeer het later opnieuw.';
     }
   }
 

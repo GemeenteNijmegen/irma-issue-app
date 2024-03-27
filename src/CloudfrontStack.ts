@@ -42,6 +42,9 @@ export interface CloudFrontStackProps extends StackProps, Configurable {
 }
 
 export class CloudfrontStack extends Stack {
+  private _cachePolicy?: CachePolicy;
+  private _responseHeadersPolicy?: ResponseHeadersPolicy;
+  private _originRequestPolicy?: OriginRequestPolicy;
   constructor(scope: Construct, id: string, props: CloudFrontStackProps) {
     super(scope, id);
 
@@ -133,29 +136,10 @@ export class CloudfrontStack extends Stack {
       webAclId,
       defaultBehavior: {
         origin: new HttpOrigin(apiGatewayDomain),
-        originRequestPolicy: new OriginRequestPolicy(this, 'cf-originrequestpolicy', {
-          originRequestPolicyName: 'cfOriginRequestPolicyYiviIssueApp',
-          headerBehavior: OriginRequestHeaderBehavior.allowList(
-            'Accept-Charset',
-            'Origin',
-            'Accept',
-            'Referer',
-            'Accept-Language',
-            'Accept-Datetime',
-            'Authoriz',
-          ),
-        }),
+        originRequestPolicy: this.originRequestPolicy(),
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: AllowedMethods.ALLOW_ALL,
-        cachePolicy: new CachePolicy(this, 'cf-caching', {
-          cachePolicyName: 'cfCachingSessionsYiviIssueApp',
-          cookieBehavior: CacheCookieBehavior.all(),
-          headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
-          queryStringBehavior: CacheQueryStringBehavior.all(),
-          defaultTtl: Duration.seconds(0),
-          minTtl: Duration.seconds(0),
-          maxTtl: Duration.seconds(1),
-        }),
+        cachePolicy: this.cachePolicy(),
         responseHeadersPolicy: this.responseHeadersPolicy(),
       },
       errorResponses: this.errorResponses(),
@@ -229,42 +213,76 @@ export class CloudfrontStack extends Stack {
     return cfLogBucket;
   }
 
+  cachePolicy() {
+    if (!this._cachePolicy) {
+      this._cachePolicy = new CachePolicy(this, 'cf-caching', {
+        cachePolicyName: 'cfCachingSessionsYiviIssueApp',
+        cookieBehavior: CacheCookieBehavior.all(),
+        headerBehavior: CacheHeaderBehavior.allowList('Authorization'),
+        queryStringBehavior: CacheQueryStringBehavior.all(),
+        defaultTtl: Duration.seconds(0),
+        minTtl: Duration.seconds(0),
+        maxTtl: Duration.seconds(1),
+      });
+    } return this._cachePolicy;
+  }
+
 
   /**
    * Get a set of (security) response headers to inject into the response
    * @returns {ResponseHeadersPolicy} cloudfront responseHeadersPolicy
    */
   responseHeadersPolicy(): ResponseHeadersPolicy {
+    if (!this._responseHeadersPolicy) {
+      const responseHeadersPolicy = new ResponseHeadersPolicy(this, 'headers', {
+        securityHeadersBehavior: {
+          contentSecurityPolicy: { contentSecurityPolicy: this.cspHeaderValue(), override: true },
+          contentTypeOptions: { override: true },
+          frameOptions: { frameOption: HeadersFrameOption.DENY, override: true },
+          referrerPolicy: { referrerPolicy: HeadersReferrerPolicy.NO_REFERRER, override: true },
+          strictTransportSecurity: { accessControlMaxAge: Duration.days(366), includeSubdomains: true, override: true },
+        },
+        customHeadersBehavior: {
+          customHeaders: [
+            {
+              header: 'Cache-Control',
+              value: 'no-cache, no-store, must-revalidate',
+              override: false,
+            },
+            {
+              header: 'Pragma',
+              value: 'no-cache',
+              override: false,
+            },
+            {
+              header: 'Expires',
+              value: '0',
+              override: false,
+            },
+          ],
+        },
+      });
+      this._responseHeadersPolicy = responseHeadersPolicy;
+    }
+    return this._responseHeadersPolicy;
+  }
 
-    const responseHeadersPolicy = new ResponseHeadersPolicy(this, 'headers', {
-      securityHeadersBehavior: {
-        contentSecurityPolicy: { contentSecurityPolicy: this.cspHeaderValue(), override: true },
-        contentTypeOptions: { override: true },
-        frameOptions: { frameOption: HeadersFrameOption.DENY, override: true },
-        referrerPolicy: { referrerPolicy: HeadersReferrerPolicy.NO_REFERRER, override: true },
-        strictTransportSecurity: { accessControlMaxAge: Duration.days(366), includeSubdomains: true, override: true },
-      },
-      customHeadersBehavior: {
-        customHeaders: [
-          {
-            header: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
-            override: false,
-          },
-          {
-            header: 'Pragma',
-            value: 'no-cache',
-            override: false,
-          },
-          {
-            header: 'Expires',
-            value: '0',
-            override: false,
-          },
-        ],
-      },
-    });
-    return responseHeadersPolicy;
+  originRequestPolicy(): OriginRequestPolicy {
+    if (!this._originRequestPolicy) {
+      this._originRequestPolicy = new OriginRequestPolicy(this, 'cf-originrequestpolicy', {
+        originRequestPolicyName: 'cfOriginRequestPolicyYiviIssueApp',
+        headerBehavior: OriginRequestHeaderBehavior.allowList(
+          'Accept-Charset',
+          'Origin',
+          'Accept',
+          'Referer',
+          'Accept-Language',
+          'Accept-Datetime',
+          'Authoriz',
+        ),
+      });
+    }
+    return this._originRequestPolicy;
   }
 
   /**

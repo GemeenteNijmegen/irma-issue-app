@@ -1,6 +1,14 @@
-import * as apigatewayv2 from '@aws-cdk/aws-apigatewayv2-alpha';
-import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
-import { aws_secretsmanager, Stack, StackProps, aws_ssm as SSM, aws_logs as logs, aws_ssm as ssm, aws_iam as iam } from 'aws-cdk-lib';
+import {
+  aws_secretsmanager,
+  Stack,
+  StackProps,
+  aws_ssm as SSM,
+  aws_logs as logs,
+  aws_ssm as ssm,
+  aws_iam as iam,
+  aws_apigatewayv2 as apigatewayv2,
+} from 'aws-cdk-lib';
+import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
 import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
@@ -130,6 +138,8 @@ export class ApiStack extends Stack {
     const yiviApiHost = SSM.StringParameter.fromStringParameterName(this, 'yivi-api-host', Statics.ssmYiviApiHost);
     const yiviApiRegion = SSM.StringParameter.fromStringParameterName(this, 'yivi-api-region', Statics.ssmYiviApiRegion);
     const brpApiUrl = SSM.StringParameter.fromStringParameterName(this, 'brp-api-url', Statics.ssmBrpApiEndpointUrl);
+
+
     const issueFunction = new ApiFunction(this, 'yivi-issue-issue-function', {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',

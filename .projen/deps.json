@@ -18,7 +18,7 @@
     },
     {
       "name": "@types/node",
-      "version": "^16",
+      "version": "^18",
       "type": "build"
     },
     {
@@ -53,10 +53,6 @@
       "type": "build"
     },
     {
-      "name": "eslint-import-resolver-node",
-      "type": "build"
-    },
-    {
       "name": "eslint-import-resolver-typescript",
       "type": "build"
     },
@@ -83,11 +79,6 @@
       "type": "build"
     },
     {
-      "name": "npm-check-updates",
-      "version": "^16",
-      "type": "build"
-    },
-    {
       "name": "projen",
       "type": "build"
     },
@@ -107,14 +98,6 @@
     {
       "name": "typescript",
       "type": "build"
-    },
-    {
-      "name": "@aws-cdk/aws-apigatewayv2-alpha",
-      "type": "runtime"
-    },
-    {
-      "name": "@aws-cdk/aws-apigatewayv2-integrations-alpha",
-      "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-cloudwatch-logs",
@@ -183,6 +166,7 @@
     },
     {
       "name": "aws4-axios",
+      "version": "3.3.0",
       "type": "runtime"
     },
     {
