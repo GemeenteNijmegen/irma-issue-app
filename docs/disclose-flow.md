@@ -16,7 +16,7 @@ note over User, Signicat: Start login flow
 User-->>Browser: Go to mijn.nijmegen.nl/login
 
 Browser->>MijnNijmegen: Request /login
-MijnNijmegen-->>Browser: Webpagina (Cookie=sessionId)
+MijnNijmegen-->>Browser: Webpagina
 
 note over User, Signicat: Authenticatie via Signicat (authenticatie broaker)
 
