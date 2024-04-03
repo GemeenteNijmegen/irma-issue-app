@@ -67,7 +67,7 @@
     "@aws-sdk/client-ses": "^3.540.0",
     "@aws-sdk/client-ssm": "^3.540.0",
     "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.54.0",
-    "@gemeentenijmegen/apiclient": "^0.0.12",
+    "@gemeentenijmegen/apiclient": "^0.0.13",
     "@gemeentenijmegen/apigateway-http": "^0.0.8",
     "@gemeentenijmegen/aws-constructs": "^0.0.5",
     "@gemeentenijmegen/dnssec-record": "^0.0.8",
