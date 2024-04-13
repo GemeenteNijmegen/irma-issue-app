@@ -38,7 +38,7 @@
   "devDependencies": {
     "@gemeentenijmegen/projen-project-type": "^1.5.8",
     "@glen/jest-raw-loader": "^2.0.0",
-    "@playwright/test": "^1.43.0",
+    "@playwright/test": "^1.43.1",
     "@types/jest": "^29.5.12",
     "@types/node": "^18",
     "@typescript-eslint/eslint-plugin": "^6",
@@ -66,7 +66,7 @@
     "@aws-sdk/client-secrets-manager": "^3.554.0",
     "@aws-sdk/client-ses": "^3.554.0",
     "@aws-sdk/client-ssm": "^3.554.0",
-    "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.54.1",
+    "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.55.0",
     "@gemeentenijmegen/apiclient": "^0.0.13",
     "@gemeentenijmegen/apigateway-http": "^0.0.8",
     "@gemeentenijmegen/aws-constructs": "^0.0.7",
