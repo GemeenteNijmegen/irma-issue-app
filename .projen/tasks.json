@@ -64,7 +64,7 @@
       "description": "Create a JavaScript bundle from src/app/auth/auth.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/auth/auth.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/auth/auth.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
+          "exec": "esbuild --bundle src/app/auth/auth.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/auth/auth.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
         }
       ]
     },
@@ -73,7 +73,7 @@
       "description": "Continuously update the JavaScript bundle from src/app/auth/auth.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/auth/auth.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/auth/auth.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
+          "exec": "esbuild --bundle src/app/auth/auth.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/auth/auth.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
         }
       ]
     },
@@ -82,7 +82,7 @@
       "description": "Create a JavaScript bundle from src/app/issue/issue.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
+          "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
         }
       ]
     },
@@ -91,7 +91,7 @@
       "description": "Continuously update the JavaScript bundle from src/app/issue/issue.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
+          "exec": "esbuild --bundle src/app/issue/issue.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/issue/issue.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
         }
       ]
     },
@@ -100,7 +100,7 @@
       "description": "Create a JavaScript bundle from src/app/login/login.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
+          "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
         }
       ]
     },
@@ -109,7 +109,7 @@
       "description": "Continuously update the JavaScript bundle from src/app/login/login.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
+          "exec": "esbuild --bundle src/app/login/login.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/login/login.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
         }
       ]
     },
@@ -118,7 +118,7 @@
       "description": "Create a JavaScript bundle from src/app/logout/logout.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
+          "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
         }
       ]
     },
@@ -127,7 +127,7 @@
       "description": "Continuously update the JavaScript bundle from src/app/logout/logout.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
+          "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
         }
       ]
     },
@@ -363,7 +363,7 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@gemeentenijmegen/projen-project-type,@glen/jest-raw-loader,@playwright/test,@types/jest,aws-sdk-client-mock,axios-mock-adapter,copyfiles,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,jest-aws-client-mock,projen,ts-jest,ts-node,typescript,@aws-sdk/client-cloudwatch-logs,@aws-sdk/client-dynamodb,@aws-sdk/client-secrets-manager,@aws-sdk/client-ses,@aws-sdk/client-ssm,@aws-solutions-constructs/aws-lambda-dynamodb,@gemeentenijmegen/apiclient,@gemeentenijmegen/apigateway-http,@gemeentenijmegen/aws-constructs,@gemeentenijmegen/dnssec-record,@gemeentenijmegen/session,@gemeentenijmegen/utils,@types/aws-lambda,@types/cookie,@types/mustache,axios,cdk-remote-stack,cookie,dotenv,mustache,openid-client"
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@gemeentenijmegen/projen-project-type,@glen/jest-raw-loader,@playwright/test,@types/jest,aws-sdk-client-mock,axios-mock-adapter,copyfiles,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,jest-aws-client-mock,projen,ts-jest,ts-node,typescript,@aws-sdk/client-cloudwatch-logs,@aws-sdk/client-dynamodb,@aws-sdk/client-secrets-manager,@aws-sdk/client-ses,@aws-sdk/client-ssm,@aws-solutions-constructs/aws-lambda-dynamodb,@gemeentenijmegen/apiclient,@gemeentenijmegen/apigateway-http,@gemeentenijmegen/aws-constructs,@gemeentenijmegen/dnssec-record,@gemeentenijmegen/session,@gemeentenijmegen/utils,@types/aws-lambda,@types/cookie,@types/mustache,aws4-axios,axios,cdk-remote-stack,cookie,dotenv,mustache,openid-client"
         },
         {
           "exec": "yarn install --check-files"
