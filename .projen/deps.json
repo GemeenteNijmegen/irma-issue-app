@@ -148,6 +148,10 @@
       "type": "runtime"
     },
     {
+      "name": "@pepperize/cdk-route53-health-check",
+      "type": "runtime"
+    },
+    {
       "name": "@types/aws-lambda",
       "type": "runtime"
     },
