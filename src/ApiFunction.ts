@@ -85,7 +85,7 @@ export class ApiFunction<T extends Lambda.Function> extends Construct {
       }),
       evaluationPeriods: 3,
       threshold: 5,
-      alarmName: `Increased error rate for ${this.node.id}`,
+      alarmName: `total-error-rate-for-${this.node.id}-high-lvl`,
       alarmDescription: `This alarm triggers if the function ${this.node.id} is logging more than 5 errors over n minutes.`,
     });
     alarm.applyRemovalPolicy(RemovalPolicy.DESTROY);
