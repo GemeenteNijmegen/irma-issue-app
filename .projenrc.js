@@ -12,6 +12,8 @@ const project = new GemeenteNijmegenCdkApp({
     '@gemeentenijmegen/dnssec-record',
     '@gemeentenijmegen/aws-constructs',
 
+    '@pepperize/cdk-route53-health-check',
+
     // Lambda packages
     '@aws-sdk/client-dynamodb',
     '@aws-sdk/client-secrets-manager',
@@ -61,6 +63,9 @@ const project = new GemeenteNijmegenCdkApp({
   gitignore: [
     'src/app/**/tests/output',
     'test/playwright/report',
+    'test/playwright/tests/report',
+    'test/playwright/tests/results',
+    'test/playwright/test-results',
     'test/playwright/screenshots',
     'test/__snapshots__/*',
   ],

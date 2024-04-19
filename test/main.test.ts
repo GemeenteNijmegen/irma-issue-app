@@ -1,15 +1,16 @@
 import { App } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
+import { Node } from 'constructs';
 import * as Dotenv from 'dotenv';
 import { ApiStack } from '../src/ApiStack';
+import { ApiStage } from '../src/ApiStage';
+import { Configuration } from '../src/Configuration';
+import { Criticality } from '../src/Criticality';
+import { DNSStack } from '../src/DNSStack';
+import { KeyStack } from '../src/keystack';
 import { ParameterStack } from '../src/ParameterStage';
 import { PipelineStack } from '../src/PipelineStack';
 import { SessionsStack } from '../src/SessionsStack';
-import { DNSStack } from '../src/DNSStack';
-import { KeyStack } from '../src/keystack';
-import { Configuration } from '../src/Configuration';
-import { Node } from 'constructs';
-import { ApiStage } from '../src/ApiStage';
 
 /**
  * Checks all snapshots in a stage
@@ -24,7 +25,7 @@ function checkStackSnapshotsInStage(app: App, node: Node) {
 const snapshotEnv = {
   account: '123456789012',
   region: 'eu-central-1',
-}
+};
 
 const config: Configuration = {
   branchName: 'snapshot-tests',
@@ -37,7 +38,8 @@ const config: Configuration = {
   useDemoScheme: true,
   nijmegenSubdomain: 'snapshot-tests',
   useLambdaRoleForYiviServer: true,
-}
+  criticality: new Criticality('low'),
+};
 
 beforeAll(() => {
   Dotenv.config();
@@ -45,8 +47,8 @@ beforeAll(() => {
 
 test('Snapshot pipeline', () => {
   const app = new App();
-  const stack = new PipelineStack(app, 'test', { 
-    env: { account: 'test', region: 'eu-west-1' }, 
+  const stack = new PipelineStack(app, 'test', {
+    env: { account: 'test', region: 'eu-west-1' },
     configuration: config,
   });
   const template = Template.fromStack(stack);
@@ -55,8 +57,8 @@ test('Snapshot pipeline', () => {
 
 test('MainPipelineExists', () => {
   const app = new App();
-  const stack = new PipelineStack(app, 'test', { 
-    env: { account: 'test', region: 'eu-west-1' }, 
+  const stack = new PipelineStack(app, 'test', {
+    env: { account: 'test', region: 'eu-west-1' },
     configuration: config,
   });
   const template = Template.fromStack(stack);
@@ -66,7 +68,7 @@ test('MainPipelineExists', () => {
 test('StackHasSessionsTable', () => {
   const app = new App();
   const keyStack = new KeyStack(app, 'keystack');
-  const stack = new SessionsStack(app, 'test', { key: keyStack.key});
+  const stack = new SessionsStack(app, 'test', { key: keyStack.key });
   const template = Template.fromStack(stack);
   template.resourceCountIs('AWS::DynamoDB::Table', 1);
   template.hasResourceProperties('AWS::DynamoDB::Table', {
@@ -82,12 +84,12 @@ test('StackHasSessionsTable', () => {
 test('StackHasApiGateway', () => {
   const app = new App();
   const keyStack = new KeyStack(app, 'keystack');
-  const sessionsStack = new SessionsStack(app, 'test', { key: keyStack.key});
+  const sessionsStack = new SessionsStack(app, 'test', { key: keyStack.key });
   new DNSStack(app, 'dns', {
     configuration: config,
   });
-  const stack = new ApiStack(app, 'api', { 
-    sessionsTable: sessionsStack.sessionsTable, 
+  const stack = new ApiStack(app, 'api', {
+    sessionsTable: sessionsStack.sessionsTable,
     configuration: config,
   });
   const template = Template.fromStack(stack);
@@ -98,12 +100,12 @@ test('StackHasApiGateway', () => {
 test('StackHasLambdas', () => {
   const app = new App();
   const keyStack = new KeyStack(app, 'keystack');
-  const sessionsStack = new SessionsStack(app, 'test', { key: keyStack.key});
+  const sessionsStack = new SessionsStack(app, 'test', { key: keyStack.key });
   new DNSStack(app, 'dns', {
     configuration: config,
   });
-  const stack = new ApiStack(app, 'api', { 
-    sessionsTable: sessionsStack.sessionsTable, 
+  const stack = new ApiStack(app, 'api', {
+    sessionsTable: sessionsStack.sessionsTable,
     configuration: config,
   });
   const template = Template.fromStack(stack);
@@ -131,4 +133,4 @@ test('ApiStage snapshot', () => {
     configuration: config,
   });
   checkStackSnapshotsInStage(app, stage.node);
-})
+});
