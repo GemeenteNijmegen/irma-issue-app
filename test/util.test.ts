@@ -1,18 +1,20 @@
+import { Criticality } from '../src/Criticality';
 import { AppDomainUtil } from '../src/Util';
 
 test('get domain names', () => {
   const domainNames = AppDomainUtil.getDomainNames({
-    branchName: "test",
+    branchName: 'test',
     pipelineStackName: 'unit-test-pipeline-stack',
-    codeStarConnectionArn: "",
-    deployFromEnvironment: { region: "", account: "" },
-    deployToEnvironment: { region: "", account: "" },
+    codeStarConnectionArn: '',
+    deployFromEnvironment: { region: '', account: '' },
+    deployToEnvironment: { region: '', account: '' },
     includePipelineValidationChecks: false,
     setWafRatelimit: false,
     useDemoScheme: true,
-    nijmegenSubdomain: "test",
+    nijmegenSubdomain: 'test',
     useLambdaRoleForYiviServer: true,
-  }, "test.csp-nijmegen.nl");
+    criticality: new Criticality('low'),
+  }, 'test.csp-nijmegen.nl');
   expect(domainNames).toContain('test.nijmegen.nl');
   expect(domainNames).toContain('test.csp-nijmegen.nl');
 });
@@ -20,16 +22,17 @@ test('get domain names', () => {
 
 test('baseurl', () => {
   const baseurl = AppDomainUtil.getBaseUrl({
-    branchName: "test",
+    branchName: 'test',
     pipelineStackName: 'unit-test-pipeline-stack',
-    codeStarConnectionArn: "",
-    deployFromEnvironment: { region: "", account: "" },
-    deployToEnvironment: { region: "", account: "" },
+    codeStarConnectionArn: '',
+    deployFromEnvironment: { region: '', account: '' },
+    deployToEnvironment: { region: '', account: '' },
     includePipelineValidationChecks: false,
     setWafRatelimit: false,
     useDemoScheme: true,
-    nijmegenSubdomain: "test",
+    nijmegenSubdomain: 'test',
     useLambdaRoleForYiviServer: true,
-  }, "test.csp-nijmegen.nl");
+    criticality: new Criticality('low'),
+  }, 'test.csp-nijmegen.nl');
   expect(baseurl).toContain('https://test.nijmegen.nl/');
 });

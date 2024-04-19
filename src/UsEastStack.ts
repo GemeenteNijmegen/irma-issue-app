@@ -67,7 +67,7 @@ export class UsEastCertificateStack extends Stack {
       });
 
       new Alarm(this, `healthcheck-alarm-${hash}`, {
-        alarmName: `yivi-issue-app-healthcheck-${hash}-critical-lvl`,
+        alarmName: `yivi-issue-app-healthcheck-${hash}${configuration.criticality.increase().alarmSuffix()}`,
         metric: healthCheck.metricHealthCheckStatus(),
         comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
         threshold: 1,

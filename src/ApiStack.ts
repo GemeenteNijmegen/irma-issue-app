@@ -88,6 +88,7 @@ export class ApiStack extends Stack {
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       lambdaInsightsExtensionArn: insightsArn,
+      criticality: props.configuration.criticality,
       environment: {
         AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
         OIDC_CLIENT_ID_SSM: Statics.ssmOIDCClientID,
@@ -104,6 +105,7 @@ export class ApiStack extends Stack {
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       lambdaInsightsExtensionArn: insightsArn,
+      criticality: props.configuration.criticality,
     }, LogoutFunction);
 
     const oidcSecret = aws_secretsmanager.Secret.fromSecretNameV2(this, 'oidc-secret', Statics.secretOIDCClientSecret);
@@ -112,6 +114,7 @@ export class ApiStack extends Stack {
       table: this.sessionsTable,
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
+      criticality: props.configuration.criticality,
       environment: {
         CLIENT_SECRET_ARN: oidcSecret.secretArn,
         AUTH_URL_BASE_SSM: Statics.ssmAuthUrlBaseParameter,
@@ -145,6 +148,7 @@ export class ApiStack extends Stack {
       tablePermissions: 'ReadWrite',
       applicationUrlBase: baseUrl,
       description: 'Home-lambda voor de YIVI issue-applicatie.',
+      criticality: props.configuration.criticality,
       environment: {
         MTLS_PRIVATE_KEY_ARN: secretMTLSPrivateKey.secretArn,
         MTLS_CLIENT_CERT_NAME: Statics.ssmMTLSClientCert,

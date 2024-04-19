@@ -3,6 +3,7 @@ import { Alarm } from 'aws-cdk-lib/aws-cloudwatch';
 import { Role } from 'aws-cdk-lib/aws-iam';
 import { FilterPattern, IFilterPattern, MetricFilter, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
+import { Criticality } from './Criticality';
 import { LambdaReadOnlyPolicy } from './iam/lambda-readonly-policy';
 import { Statics } from './statics';
 
@@ -17,6 +18,7 @@ export interface ApiFunctionProps {
   logRetention?: RetentionDays;
   ssmLogGroup?: string;
   lambdaInsightsExtensionArn: string;
+  criticality: Criticality;
 }
 
 export class ApiFunction<T extends Lambda.Function> extends Construct {
@@ -55,7 +57,7 @@ export class ApiFunction<T extends Lambda.Function> extends Construct {
       });
     }
 
-    this.monitor(props.monitorFilterPattern);
+    this.monitor(props.criticality, props.monitorFilterPattern);
     if (props.readOnlyRole) {
       this.allowAccessToReadOnlyRole(props.readOnlyRole);
     }
@@ -68,7 +70,7 @@ export class ApiFunction<T extends Lambda.Function> extends Construct {
    * @param monitoredBy Lambda function responsible for monitoring this function
    * @param filterPattern Pattern to filter by (default: containing ERROR)
    */
-  private monitor(filterPattern?: IFilterPattern) {
+  private monitor(criticality: Criticality, filterPattern?: IFilterPattern) {
     const errorMetricFilter = new MetricFilter(this, 'MetricFilter', {
       logGroup: this.lambda.logGroup,
       metricNamespace: `${Statics.projectName}/${this.node.id}`,
@@ -85,7 +87,7 @@ export class ApiFunction<T extends Lambda.Function> extends Construct {
       }),
       evaluationPeriods: 3,
       threshold: 5,
-      alarmName: `total-error-rate-for-${this.node.id}-high-lvl`,
+      alarmName: `total-error-rate-for-${this.node.id}${criticality.alarmSuffix()}`,
       alarmDescription: `This alarm triggers if the function ${this.node.id} is logging more than 5 errors over n minutes.`,
     });
     alarm.applyRemovalPolicy(RemovalPolicy.DESTROY);
