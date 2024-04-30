@@ -76,9 +76,6 @@ const config: PlaywrightTestConfig = {
   expect: {
     timeout: 10000,
   },
-  use: {
-    baseURL: 'https://app6-accp.nijmegen.nl',
-  },
   reporter: process.env.CI ? 'line' : [['html', { outputFolder: 'tests/report' }]],
   workers: process.env.CI ? 1: undefined,
   projects: (process.env?.LT_USERNAME && process.env?.LT_ACCESS_KEY) ? lambdaTestProjects : localProjects,
