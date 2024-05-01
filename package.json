@@ -73,7 +73,7 @@
     "@gemeentenijmegen/dnssec-record": "^0.0.8",
     "@gemeentenijmegen/session": "^0.0.9",
     "@gemeentenijmegen/utils": "^0.0.6",
-    "@pepperize/cdk-route53-health-check": "^0.0.588",
+    "@pepperize/cdk-route53-health-check": "^0.0.589",
     "@types/aws-lambda": "^8.10.137",
     "@types/cookie": "^0.6.0",
     "@types/mustache": "^4.2.5",
