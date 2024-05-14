@@ -109,7 +109,8 @@ const configurations: { [name: string] : Configuration } = {
     setWafRatelimit: true,
     useDemoScheme: false,
     nijmegenSubdomain: 'yivi', // yivi.nijmegen.nl
-    useLambdaRoleForYiviServer: false,
+    useLambdaRoleForYiviServer: true,
+    yiviServerAccount: '079163754011',
     cnameRecords: {
       _e573bcd00b0f468178ff502aeb92eae3: '_df939a5caaba3eef9055e611864019d2.yghrkwvzvz.acm-validations.aws.',
     },
