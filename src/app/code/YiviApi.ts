@@ -11,6 +11,7 @@ export class YiviApi {
   private credentials: {
     accessKeyId: string;
     secretAccessKey: string;
+    sessionToken?: string;
   };
   private apiKey: string;
 
@@ -43,6 +44,7 @@ export class YiviApi {
       this.credentials = {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
+        sessionToken: process.env.AWS_SESSION_TOKEN ?? '',
       };
     } else {
       this.credentials = {
