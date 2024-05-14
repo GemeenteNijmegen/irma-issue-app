@@ -182,13 +182,16 @@ export class ApiStack extends Stack {
     tickenLogGroup.grantWrite(issueFunction.lambda);
 
     // Allow lambda role to invoke the API in a different account
-    issueFunction.lambda.addToRolePolicy(new iam.PolicyStatement({
-      actions: ['execute-api:Invoke'],
-      effect: iam.Effect.ALLOW,
-      resources: [
-        'arn:aws:execute-api:eu-central-1:*:*/prod/POST/session',
-      ],
-    }));
+    if (props.configuration.useLambdaRoleForYiviServer) {
+      const yiviServerAccount = props.configuration.yiviServerAccount;
+      issueFunction.lambda.addToRolePolicy(new iam.PolicyStatement({
+        actions: ['execute-api:Invoke'],
+        effect: iam.Effect.ALLOW,
+        resources: [
+          `arn:aws:execute-api:eu-central-1:${yiviServerAccount}:*/*/POST/session`,
+        ],
+      }));
+    }
 
     this.api.addRoutes({
       integration: new HttpLambdaIntegration('yivi-issue-login', loginFunction.lambda),

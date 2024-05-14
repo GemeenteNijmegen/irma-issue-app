@@ -63,6 +63,12 @@ export interface Configuration {
   readonly useLambdaRoleForYiviServer: boolean;
 
   /**
+   * The account ID of the Yivi server, it is used in the IAM policy to allow
+   * access to the session endpoint on the yivi server.
+   */
+  readonly yiviServerAccount?: string;
+
+  /**
    * Denotes the average level of criticality used by the application
    */
   readonly criticality: Criticality;
@@ -86,7 +92,8 @@ const configurations: { [name: string] : Configuration } = {
     setWafRatelimit: false, // False for pentesting?
     useDemoScheme: true,
     nijmegenSubdomain: 'yivi.accp', // yivi.accp.nijmegen.nl
-    useLambdaRoleForYiviServer: false,
+    useLambdaRoleForYiviServer: true,
+    yiviServerAccount: '',
     cnameRecords: {
       _9699982ccd3555be4d8f02a487a0287e: '_1d0dce24777d3d1257367aa28e6816c7.fgsdscwdjl.acm-validations.aws',
     },
