@@ -108,6 +108,10 @@ export class CloudfrontStack extends Stack {
     cloudfrontDistribution.addBehavior('/static/*', origin, {
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     });
+    cloudfrontDistribution.addBehavior(
+      '/.well-known/security.txt',
+      new HttpOrigin('nijmegen.nl'),
+    );
     cloudfrontDistribution.addBehavior('/.well-known/*', origin, {
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     });
