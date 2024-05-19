@@ -59,6 +59,9 @@
         },
         {
           "spawn": "bundle:app/statistics/statistics.lambda"
+        },
+        {
+          "spawn": "bundle:lambdas/statistics/CalculateStatistics.lambda"
         }
       ]
     },
@@ -149,6 +152,24 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/app/statistics/statistics.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/statistics/statistics.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
+        }
+      ]
+    },
+    "bundle:lambdas/statistics/CalculateStatistics.lambda": {
+      "name": "bundle:lambdas/statistics/CalculateStatistics.lambda",
+      "description": "Create a JavaScript bundle from src/lambdas/statistics/CalculateStatistics.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/lambdas/statistics/CalculateStatistics.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/lambdas/statistics/CalculateStatistics.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
+        }
+      ]
+    },
+    "bundle:lambdas/statistics/CalculateStatistics.lambda:watch": {
+      "name": "bundle:lambdas/statistics/CalculateStatistics.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/lambdas/statistics/CalculateStatistics.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/lambdas/statistics/CalculateStatistics.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/lambdas/statistics/CalculateStatistics.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
         }
       ]
     },

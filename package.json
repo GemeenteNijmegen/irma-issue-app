@@ -14,6 +14,8 @@
     "bundle:app/logout/logout.lambda:watch": "npx projen bundle:app/logout/logout.lambda:watch",
     "bundle:app/statistics/statistics.lambda": "npx projen bundle:app/statistics/statistics.lambda",
     "bundle:app/statistics/statistics.lambda:watch": "npx projen bundle:app/statistics/statistics.lambda:watch",
+    "bundle:lambdas/statistics/CalculateStatistics.lambda": "npx projen bundle:lambdas/statistics/CalculateStatistics.lambda",
+    "bundle:lambdas/statistics/CalculateStatistics.lambda:watch": "npx projen bundle:lambdas/statistics/CalculateStatistics.lambda:watch",
     "clobber": "npx projen clobber",
     "compile": "npx projen compile",
     "default": "npx projen default",

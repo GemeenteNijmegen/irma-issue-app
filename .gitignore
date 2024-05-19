@@ -68,6 +68,7 @@ junit.xml
 !/src/app/login/login-function.ts
 !/src/app/logout/logout-function.ts
 !/src/app/statistics/statistics-function.ts
+!/src/lambdas/statistics/CalculateStatistics-function.ts
 !/.github/workflows/emergency.yml
 !/.github/workflows/auto-merge.yml
 !/.projenrc.js

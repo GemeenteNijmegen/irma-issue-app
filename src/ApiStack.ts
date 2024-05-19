@@ -9,8 +9,11 @@ import {
   aws_apigatewayv2 as apigatewayv2,
 } from 'aws-cdk-lib';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
-import { Table } from 'aws-cdk-lib/aws-dynamodb';
+import { AttributeType, BillingMode, Table } from 'aws-cdk-lib/aws-dynamodb';
+import { Rule, RuleTargetInput, Schedule } from 'aws-cdk-lib/aws-events';
+import { LambdaFunction } from 'aws-cdk-lib/aws-events-targets';
 import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
+import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
 import { AuthFunction } from './app/auth/auth-function';
@@ -20,6 +23,7 @@ import { LogoutFunction } from './app/logout/logout-function';
 import { StatisticsFunction } from './app/statistics/statistics-function';
 import { Configurable } from './Configuration';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
+import { CalculateStatisticsFunction } from './lambdas/statistics/CalculateStatistics-function';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
 import { AppDomainUtil } from './Util';
@@ -82,6 +86,8 @@ export class ApiStack extends Stack {
     const authBaseUrl = SSM.StringParameter.fromStringParameterName(this, 'ssm-auth-base-url', Statics.ssmAuthUrlBaseParameter);
     const odicClientId = SSM.StringParameter.fromStringParameterName(this, 'ssm-odic-client-id', Statics.ssmOIDCClientID);
     const oidcScope = SSM.StringParameter.fromStringParameterName(this, 'ssm-odic-scope', Statics.ssmOIDCScope);
+
+    const statisticsTable = this.setupStatisticsPublication(statisticsLogGroup);
 
     const loginFunction = new ApiFunction(this, 'yivi-issue-login-function', {
       description: 'Login-pagina voor de YIVI issue-applicatie.',
@@ -189,9 +195,11 @@ export class ApiStack extends Stack {
       applicationUrlBase: baseUrl,
       criticality: props.configuration.criticality,
       environment: {
+        TABLE_NAME: statisticsTable.tableName,
       },
       lambdaInsightsExtensionArn: insightsArn,
     }, StatisticsFunction);
+    statisticsTable.grantReadData(statisticsFunction.lambda);
 
     // Allow lambda role to invoke the API in a different account
     if (props.configuration.useLambdaRoleForYiviServer) {
@@ -242,6 +250,8 @@ export class ApiStack extends Stack {
       issueFunction.lambda.logGroup,
       statisticsFunction.lambda.logGroup,
     ]);
+
+
   }
 
   /**
@@ -357,6 +367,52 @@ export class ApiStack extends Stack {
       }),
     });
 
+  }
+
+
+  setupStatisticsPublication(logGroup: LogGroup) {
+
+    const table = new Table(this, 'statistics', {
+      partitionKey: { name: 'type', type: AttributeType.STRING },
+      sortKey: { name: 'date', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+    });
+
+    const calculateStatistics = new CalculateStatisticsFunction(this, 'calculate-statistics', {
+      environment: {
+        TABLE_NAME: table.tableName,
+        LOG_GROUP: logGroup.logGroupName,
+      },
+    });
+    logGroup.grantRead(calculateStatistics);
+    table.grantReadWriteData(calculateStatistics);
+
+    new Rule(this, 'calculate-statistics-day', {
+      schedule: Schedule.cron({
+        hour: '3',
+        minute: '0',
+      }),
+      targets: [new LambdaFunction(calculateStatistics, {
+        event: RuleTargetInput.fromObject({
+          scope: 'day',
+        }),
+      })],
+    });
+
+    new Rule(this, 'calculate-statistics-month', {
+      schedule: Schedule.cron({
+        day: '1',
+        hour: '3',
+        minute: '0',
+      }),
+      targets: [new LambdaFunction(calculateStatistics, {
+        event: RuleTargetInput.fromObject({
+          scope: 'month',
+        }),
+      })],
+    });
+
+    return table;
   }
 
 }
