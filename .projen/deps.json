@@ -152,6 +152,10 @@
       "type": "runtime"
     },
     {
+      "name": "@privacybydesign/yivi-frontend",
+      "type": "runtime"
+    },
+    {
       "name": "@types/aws-lambda",
       "type": "runtime"
     },
@@ -179,6 +183,10 @@
     },
     {
       "name": "cdk-remote-stack",
+      "type": "runtime"
+    },
+    {
+      "name": "chart.js",
       "type": "runtime"
     },
     {
