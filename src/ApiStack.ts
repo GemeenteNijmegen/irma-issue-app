@@ -17,6 +17,7 @@ import { AuthFunction } from './app/auth/auth-function';
 import { IssueFunction } from './app/issue/issue-function';
 import { LoginFunction } from './app/login/login-function';
 import { LogoutFunction } from './app/logout/logout-function';
+import { StatisticsFunction } from './app/statistics/statistics-function';
 import { Configurable } from './Configuration';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
 import { SessionsTable } from './SessionsTable';
@@ -181,6 +182,17 @@ export class ApiStack extends Stack {
     statisticsLogGroup.grantWrite(issueFunction.lambda);
     tickenLogGroup.grantWrite(issueFunction.lambda);
 
+    const statisticsFunction = new ApiFunction(this, 'yivi-issue-statistics-function', {
+      description: 'Statistics-lambd voor de YIVI issue-applicatie.',
+      table: this.sessionsTable,
+      tablePermissions: 'ReadWrite',
+      applicationUrlBase: baseUrl,
+      criticality: props.configuration.criticality,
+      environment: {
+      },
+      lambdaInsightsExtensionArn: insightsArn,
+    }, StatisticsFunction);
+
     // Allow lambda role to invoke the API in a different account
     if (props.configuration.useLambdaRoleForYiviServer) {
       const yiviServerAccount = props.configuration.yiviServerAccount;
@@ -217,11 +229,18 @@ export class ApiStack extends Stack {
       methods: [apigatewayv2.HttpMethod.GET],
     });
 
+    this.api.addRoutes({
+      integration: new HttpLambdaIntegration('yivi-issue-statistics', statisticsFunction.lambda),
+      path: '/statistics',
+      methods: [apigatewayv2.HttpMethod.GET],
+    });
+
     this.createCloudWatchInsightsQueries([
       loginFunction.lambda.logGroup,
       logoutFunction.lambda.logGroup,
       authFunction.lambda.logGroup,
       issueFunction.lambda.logGroup,
+      statisticsFunction.lambda.logGroup,
     ]);
   }
 

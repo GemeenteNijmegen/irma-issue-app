@@ -1,0 +1,15 @@
+{{>header}}
+<main>
+    <h1>Statistieken</h1>
+    <p>Het aantal keren dat persoonsgegevens zijn opgehaald.</p>
+    <select id="select">
+        <option value="day" selected="selected">Per dag</option>
+        <option value="month">Per maand</option>
+    </select>
+    <canvas id="chart"></canvas>
+</main>
+
+<script src="/static/scripts/chart.js"></script>
+<script src="/static/scripts/statistics.js"></script>
+
+{{>footer}}

@@ -31,6 +31,7 @@ jspm_packages/
 .yarn-integrity
 .cache
 src/app/**/tests/output
+src/app/static-resources/packages/*
 test/playwright/tests/report
 test/playwright/tests/results
 test/playwright/test-results
@@ -66,6 +67,7 @@ junit.xml
 !/src/app/issue/issue-function.ts
 !/src/app/login/login-function.ts
 !/src/app/logout/logout-function.ts
+!/src/app/statistics/statistics-function.ts
 !/.github/workflows/emergency.yml
 !/.github/workflows/auto-merge.yml
 !/.projenrc.js
