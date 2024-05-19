@@ -35,38 +35,19 @@ function plotData(){
   // Per dag of per maand
   const scope = document.getElementById('select').value;
   
-  // Get data
-  const data = {
-    "2024-05-01": 4,
-    "2024-05-02": 24,
-    "2024-05-03": 13,
-    "2024-05-04": 38,
-    "2024-05-05": 40,
-    "2024-05-06": 60,
-    "2024-05-07": 10,
-    "2024-05-08": 10,
-    "2024-05-09": 11,
-    "2024-05-10": 44,
-    "2024-05-11": 59,
-    "2024-05-12": 108,
-    "2024-05-13": 70,
-    "2024-05-14": 93,
-    "2024-05-15": 82,
-    "2024-05-16": 94,
-    "2024-05-17": 62,
-    "2024-05-18": 82,
-    "2024-05-19": 87,
-  }
-
-  const labels = Object.entries(data);
-  const values = Object.values(data);
-
-  chart.data.labels = labels;
-  chart.data.datasets.forEach((dataset) => {
-    dataset.data = values;
-  });
-  chart.update();
-
+  // Fetch data from the same lambda as renders this page
+  fetch(window.location.href + "?scope="+scope).then(response => {
+    const data = response.json();
+    const labels = Object.entries(data);
+    const values = Object.values(data);
   
+    chart.data.labels = labels;
+    chart.data.datasets.forEach((dataset) => {
+      dataset.data = values;
+    });
+    chart.update();
+  }).catch(error => {
+    console.error(error);
+  });
 
 }
