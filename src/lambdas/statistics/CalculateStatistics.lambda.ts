@@ -7,21 +7,35 @@ const logsClient = new CloudWatchLogsClient();
 
 export async function handler(event: ScheduledEvent) {
   try {
-    const isMonthScope = event.detail?.scope === 'month';
-    if (isMonthScope) {
+    const scope = event.detail?.scope;
+    const beginDate = event.detail?.beginDate;
+    const endDate = event.detail?.beginDate ?? new Date();
+
+    if (beginDate) {
+      const dates = getDates(scope, beginDate, endDate);
+      for (const date of dates) {
+        if (scope == 'month') {
+          await calculateMonlthyStatistics(date);
+        } else {
+          await calculateDailyStatistics(date);
+        }
+      };
+    }
+
+    if (scope == 'month') {
       // Do monthly calculations
-      await calculateMonlthyStatistics();
+      await calculateMonlthyStatistics(new Date());
     } else {
       // Do daily caluclation
-      await calculateDailyStatistics();
+      await calculateDailyStatistics(new Date());
     }
   } catch (err) {
     console.error(err);
   }
 };
 
-async function calculateMonlthyStatistics() {
-  const date = new Date();
+
+async function calculateMonlthyStatistics(date: Date) {
   const firstDay = new Date(date.getFullYear(), date.getMonth()-1, 1, 0, 0, 0, 0);
   const lastDay = new Date(date.getFullYear(), date.getMonth(), 0, 0, 0, 0, 0);
   const dateStamp = firstDay.toISOString().substring(0, 7); // Date stamp
@@ -29,8 +43,7 @@ async function calculateMonlthyStatistics() {
   await storeInDynamodb(dateStamp, count, 'month');
 }
 
-async function calculateDailyStatistics() {
-  const date = new Date();
+async function calculateDailyStatistics(date: Date) {
   const start = new Date(date.getFullYear(), date.getMonth(), date.getDate()-1, 0, 0, 0, 0);
   const end = new Date(date.getFullYear(), date.getMonth(), date.getDate()-1, 23, 59, 59, 999);
   const dateStamp = start.toISOString().substring(0, 10); // Date stamp
@@ -81,4 +94,18 @@ async function getStatistics(startTime: number, endTime: number) {
 
 async function sleep(ms: number) {
   return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
+function getDates(stepsize: 'day'| 'month', startDate: Date, stopDate: Date) {
+  var dateArray = new Array();
+  var currentDate = startDate;
+  while (currentDate <= stopDate) {
+    dateArray.push(new Date (currentDate));
+    if (stepsize=='day') {
+      currentDate.setDate(currentDate.getDate() + 1);
+    } else {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+  }
+  return dateArray;
 }
