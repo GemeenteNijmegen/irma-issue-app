@@ -1,12 +1,23 @@
-<div>
-  <canvas id="myChart"></canvas>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-  const ctx = document.getElementById('myChart');
+// Change chart on option update
+document.getElementById('select').addEventListener('change', () => {
+  plotData();
+});
 
+// Plot data on page load
+plotData();
+
+
+function plotData(){ 
+  
+  // Per dag of per maand
+  const scope = document.getElementById('select').value;
+
+  // Get chart
+  const ctx = document.getElementById('chart');
+
+  // Get data
   const data = {
     "2024-05-01": 4,
     "2024-05-02": 24,
@@ -50,4 +61,5 @@
       }
     }
   });
-</script>
+
+}
