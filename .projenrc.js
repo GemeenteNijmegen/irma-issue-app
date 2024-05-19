@@ -80,7 +80,7 @@ const project = new GemeenteNijmegenCdkApp({
   },
   scripts: {
     'lint': 'cfn-lint cdk.out/**/*.template.json -i W3005 W2001 W3045', // W3045: zie CloudFront logs bucket
-    'install:chartjs': 'copyfiles -f -E -V node_modules/chart.js/dist/chart.js src/app/static-resources/static/scripts/',
+    'install:chartjs': 'copyfiles -f -E -V node_modules/chart.js/dist/chart.umd.js src/app/static-resources/static/scripts/',
     'install:yivi-frontend': 'copyfiles -f -E -V node_modules/@privacybydesign/yivi-frontend/dist/yivi.js src/app/static-resources/static/scripts/',
     'postinstall': 'echo copying frontend files... && npx projen install:chartjs && npx projen install:yivi-frontend',
   },
