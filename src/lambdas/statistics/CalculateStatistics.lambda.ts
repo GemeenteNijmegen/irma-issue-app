@@ -24,7 +24,7 @@ async function calculateMonlthyStatistics() {
   const date = new Date();
   const firstDay = new Date(date.getFullYear(), date.getMonth()-1, 1, 0, 0, 0, 0);
   const lastDay = new Date(date.getFullYear(), date.getMonth(), 0, 0, 0, 0, 0);
-  const dateStamp = firstDay.toISOString().substring(0, 10); // Date stamp
+  const dateStamp = firstDay.toISOString().substring(0, 7); // Date stamp
   const count = await getStatistics(firstDay.getTime(), lastDay.getTime());
   await storeInDynamodb(dateStamp, count, 'month');
 }
