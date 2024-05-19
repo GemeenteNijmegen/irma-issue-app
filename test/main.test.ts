@@ -109,7 +109,7 @@ test('StackHasLambdas', () => {
     configuration: config,
   });
   const template = Template.fromStack(stack);
-  template.resourceCountIs('AWS::Lambda::Function', 5);
+  template.resourceCountIs('AWS::Lambda::Function', 6);
 });
 
 test('StackHasParameters', () => {
