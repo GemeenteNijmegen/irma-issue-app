@@ -261,7 +261,7 @@
       "name": "install:chartjs",
       "steps": [
         {
-          "exec": "copyfiles -f -E -V node_modules/chart.js/dist/chart.js src/app/static-resources/static/scripts/"
+          "exec": "copyfiles -f -E -V node_modules/chart.js/dist/chart.umd.js src/app/static-resources/static/scripts/"
         }
       ]
     },
