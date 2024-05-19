@@ -7,12 +7,13 @@ import {
   aws_ssm as ssm,
   aws_iam as iam,
   aws_apigatewayv2 as apigatewayv2,
+  Duration,
 } from 'aws-cdk-lib';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import { AttributeType, BillingMode, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { Rule, RuleTargetInput, Schedule } from 'aws-cdk-lib/aws-events';
 import { LambdaFunction } from 'aws-cdk-lib/aws-events-targets';
-import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
+import { AccountPrincipal, PolicyStatement, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
@@ -383,9 +384,20 @@ export class ApiStack extends Stack {
         TABLE_NAME: table.tableName,
         LOG_GROUP: logGroup.logGroupName,
       },
+      timeout: Duration.minutes(5),
     });
     logGroup.grantRead(calculateStatistics);
     table.grantReadWriteData(calculateStatistics);
+    calculateStatistics.addToRolePolicy(new PolicyStatement({
+      actions: ['logs:StartQuery'],
+      resources: [
+        logGroup.logGroupArn,
+      ],
+    }));
+    calculateStatistics.addToRolePolicy(new PolicyStatement({
+      actions: ['logs:GetQueryResults'],
+      resources: ['*'],
+    }));
 
     new Rule(this, 'calculate-statistics-day', {
       schedule: Schedule.cron({

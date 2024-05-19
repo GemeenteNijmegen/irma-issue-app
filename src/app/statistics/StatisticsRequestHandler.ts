@@ -1,4 +1,4 @@
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { Response } from '@gemeentenijmegen/apigateway-http';
 import * as template from './statistics.mustache';
 import render from '../code/Render';
@@ -14,15 +14,27 @@ export class StatisticsRequestHandler {
     return Response.html(html, 200);
   }
 
-  async handleStatisticsDataRequest() {
+  async handleStatisticsDataRequest(type: string) {
 
     // Query dynamodb
+    const query = await this.dynamoDBClient.send(new QueryCommand({
+      TableName: process.env.TABLE_NAME!,
+      KeyConditionExpression: 'type = :type',
+      ExpressionAttributeValues: {
+        ':type': { S: type },
+      },
+    }));
 
+    const data: Record<string, number> = {};
 
-    // Expected data
-    const data = {
-      '2024-05-19': 13,
-    };
+    query.Items?.forEach(item => {
+      const label = item.date.S;
+      const count = item.value.N;
+      if (!label || !count) {
+        return;
+      }
+      data[label] = parseInt(count);
+    });
 
     return Response.json(data, 200);
   }

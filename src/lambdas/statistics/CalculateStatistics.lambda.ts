@@ -52,7 +52,7 @@ async function storeInDynamodb(dateStemp: string, value: string, type: string) {
 async function getStatistics(startTime: number, endTime: number) {
   // Start a query
   const query = await logsClient.send(new StartQueryCommand({
-    logGroupName: process.env.LOGG_ROUP,
+    logGroupName: process.env.LOG_GROUP,
     queryString: 'filter not isempty(subject) and issueAttempt == 1 \
                 | stats count(subject) as issued',
     startTime: startTime,
