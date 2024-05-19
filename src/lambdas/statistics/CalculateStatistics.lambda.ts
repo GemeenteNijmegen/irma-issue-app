@@ -9,10 +9,11 @@ export async function handler(event: ScheduledEvent) {
   try {
     const scope = event.detail?.scope;
     const beginDate = event.detail?.beginDate;
-    const endDate = event.detail?.beginDate ?? new Date();
+    const endDate = event.detail?.endDate ?? new Date();
 
     if (beginDate) {
-      const dates = getDates(scope, beginDate, endDate);
+      console.log('Calculating for multiple days', beginDate, endDate);
+      const dates = getDates(scope, new Date(Date.parse(beginDate)), new Date(Date.parse(endDate)));
       for (const date of dates) {
         if (scope == 'month') {
           await calculateMonlthyStatistics(date);

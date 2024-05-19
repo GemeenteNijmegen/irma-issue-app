@@ -16,7 +16,7 @@ exports.handler = async (event: APIGatewayProxyEventV2) => {
   try {
     const params = parseEvent(event);
     if (params.scope) {
-      await handler.handleStatisticsDataRequest(params.scope);
+      return await handler.handleStatisticsDataRequest(params.scope);
     }
     return await handler.handleStatisticsRequest();
   } catch (err) {

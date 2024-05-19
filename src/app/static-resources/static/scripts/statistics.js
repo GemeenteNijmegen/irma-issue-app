@@ -40,11 +40,13 @@ function plotData(){
     const data = response.json();
     const labels = Object.entries(data);
     const values = Object.values(data);
+    console.log(data);
   
     chart.data.labels = labels;
     chart.data.datasets.forEach((dataset) => {
       dataset.data = values;
     });
+    console.log('Updating chart...');
     chart.update();
   }).catch(error => {
     console.error(error);

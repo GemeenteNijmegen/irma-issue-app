@@ -19,10 +19,11 @@ export class StatisticsRequestHandler {
     // Query dynamodb
     const query = await this.dynamoDBClient.send(new QueryCommand({
       TableName: process.env.TABLE_NAME!,
-      KeyConditionExpression: 'type = :type',
+      KeyConditionExpression: '#dayOrMonth = :dayOrMonth',
       ExpressionAttributeValues: {
-        ':type': { S: type },
+        ':dayOrMonth': { S: type },
       },
+      ExpressionAttributeNames: { '#dayOrMonth': 'type' },
     }));
 
     const data: Record<string, number> = {};
