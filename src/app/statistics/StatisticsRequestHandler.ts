@@ -16,6 +16,12 @@ export class StatisticsRequestHandler {
 
   async handleStatisticsDataRequest(type: string) {
 
+    // Set a max number of items to be returned
+    let limit = 31;
+    if (type == 'month') {
+      limit = 12;
+    }
+
     // Query dynamodb
     const query = await this.dynamoDBClient.send(new QueryCommand({
       TableName: process.env.TABLE_NAME!,
@@ -24,6 +30,7 @@ export class StatisticsRequestHandler {
         ':dayOrMonth': { S: type },
       },
       ExpressionAttributeNames: { '#dayOrMonth': 'type' },
+      Limit: limit,
     }));
 
     const data: Record<string, number> = {};
