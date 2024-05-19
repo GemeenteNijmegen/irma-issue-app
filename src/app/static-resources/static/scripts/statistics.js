@@ -37,17 +37,18 @@ function plotData(){
   
   // Fetch data from the same lambda as renders this page
   fetch(window.location.href + "?scope="+scope).then(response => {
-    const data = response.json();
-    const labels = Object.entries(data);
-    const values = Object.values(data);
-    console.log(data);
-  
-    chart.data.labels = labels;
-    chart.data.datasets.forEach((dataset) => {
-      dataset.data = values;
+    response.json().then(data => {
+      const labels = Object.entries(data);
+      const values = Object.values(data);
+      console.log(data);
+    
+      chart.data.labels = labels;
+      chart.data.datasets.forEach((dataset) => {
+        dataset.data = values;
+      });
+      console.log('Updating chart...');
+      chart.update();
     });
-    console.log('Updating chart...');
-    chart.update();
   }).catch(error => {
     console.error(error);
   });
