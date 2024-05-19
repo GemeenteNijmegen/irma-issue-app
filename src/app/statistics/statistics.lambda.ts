@@ -8,15 +8,15 @@ const handler = new StatisticsRequestHandler(dynamoDBClient);
 
 function parseEvent(event: APIGatewayProxyEventV2) {
   return {
-    data: event.queryStringParameters?.data !== undefined,
+    scope: event.queryStringParameters?.scope,
   };
 }
 
 exports.handler = async (event: APIGatewayProxyEventV2) => {
   try {
     const params = parseEvent(event);
-    if (params.data) {
-      await handler.handleStatisticsDataRequest();
+    if (params.scope) {
+      await handler.handleStatisticsDataRequest(params.scope);
     }
     return await handler.handleStatisticsRequest();
   } catch (err) {
