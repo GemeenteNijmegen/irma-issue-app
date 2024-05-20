@@ -87,7 +87,7 @@
     "@types/mustache": "^4.2.5",
     "aws-cdk-lib": "^2.22.0",
     "aws4-axios": "3.3.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.0",
     "cdk-remote-stack": "^2.0.101",
     "chart.js": "^4.4.3",
     "constructs": "^10.0.5",
