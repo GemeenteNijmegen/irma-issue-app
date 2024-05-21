@@ -24,11 +24,6 @@ const chart = new Chart(ctx, {
       }
     }
   },
-  plugins: {
-    datalabels: {
-        display: false,
-    },
-  },
 });
 
 
@@ -43,7 +38,7 @@ function plotData(){
   // Fetch data from the same lambda as renders this page
   fetch(window.location.href + "?scope="+scope).then(response => {
     response.json().then(data => {
-      const labels = Object.entries(data);
+      const labels = Object.keys(data);
       const values = Object.values(data);
       console.log(data);
     
