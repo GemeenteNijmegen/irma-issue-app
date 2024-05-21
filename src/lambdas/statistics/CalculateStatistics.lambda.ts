@@ -102,7 +102,7 @@ async function getStatistics(startTime: number, endTime: number) {
   } while (results == undefined);
 
   if (!results || results.length == 0) {
-    return '-1';
+    return '0';
   }
   return results[0][0].value ?? '-1';
 }
