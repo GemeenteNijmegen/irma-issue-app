@@ -23,7 +23,12 @@ const chart = new Chart(ctx, {
         beginAtZero: true
       }
     }
-  }
+  },
+  plugins: {
+    datalabels: {
+        display: false,
+    },
+  },
 });
 
 
