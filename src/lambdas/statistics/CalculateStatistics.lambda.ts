@@ -17,10 +17,16 @@ export async function handler(event: ScheduledEvent) {
       console.log('Calculating for multiple days', beginDate, endDate);
       const dates = getDates(scope, new Date(Date.parse(beginDate)), new Date(Date.parse(endDate)));
       for (const date of dates) {
-        if (scope == 'month') {
-          await calculateMonlthyStatistics(date);
-        } else {
-          await calculateDailyStatistics(date);
+        console.log('Calculating for date', date.toISOString());
+        try {
+          if (scope == 'month') {
+            await calculateMonlthyStatistics(date);
+          } else {
+            await calculateDailyStatistics(date);
+          }
+        } catch (error) {
+          console.error(error);
+          console.log('Continuing with next data...');
         }
       };
     }
@@ -49,7 +55,7 @@ async function calculateMonlthyStatistics(date: Date) {
 
 async function calculateDailyStatistics(date: Date) {
   const start = new Date(date.getFullYear(), date.getMonth(), date.getDate()-1, 0, 0, 0, 0);
-  const end = new Date(date.getFullYear(), date.getMonth(), date.getDate()-1, 23, 59, 59, 999);
+  const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
   const dateStamp = start.toISOString().substring(0, 10); // Date stamp
   console.log('Storing statistics for', dateStamp);
   const count = await getStatistics(start.getTime(), end.getTime());
@@ -93,6 +99,10 @@ async function getStatistics(startTime: number, endTime: number) {
       results = response.results;
     }
   } while (results == undefined);
+
+  if (!results) {
+    throw Error('Could not find results');
+  }
 
   return results[0][0].value ?? '-1';
 }
