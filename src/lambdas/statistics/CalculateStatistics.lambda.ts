@@ -6,10 +6,12 @@ const dynamoDBClient = new DynamoDBClient({});
 const logsClient = new CloudWatchLogsClient();
 
 export async function handler(event: ScheduledEvent) {
+  console.log('Calculating statistics...');
   try {
     const scope = event.detail?.scope;
     const beginDate = event.detail?.beginDate;
     const endDate = event.detail?.endDate ?? new Date();
+    console.log(event);
 
     if (beginDate) {
       console.log('Calculating for multiple days', beginDate, endDate);
@@ -24,10 +26,10 @@ export async function handler(event: ScheduledEvent) {
     }
 
     if (scope == 'month') {
-      // Do monthly calculations
+      console.log('Monthly calculations...');
       await calculateMonlthyStatistics(new Date());
     } else {
-      // Do daily caluclation
+      console.log('Dayly calculations...');
       await calculateDailyStatistics(new Date());
     }
   } catch (err) {
@@ -40,6 +42,7 @@ async function calculateMonlthyStatistics(date: Date) {
   const firstDay = new Date(date.getFullYear(), date.getMonth()-1, 1, 0, 0, 0, 0);
   const lastDay = new Date(date.getFullYear(), date.getMonth(), 0, 0, 0, 0, 0);
   const dateStamp = firstDay.toISOString().substring(0, 7); // Date stamp
+  console.log('Storing statistics for', dateStamp);
   const count = await getStatistics(firstDay.getTime(), lastDay.getTime());
   await storeInDynamodb(dateStamp, count, 'month');
 }
@@ -48,6 +51,7 @@ async function calculateDailyStatistics(date: Date) {
   const start = new Date(date.getFullYear(), date.getMonth(), date.getDate()-1, 0, 0, 0, 0);
   const end = new Date(date.getFullYear(), date.getMonth(), date.getDate()-1, 23, 59, 59, 999);
   const dateStamp = start.toISOString().substring(0, 10); // Date stamp
+  console.log('Storing statistics for', dateStamp);
   const count = await getStatistics(start.getTime(), end.getTime());
   await storeInDynamodb(dateStamp, count, 'day');
 }
@@ -97,7 +101,7 @@ async function sleep(ms: number) {
   return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
-function getDates(stepsize: 'day'| 'month', startDate: Date, stopDate: Date) {
+function getDates(stepsize: 'day'| 'month', startDate: Date, stopDate: Date): Date[] {
   var dateArray = new Array();
   var currentDate = startDate;
   while (currentDate <= stopDate) {
