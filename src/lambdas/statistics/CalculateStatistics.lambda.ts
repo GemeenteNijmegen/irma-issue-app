@@ -29,6 +29,7 @@ export async function handler(event: ScheduledEvent) {
           console.log('Continuing with next data...');
         }
       };
+      return;
     }
 
     if (scope == 'month') {
@@ -100,10 +101,9 @@ async function getStatistics(startTime: number, endTime: number) {
     }
   } while (results == undefined);
 
-  if (!results) {
-    throw Error('Could not find results');
+  if (!results || results.length == 0) {
+    return '-1';
   }
-
   return results[0][0].value ?? '-1';
 }
 
