@@ -38,8 +38,8 @@ function plotData(){
   // Fetch data from the same lambda as renders this page
   fetch(window.location.href + "?scope="+scope).then(response => {
     response.json().then(data => {
-      const labels = Object.keys(data);
-      const values = Object.values(data);
+      const labels = Object.keys(data).reverse();
+      const values = Object.values(data).reverse();
       console.log(data);
     
       chart.data.labels = labels;
