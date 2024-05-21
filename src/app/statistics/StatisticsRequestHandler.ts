@@ -31,6 +31,7 @@ export class StatisticsRequestHandler {
       },
       ExpressionAttributeNames: { '#dayOrMonth': 'type' },
       Limit: limit,
+      ScanIndexForward: false,
     }));
 
     const data: Record<string, number> = {};
