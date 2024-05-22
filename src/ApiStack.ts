@@ -424,6 +424,20 @@ export class ApiStack extends Stack {
       })],
     });
 
+    new Rule(this, 'calculate-statistics-year', {
+      schedule: Schedule.cron({
+        month: '1', // Jan 1 03.00 every year
+        day: '1',
+        hour: '3',
+        minute: '0',
+      }),
+      targets: [new LambdaFunction(calculateStatistics, {
+        event: RuleTargetInput.fromObject({
+          scope: 'year',
+        }),
+      })],
+    });
+
     return table;
   }
 
