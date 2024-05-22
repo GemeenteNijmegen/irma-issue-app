@@ -16,20 +16,22 @@ export class StatisticsRequestHandler {
 
   async handleStatisticsDataRequest(type: string) {
 
-    // Set a max number of items to be returned
-    let limit = 31;
-    if (type == 'month') {
-      limit = 12;
+    // Only allow monthly and annual requests
+    if (type !== 'month' && type !== 'year') {
+      throw Error('Only month and year are supported date scopes');
     }
+
+    // Set a max number of items to be returned
+    const limit = 12;
 
     // Query dynamodb
     const query = await this.dynamoDBClient.send(new QueryCommand({
       TableName: process.env.TABLE_NAME!,
-      KeyConditionExpression: '#dayOrMonth = :dayOrMonth',
+      KeyConditionExpression: '#type = :type',
       ExpressionAttributeValues: {
-        ':dayOrMonth': { S: type },
+        ':type': { S: type },
       },
-      ExpressionAttributeNames: { '#dayOrMonth': 'type' },
+      ExpressionAttributeNames: { '#type': 'type' },
       Limit: limit,
       ScanIndexForward: false,
     }));
