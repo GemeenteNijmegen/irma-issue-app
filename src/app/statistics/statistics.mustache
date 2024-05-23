@@ -1,0 +1,30 @@
+{{>header}}
+<main>
+    <h1>Statistieken</h1>
+    <p>Het aantal keren dat persoonsgegevens in de Yivi-app zijn geladen.</p>
+    <p>
+    We slaan geen persoonsgegevens op bij het verstrekken van BRP gegevens aan gebruikers. 
+    Er worden wel geanonimiseerde statistieken bijgehouden over het aantal keren dat persoonsgegevens worden verstrekt.
+    </p>
+    <select id="select">
+        <option value="month" selected="selected">Per maand</option>
+        <option value="year">Per jaar</option>
+    </select>
+    <canvas id="chart"></canvas>
+    <table class="responsive-table" id="statistics-table">
+      <thead>
+        <tr>
+          <th>Periode</th>
+          <th>Aantal</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="2">Nog geen data geladen</td></tr>
+        </tbody>
+    </table>
+</main>
+
+<script src="/static/scripts/chart.umd.js"></script>
+<script src="/static/scripts/statistics.js"></script>
+
+{{>footer}}

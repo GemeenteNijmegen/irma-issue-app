@@ -26,6 +26,7 @@ export async function issueRequestHandler(
   if (session.isLoggedIn() == true) {
     return handleLoggedinRequest(session, brpApi, yiviApi, logsClient);
   }
+  console.info('Redirecting to login...');
   return Response.redirect('/login');
 }
 

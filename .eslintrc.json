@@ -151,7 +151,9 @@
           "src/app/auth/auth.lambda.ts",
           "src/app/issue/issue.lambda.ts",
           "src/app/login/login.lambda.ts",
-          "src/app/logout/logout.lambda.ts"
+          "src/app/logout/logout.lambda.ts",
+          "src/app/statistics/statistics.lambda.ts",
+          "src/lambdas/statistics/CalculateStatistics.lambda.ts"
         ],
         "optionalDependencies": false,
         "peerDependencies": true

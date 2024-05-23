@@ -56,6 +56,12 @@
         },
         {
           "spawn": "bundle:app/logout/logout.lambda"
+        },
+        {
+          "spawn": "bundle:app/statistics/statistics.lambda"
+        },
+        {
+          "spawn": "bundle:lambdas/statistics/CalculateStatistics.lambda"
         }
       ]
     },
@@ -128,6 +134,42 @@
       "steps": [
         {
           "exec": "esbuild --bundle src/app/logout/logout.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/logout/logout.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
+        }
+      ]
+    },
+    "bundle:app/statistics/statistics.lambda": {
+      "name": "bundle:app/statistics/statistics.lambda",
+      "description": "Create a JavaScript bundle from src/app/statistics/statistics.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/statistics/statistics.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/statistics/statistics.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
+        }
+      ]
+    },
+    "bundle:app/statistics/statistics.lambda:watch": {
+      "name": "bundle:app/statistics/statistics.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/app/statistics/statistics.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/app/statistics/statistics.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/app/statistics/statistics.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
+        }
+      ]
+    },
+    "bundle:lambdas/statistics/CalculateStatistics.lambda": {
+      "name": "bundle:lambdas/statistics/CalculateStatistics.lambda",
+      "description": "Create a JavaScript bundle from src/lambdas/statistics/CalculateStatistics.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/lambdas/statistics/CalculateStatistics.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/lambdas/statistics/CalculateStatistics.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text"
+        }
+      ]
+    },
+    "bundle:lambdas/statistics/CalculateStatistics.lambda:watch": {
+      "name": "bundle:lambdas/statistics/CalculateStatistics.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/lambdas/statistics/CalculateStatistics.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/lambdas/statistics/CalculateStatistics.lambda.ts --target=\"node20\" --platform=\"node\" --outfile=\"assets/lambdas/statistics/CalculateStatistics.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --loader:.mustache=text --watch"
         }
       ]
     },
@@ -236,12 +278,28 @@
         }
       ]
     },
+    "install:chartjs": {
+      "name": "install:chartjs",
+      "steps": [
+        {
+          "exec": "copyfiles -f -E -V node_modules/chart.js/dist/chart.umd.js src/app/static-resources/static/scripts/"
+        }
+      ]
+    },
     "install:ci": {
       "name": "install:ci",
       "description": "Install project dependencies using frozen lockfile",
       "steps": [
         {
           "exec": "yarn install --check-files --frozen-lockfile"
+        }
+      ]
+    },
+    "install:yivi-frontend": {
+      "name": "install:yivi-frontend",
+      "steps": [
+        {
+          "exec": "copyfiles -f -E -V node_modules/@privacybydesign/yivi-frontend/dist/yivi.js src/app/static-resources/static/scripts/"
         }
       ]
     },
@@ -269,6 +327,14 @@
     "post-upgrade": {
       "name": "post-upgrade",
       "description": "Runs after upgrading dependencies"
+    },
+    "postinstall": {
+      "name": "postinstall",
+      "steps": [
+        {
+          "exec": "echo copying frontend files... && npx projen install:chartjs && npx projen install:yivi-frontend"
+        }
+      ]
     },
     "pre-compile": {
       "name": "pre-compile",
@@ -363,13 +429,13 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@gemeentenijmegen/projen-project-type,@glen/jest-raw-loader,@playwright/test,@types/jest,aws-sdk-client-mock,axios-mock-adapter,copyfiles,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,jest-aws-client-mock,projen,ts-jest,ts-node,typescript,@aws-sdk/client-cloudwatch-logs,@aws-sdk/client-dynamodb,@aws-sdk/client-secrets-manager,@aws-sdk/client-ses,@aws-sdk/client-ssm,@aws-solutions-constructs/aws-lambda-dynamodb,@gemeentenijmegen/apiclient,@gemeentenijmegen/apigateway-http,@gemeentenijmegen/aws-constructs,@gemeentenijmegen/dnssec-record,@gemeentenijmegen/session,@gemeentenijmegen/utils,@pepperize/cdk-route53-health-check,@types/aws-lambda,@types/cookie,@types/mustache,axios,cdk-remote-stack,cookie,dotenv,mustache,openid-client"
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@gemeentenijmegen/projen-project-type,@glen/jest-raw-loader,@playwright/test,@types/jest,aws-sdk-client-mock,axios-mock-adapter,copyfiles,esbuild,eslint-import-resolver-typescript,eslint-plugin-import,jest,jest-aws-client-mock,projen,ts-jest,ts-node,typescript,@aws-sdk/client-cloudwatch-logs,@aws-sdk/client-dynamodb,@aws-sdk/client-secrets-manager,@aws-sdk/client-ses,@aws-sdk/client-ssm,@aws-solutions-constructs/aws-lambda-dynamodb,@gemeentenijmegen/apiclient,@gemeentenijmegen/apigateway-http,@gemeentenijmegen/aws-constructs,@gemeentenijmegen/dnssec-record,@gemeentenijmegen/session,@gemeentenijmegen/utils,@pepperize/cdk-route53-health-check,@privacybydesign/yivi-frontend,@types/aws-lambda,@types/cookie,@types/mustache,axios,cdk-remote-stack,chart.js,cookie,dotenv,mustache,openid-client"
         },
         {
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade @gemeentenijmegen/projen-project-type @glen/jest-raw-loader @playwright/test @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk aws-sdk-client-mock axios-mock-adapter copyfiles esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-aws-client-mock jest-junit projen standard-version ts-jest ts-node typescript @aws-sdk/client-cloudwatch-logs @aws-sdk/client-dynamodb @aws-sdk/client-secrets-manager @aws-sdk/client-ses @aws-sdk/client-ssm @aws-solutions-constructs/aws-lambda-dynamodb @gemeentenijmegen/apiclient @gemeentenijmegen/apigateway-http @gemeentenijmegen/aws-constructs @gemeentenijmegen/dnssec-record @gemeentenijmegen/session @gemeentenijmegen/utils @pepperize/cdk-route53-health-check @types/aws-lambda @types/cookie @types/mustache aws-cdk-lib aws4-axios axios cdk-remote-stack constructs cookie dotenv mustache openid-client"
+          "exec": "yarn upgrade @gemeentenijmegen/projen-project-type @glen/jest-raw-loader @playwright/test @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk aws-sdk-client-mock axios-mock-adapter copyfiles esbuild eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-aws-client-mock jest-junit projen standard-version ts-jest ts-node typescript @aws-sdk/client-cloudwatch-logs @aws-sdk/client-dynamodb @aws-sdk/client-secrets-manager @aws-sdk/client-ses @aws-sdk/client-ssm @aws-solutions-constructs/aws-lambda-dynamodb @gemeentenijmegen/apiclient @gemeentenijmegen/apigateway-http @gemeentenijmegen/aws-constructs @gemeentenijmegen/dnssec-record @gemeentenijmegen/session @gemeentenijmegen/utils @pepperize/cdk-route53-health-check @privacybydesign/yivi-frontend @types/aws-lambda @types/cookie @types/mustache aws-cdk-lib aws4-axios axios cdk-remote-stack chart.js constructs cookie dotenv mustache openid-client"
         },
         {
           "exec": "npx projen"

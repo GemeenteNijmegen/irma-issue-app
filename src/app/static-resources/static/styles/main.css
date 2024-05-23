@@ -141,3 +141,11 @@ img {
 .hidden {
   display: none;
 }
+
+table th {
+  font-weight: bold;
+}
+
+table th, td {
+  padding: .25em;
+}
