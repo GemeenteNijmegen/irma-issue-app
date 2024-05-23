@@ -26,6 +26,20 @@ const chart = new Chart(ctx, {
   },
 });
 
+const table = document.getElementById('statistics-table');
+
+function updateTable(data) {
+  let body = '<tbody>';
+  for(let dataPoint of Object.keys(data).reverse()) {
+    body += `<tr>
+      <td>${dataPoint}</td><td>${data[dataPoint]}</td>
+    </tr>`;
+  }
+  body += '</tbody>';
+  const newBody = htmlStringToElement(body);
+  const oldBody = table.querySelector('tbody');
+  oldBody.replaceWith(newBody);
+}
 
 // Plot data on page load
 plotData();
@@ -48,9 +62,21 @@ function plotData(){
       });
       console.log('Updating chart...');
       chart.update();
+      updateTable(data);
     });
   }).catch(error => {
     console.error(error);
   });
 
+/**
+ * Transform an html-string to an actual nodetree
+ * 
+ * @param {string} html the valid HTML as as string
+ * @returns {Node} the html node
+ */
+function htmlStringToElement(html) {
+  var template = document.createElement('template');
+  html = html.trim(); // Never return a text node of whitespace as the result
+  template.innerHTML = html;
+  return template.content.firstChild;
 }
