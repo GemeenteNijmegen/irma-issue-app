@@ -84,8 +84,7 @@ export class ApiStack extends Stack {
     const odicClientId = SSM.StringParameter.fromStringParameterName(this, 'ssm-odic-client-id', Statics.ssmOIDCClientID);
     const oidcScope = SSM.StringParameter.fromStringParameterName(this, 'ssm-odic-scope', Statics.ssmOIDCScope);
 
-    const statisticsTable = this.setupStatisticsPublication(statisticsLogGroup);
-    new Statistics(this, 'stats', { logGroup: statisticsLogGroup });
+    const statistics = new Statistics(this, 'stats', { logGroup: statisticsLogGroup });
 
     const loginFunction = new ApiFunction(this, 'yivi-issue-login-function', {
       description: 'Login-pagina voor de YIVI issue-applicatie.',
@@ -193,11 +192,11 @@ export class ApiStack extends Stack {
       applicationUrlBase: baseUrl,
       criticality: props.configuration.criticality,
       environment: {
-        TABLE_NAME: statisticsTable.tableName,
+        TABLE_NAME: statistics.table.tableName,
       },
       lambdaInsightsExtensionArn: insightsArn,
     }, StatisticsFunction);
-    statisticsTable.grantReadData(statisticsFunction.lambda);
+    statistics.table.grantReadData(statisticsFunction.lambda);
 
     // Allow lambda role to invoke the API in a different account
     if (props.configuration.useLambdaRoleForYiviServer) {

@@ -11,13 +11,14 @@ interface StatisticsProps {
   logGroup: LogGroup;
 }
 export class Statistics extends Construct {
+  public readonly table: Table;
   constructor(scope: Construct, id: string, props: StatisticsProps) {
     super(scope, id);
-    const table = this.table();
-    this.setupStatisticsPublication(props.logGroup, table);
+    this.table = this.createTable();
+    this.setupStatisticsPublication(props.logGroup, this.table);
   }
 
-  table() {
+  createTable() {
     const table = new Table(this, 'statistics', {
       partitionKey: { name: 'type', type: AttributeType.STRING },
       sortKey: { name: 'date', type: AttributeType.STRING },
