@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { CloudWatchLogsClient } from '@aws-sdk/client-cloudwatch-logs';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ApiClient } from '@gemeentenijmegen/apiclient';
@@ -7,7 +8,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { DigidLoa } from '../../src/app/code/DigiDLoa';
 import { YiviApi } from '../../src/app/code/YiviApi';
 import { BrpApi } from '../../src/app/issue/BrpApi';
-import { issueRequestHandler } from '../../src/app/issue/issueRequestHandler';
+import { IssueRequestHandler } from '../../src/app/issue/issueRequestHandler';
 import { TestUtils } from '../other/TestUtils';
 
 const ddbMock = mockClient(DynamoDBClient);
@@ -58,7 +59,16 @@ test('Issue page loads successfull', async () => {
   axiosMock.onPost('https://example.com/brp/api/test').reply(200, TestUtils.getBrpExampleData());
 
   // Call issue request handler
-  const response = await issueRequestHandler('session=12345', brpApi, yiviApi, dynamoDBClient, logsClient);
+  const handler = new IssueRequestHandler({
+    brpApi,
+    yiviApi,
+    logsClient,
+    dynamoDBClient,
+  });
+  const response = await handler.handle({
+    cookies: 'session=12345',
+    requestId: randomUUID(),
+  });
 
   // Check if the session resonse is encoded in the html
   const data = await brpApi.getBrpData('900026236');
@@ -72,8 +82,16 @@ test('Issue page not logged in', async () => {
   const dynamoDBClient = TestUtils.getSessionStoreMock(ddbMock, false);
   const logsClient = new CloudWatchLogsClient({});
 
-  const response = await issueRequestHandler('session=12345', brpApi, yiviApi, dynamoDBClient, logsClient);
-  expect(response.statusCode).toBe(302);
+  const handler = new IssueRequestHandler({
+    brpApi,
+    yiviApi,
+    logsClient,
+    dynamoDBClient,
+  });
+  const response = await handler.handle({
+    cookies: 'session=12345',
+    requestId: randomUUID(),
+  }); expect(response.statusCode).toBe(302);
   expect(response.headers?.Location).toBe('/login');
   expect(response.body).toBe('');
 });
@@ -86,8 +104,16 @@ test('Yivi API timeout', async () => {
   axiosMock.onPost('https://example.com/brp/api/test').reply(200, TestUtils.getBrpExampleData());
 
   // Call issue request handler
-  const response = await issueRequestHandler('session=12345', brpApi, yiviApi, dynamoDBClient, logsClient);
-  expect(response.body).toContain('Er is iets mis gegaan bij het inladen van uw persoonsgegevens in Yivi. Probeer het later opnieuw');
+  const handler = new IssueRequestHandler({
+    brpApi,
+    yiviApi,
+    logsClient,
+    dynamoDBClient,
+  });
+  const response = await handler.handle({
+    cookies: 'session=12345',
+    requestId: randomUUID(),
+  }); expect(response.body).toContain('Er is iets mis gegaan bij het inladen van uw persoonsgegevens in Yivi. Probeer het later opnieuw');
 
 });
 
@@ -99,7 +125,15 @@ test('BRP API timeout', async () => {
   axiosMock.onPost('https://example.com/brp/api/test').timeout();
 
   // Call issue request handler
-  const response = await issueRequestHandler('session=12345', brpApi, yiviApi, dynamoDBClient, logsClient);
-  expect(console.error).toHaveBeenCalledWith('BRP API:', 'Het ophalen van gegevens duurt te lang.');
+  const handler = new IssueRequestHandler({
+    brpApi,
+    yiviApi,
+    logsClient,
+    dynamoDBClient,
+  });
+  const response = await handler.handle({
+    cookies: 'session=12345',
+    requestId: randomUUID(),
+  }); expect(console.error).toHaveBeenCalledWith('BRP API:', 'Het ophalen van gegevens duurt te lang.');
   expect(response.body).toContain('duurde te lang');
 });
