@@ -7,14 +7,10 @@ import {
   aws_ssm as ssm,
   aws_iam as iam,
   aws_apigatewayv2 as apigatewayv2,
-  Duration,
 } from 'aws-cdk-lib';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
-import { AttributeType, BillingMode, Table } from 'aws-cdk-lib/aws-dynamodb';
-import { Rule, RuleTargetInput, Schedule } from 'aws-cdk-lib/aws-events';
-import { LambdaFunction } from 'aws-cdk-lib/aws-events-targets';
-import { AccountPrincipal, PolicyStatement, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
-import { LogGroup } from 'aws-cdk-lib/aws-logs';
+import { Table } from 'aws-cdk-lib/aws-dynamodb';
+import { AccountPrincipal, PrincipalWithConditions, Role } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 import { ApiFunction } from './ApiFunction';
 import { AuthFunction } from './app/auth/auth-function';
@@ -24,9 +20,9 @@ import { LogoutFunction } from './app/logout/logout-function';
 import { StatisticsFunction } from './app/statistics/statistics-function';
 import { Configurable } from './Configuration';
 import { DynamoDbReadOnlyPolicy } from './iam/dynamodb-readonly-policy';
-import { CalculateStatisticsFunction } from './lambdas/statistics/CalculateStatistics-function';
 import { SessionsTable } from './SessionsTable';
 import { Statics } from './statics';
+import { Statistics } from './Statistics';
 import { AppDomainUtil } from './Util';
 
 export interface ApiStackProps extends StackProps, Configurable {
@@ -89,6 +85,7 @@ export class ApiStack extends Stack {
     const oidcScope = SSM.StringParameter.fromStringParameterName(this, 'ssm-odic-scope', Statics.ssmOIDCScope);
 
     const statisticsTable = this.setupStatisticsPublication(statisticsLogGroup);
+    new Statistics(this, 'stats', { logGroup: statisticsLogGroup });
 
     const loginFunction = new ApiFunction(this, 'yivi-issue-login-function', {
       description: 'Login-pagina voor de YIVI issue-applicatie.',
@@ -369,76 +366,4 @@ export class ApiStack extends Stack {
     });
 
   }
-
-
-  setupStatisticsPublication(logGroup: LogGroup) {
-
-    const table = new Table(this, 'statistics', {
-      partitionKey: { name: 'type', type: AttributeType.STRING },
-      sortKey: { name: 'date', type: AttributeType.STRING },
-      billingMode: BillingMode.PAY_PER_REQUEST,
-    });
-
-    const calculateStatistics = new CalculateStatisticsFunction(this, 'calculate-statistics', {
-      environment: {
-        TABLE_NAME: table.tableName,
-        LOG_GROUP: logGroup.logGroupName,
-      },
-      timeout: Duration.minutes(5),
-    });
-    logGroup.grantRead(calculateStatistics);
-    table.grantReadWriteData(calculateStatistics);
-    calculateStatistics.addToRolePolicy(new PolicyStatement({
-      actions: ['logs:StartQuery'],
-      resources: [
-        logGroup.logGroupArn,
-      ],
-    }));
-    calculateStatistics.addToRolePolicy(new PolicyStatement({
-      actions: ['logs:GetQueryResults'],
-      resources: ['*'],
-    }));
-
-    new Rule(this, 'calculate-statistics-day', {
-      schedule: Schedule.cron({
-        hour: '3',
-        minute: '0',
-      }),
-      targets: [new LambdaFunction(calculateStatistics, {
-        event: RuleTargetInput.fromObject({
-          scope: 'day',
-        }),
-      })],
-    });
-
-    new Rule(this, 'calculate-statistics-month', {
-      schedule: Schedule.cron({
-        day: '1',
-        hour: '3',
-        minute: '0',
-      }),
-      targets: [new LambdaFunction(calculateStatistics, {
-        event: RuleTargetInput.fromObject({
-          scope: 'month',
-        }),
-      })],
-    });
-
-    new Rule(this, 'calculate-statistics-year', {
-      schedule: Schedule.cron({
-        month: '1', // Jan 1 03.00 every year
-        day: '1',
-        hour: '3',
-        minute: '0',
-      }),
-      targets: [new LambdaFunction(calculateStatistics, {
-        event: RuleTargetInput.fromObject({
-          scope: 'year',
-        }),
-      })],
-    });
-
-    return table;
-  }
-
 }
