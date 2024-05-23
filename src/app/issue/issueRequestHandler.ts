@@ -101,9 +101,9 @@ export class IssueRequestHandler {
   }
 
   /**
-   * Add the requred issue event data to the sessino for
+   * Add the required issue event data to the session for
    * collecting statistics one usage of the yivi-issue-app later on
-   * @param session the uses session to store data in
+   * @param session the user session to store data in
    */
   async storeIssueEventInSession(session: Session) {
     const loggedin = session.getValue('loggedin', 'BOOL') ?? false;
@@ -126,11 +126,6 @@ export class IssueRequestHandler {
 
   /**
    * Log the issue event to a separate log group
-   * @param session
-   * @param brpData
-   * @param requestId
-   * @param yiviSessionToken
-   * @param error
    */
   async logIssueEvent(session: Session, brpData: any, requestId: string, yiviSessionToken: string, error?: string) {
 
