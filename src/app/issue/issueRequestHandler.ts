@@ -47,13 +47,12 @@ export class IssueRequestHandler {
 
 
   /**
- * Request persoonsgegevens form BRP send them to the YIVI server
- * logs the issue event and passes the yivi sessionPtr to the render.
- * @param session
- * @param brpClient
- * @param yiviApi
- * @returns
- */
+   * Request persoonsgegevens form BRP send them to the YIVI server
+   * logs the issue event and passes the yivi sessionPtr to the render.
+   * @param session
+   * @param requestId
+   * @returns
+   */
   async handleLoggedinRequest(session: Session, requestId: string) {
     let error = undefined;
 
@@ -127,9 +126,10 @@ export class IssueRequestHandler {
 
   /**
    * Log the issue event to a separate log group
-   * @param client
    * @param session
    * @param brpData
+   * @param requestId
+   * @param yiviSessionToken
    * @param error
    */
   async logIssueEvent(session: Session, brpData: any, requestId: string, yiviSessionToken: string, error?: string) {
@@ -145,17 +145,10 @@ export class IssueRequestHandler {
     const diversify = `${brpDataAsJson}/${process.env.DIVERSIFYER}`;
     const subject = crypto.createHash('sha256').update(diversify).digest('hex');
 
-    // For tracability between webapp and server we hash the session token to correlate with
-    // the session token that is logged by the irmago server.
-    let yiviSessionFingerprint = 'no session token';
-    if (yiviSessionToken) {
-      yiviSessionFingerprint = crypto.createHash('sha256').update(yiviSessionToken).digest('hex');
-    }
-
     // Constuct the message
-    let message = JSON.stringify({ timestamp, gemeente, subject, loa, issueAttempt, requestId, yiviSessionFingerprint });
+    let message = JSON.stringify({ timestamp, gemeente, subject, loa, issueAttempt, requestId, yiviSessionToken });
     if (error) {
-      message = JSON.stringify({ timestamp, loa, issueAttempt, error, requestId, yiviSessionFingerprint });
+      message = JSON.stringify({ timestamp, loa, issueAttempt, error, requestId, yiviSessionToken });
     }
 
     // Log the message
