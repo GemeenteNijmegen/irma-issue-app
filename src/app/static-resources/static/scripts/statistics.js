@@ -67,6 +67,7 @@ function plotData(){
   }).catch(error => {
     console.error(error);
   });
+}
 
 /**
  * Transform an html-string to an actual nodetree
