@@ -51,20 +51,7 @@ function plotData(){
   
   // Fetch data from the same lambda as renders this page
   fetch(window.location.href + "?scope="+scope).then(response => {
-      data = {
-        "2024-04": 17,
-        "2024-03": 8,
-        "2024-02": 5,
-        "2024-01": 5,
-        "2023-12": 3,
-        "2023-11": 1,
-        "2023-10": 9,
-        "2023-09": 7,
-        "2023-08": 6,
-        "2023-07": 13,
-        "2023-06": 1,
-        "2023-05": 3
-    }
+    response.json().then(data => {
       const labels = Object.keys(data).reverse();
       const values = Object.values(data).reverse();
       console.log(data);
@@ -77,9 +64,9 @@ function plotData(){
       chart.update();
       updateTable(data);
     });
-
-}
-
+  }).catch(error => {
+    console.error(error);
+  });
 
 /**
  * Transform an html-string to an actual nodetree

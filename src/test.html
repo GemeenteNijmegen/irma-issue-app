@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+
+        <!-- Search engine metadata -->
+        <meta name="title" content="Yivi persoonsgegevens toevoegen">
+        <meta name="description" content="Voeg je persoonsgegevens (BRP) toe aan Yivi (Gemeente Nijmegen stelt de persoonsgevens beschikbaar voor iedereen in Nederland)">
+        <meta name="keywords" content="Yivi, BRP, Gemeente Nijmegen, GemeenteNijmegen, SIDN, IRMA">
+        <meta name="robots" content="index, nofollow">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+        <!-- Open graph metadata (for sharing link) -->
+        <meta property="og:title" content="Yivi persoonsgegevens toevoegen">
+        <meta property="og:description" content="Voeg je persoonsgegevens (BRP) toe aan Yivi (Gemeente Nijmegen stelt de persoonsgevens beschikbaar voor iedereen in Nederland)">
+        <meta property="og:image" content="/static/img/yivi-logo-compact.svg" />
+        <meta property="og:image:alt" content="Yivi - the identity wallet" />
+
+        <title>Yivi - persoonsgevens</title>
+
+        <link rel="stylesheet" href="../src/app/static-resources/static/styles/main.css"/>
+        <link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+
+    </head>
+    <body>
+        <header>
+            <a href="#">
+                <img class="logo-compact" src="static/img/yivi-logo-compact.svg" alt="Yivi - the identity wallet">
+                <img class="logo-large" src="static/img/yivi-logo.svg" alt="Yivi - the identity wallet">
+            </a>
+            <a href="#"><img src="https://componenten.nijmegen.nl/v6.0.0/img/beeldmerklabel.svg" alt="Gemeente Nijmegen"></a>
+        </header><main>
+    <h1>Statistieken</h1>
+    <p>Het aantal keren dat persoonsgegevens in de Yivi-app zijn geladen.</p>
+    <p>
+    We slaan geen persoonsgegevens op bij het verstrekken van BRP gegevens aan gebruikers. 
+    Er worden wel geanonimiseerde statistieken bijgehouden over het aantal keren dat persoonsgegevens worden verstrekt.
+    </p>
+    <select id="select">
+        <option value="month" selected="selected">Per maand</option>
+        <option value="year">Per jaar</option>
+    </select>
+    <canvas id="chart"></canvas>
+    <table class="responsive-table" id="statistics-table">
+      <thead>
+        <tr>
+          <th>Periode</th>
+          <th>Aantal</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="2">Nog geen data geladen</td></tr>
+        </tbody>
+    </table>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../src/app/static-resources/static/scripts/statistics.js"></script>
+
+    </body>
+</html>
