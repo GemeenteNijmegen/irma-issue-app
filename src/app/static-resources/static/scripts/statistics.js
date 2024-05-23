@@ -51,9 +51,10 @@ function plotData(){
   
   // Fetch data from the same lambda as renders this page
   fetch(window.location.href + "?scope="+scope).then(response => {
-    response.json().then(data => {
-      const labels = Object.keys(data).reverse();
-      const values = Object.values(data).reverse();
+    response.json().then(result => {
+      const data = sortData(result);
+      const labels = Object.keys(data)
+      const values = Object.values(data)
       console.log(data);
     
       chart.data.labels = labels;
@@ -80,4 +81,20 @@ function htmlStringToElement(html) {
   html = html.trim(); // Never return a text node of whitespace as the result
   template.innerHTML = html;
   return template.content.firstChild;
+}
+
+
+/**
+ * Sorts an object by its keys
+ * @param {} data 
+ * @returns 
+ */
+function sortData(data){
+  return Object.keys(data).sort().reduce(
+    (obj, key) => { 
+      obj[key] = data[key]; 
+      return obj;
+    }, 
+    {}
+  );
 }
