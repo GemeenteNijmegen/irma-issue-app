@@ -2,8 +2,9 @@ import { CloudWatchLogsClient } from '@aws-sdk/client-cloudwatch-logs';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ApiClient } from '@gemeentenijmegen/apiclient';
 import { Response } from '@gemeentenijmegen/apigateway-http';
+import { Context } from 'aws-lambda';
 import { BrpApi } from './BrpApi';
-import { issueRequestHandler } from './issueRequestHandler';
+import { IssueRequestHandler } from './issueRequestHandler';
 import { YiviApi } from '../code/YiviApi';
 
 const dynamoDBClient = new DynamoDBClient({ region: process.env.AWS_REGION });
@@ -22,18 +23,25 @@ async function init() {
 
 const initPromise = init();
 
-function parseEvent(event: any) {
+function parseEvent(event: any, context: Context) {
   return {
     cookies: event?.cookies?.join(';'),
+    requestId: context.awsRequestId,
   };
 }
 
-exports.handler = async (event: any) => {
+export async function handler(event: any, context: Context) {
   try {
-    const params = parseEvent(event);
     await initPromise;
 
-    return await issueRequestHandler(params.cookies, brpApi, yiviApi, dynamoDBClient, logsClient);
+    const params = parseEvent(event, context);
+    const issueRequestHandler = new IssueRequestHandler({
+      dynamoDBClient,
+      logsClient,
+      brpApi,
+      yiviApi,
+    });
+    return await issueRequestHandler.handle(params);
 
   } catch (err) {
     console.error(err);
