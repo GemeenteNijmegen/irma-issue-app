@@ -1,15 +1,14 @@
 import { CloudWatchLogsClient, GetQueryResultsCommand, QueryStatus, StartQueryCommand } from '@aws-sdk/client-cloudwatch-logs';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { ScheduledEvent } from 'aws-lambda';
 
 const dynamoDBClient = new DynamoDBClient({});
 const logsClient = new CloudWatchLogsClient();
 
-export async function handler(event: ScheduledEvent) {
+export async function handler(event: any) {
   console.log('Calculating statistics...');
-  const scope = event.detail?.scope;
-  const beginDate = event.detail?.beginDate;
-  const endDate = event.detail?.endDate ?? new Date();
+  const scope = event.scope;
+  const beginDate = event.beginDate;
+  const endDate = event.endDate ?? new Date();
   console.log(event);
 
   // Triggerd by EventBridge rule
@@ -32,10 +31,10 @@ async function startCalculation(scope: string, date: Date) {
       console.log('Monthly calculations...');
       await calculateMonlthyStatistics(date);
     } else if (scope == 'year') {
-      console.log('Monthly calculations...');
+      console.log('Annual calculations...');
       await calculateAnnualStatistics(date);
     } else {
-      console.log('Dayly calculations...');
+      console.log('Daily calculations...');
       await calculateDailyStatistics(date);
     }
   } catch (error) {
