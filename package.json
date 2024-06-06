@@ -80,7 +80,7 @@
     "@gemeentenijmegen/dnssec-record": "^0.0.16",
     "@gemeentenijmegen/session": "^0.0.11",
     "@gemeentenijmegen/utils": "^0.0.12",
-    "@pepperize/cdk-route53-health-check": "^0.0.602",
+    "@pepperize/cdk-route53-health-check": "^0.0.603",
     "@privacybydesign/yivi-frontend": "^0.1.3",
     "@types/aws-lambda": "^8.10.138",
     "@types/cookie": "^0.6.0",
