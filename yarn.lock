@@ -1619,10 +1619,10 @@
   resolved "https://registry.yarnpkg.com/@oozcitak/util/-/util-8.3.8.tgz#10f65fe1891fd8cde4957360835e78fd1936bfdd"
   integrity sha512-T8TbSnGsxo6TDBJx/Sgv/BlVJL3tshxZP7Aq5R1mSnM5OcHY2dQaxLMu2+E8u3gN0MLOzdjurqN4ZRVuzQycOQ==
 
-"@pepperize/cdk-route53-health-check@^0.0.608":
-  version "0.0.608"
-  resolved "https://registry.yarnpkg.com/@pepperize/cdk-route53-health-check/-/cdk-route53-health-check-0.0.608.tgz#f9a021161468e3ef1a1b6b75f0ff0e68c0c95b15"
-  integrity sha512-Dhzu4hx0WmRn7HlKRD70hje6ooSGuyuGMqCi+2bF9gWrqXq9bYmya3Q4KcyXtk0tAqJmQ9rPbEIhus9vhbQEzg==
+"@pepperize/cdk-route53-health-check@^0.0.609":
+  version "0.0.609"
+  resolved "https://registry.yarnpkg.com/@pepperize/cdk-route53-health-check/-/cdk-route53-health-check-0.0.609.tgz#1cc80efc82b08e9bab325bcf14be49834efd8f36"
+  integrity sha512-svKZUwdYfFVLAfjS/llOI7F3DX4YAfCtYYBcuay+u9/w+i6Ir4g5h7Vd0wyqxBczDBv2ci1q2ksVE/e+bUHqrQ==
 
 "@playwright/test@^1.44.1":
   version "1.44.1"
@@ -2119,9 +2119,9 @@
     tslib "^2.6.2"
 
 "@smithy/util-waiter@^3.0.1":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@smithy/util-waiter/-/util-waiter-3.1.0.tgz#7fa58fe91ddcf4a8bcf00c3d216f2cc14386da2a"
-  integrity sha512-5OVcC5ZcmmutY208ADY/l2eB4H4DVXs+hPUo/M1spF4/YEmF9DdLkfwBvohej2dIeVJayKY7hMlD0X8j3F3/Uw==
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@smithy/util-waiter/-/util-waiter-3.1.1.tgz#9defbb12eda75135dc6e347923b3a01a8ef4a256"
+  integrity sha512-xT+Bbpe5sSrC7cCWSElOreDdWzqovR1V+7xrp+fmwGAA+TPYBb78iasaXjO1pa+65sY6JjW5GtGeIoJwCK9B1g==
   dependencies:
     "@smithy/abort-controller" "^3.1.0"
     "@smithy/types" "^3.2.0"
@@ -3383,9 +3383,9 @@ dotgitignore@^2.1.0:
     minimatch "^3.0.4"
 
 electron-to-chromium@^1.4.796:
-  version "1.4.807"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.807.tgz#4d6c5ea1516f0164ac5bfd487ccd4ee9507c8f01"
-  integrity sha512-kSmJl2ZwhNf/bcIuCH/imtNOKlpkLDn2jqT5FJ+/0CXjhnFaOa9cOe9gHKKy71eM49izwuQjZhKk+lWQ1JxB7A==
+  version "1.4.808"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.808.tgz#85b2f93a5e32c2949a1a4d39375851945c936835"
+  integrity sha512-0ItWyhPYnww2VOuCGF4s1LTfbrdAV2ajy/TN+ZTuhR23AHI6rWHCrBXJ/uxoXOvRRqw8qjYVrG81HFI7x/2wdQ==
 
 emittery@^0.13.1:
   version "0.13.1"
