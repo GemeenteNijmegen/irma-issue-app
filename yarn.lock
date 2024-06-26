@@ -1619,10 +1619,10 @@
   resolved "https://registry.yarnpkg.com/@oozcitak/util/-/util-8.3.8.tgz#10f65fe1891fd8cde4957360835e78fd1936bfdd"
   integrity sha512-T8TbSnGsxo6TDBJx/Sgv/BlVJL3tshxZP7Aq5R1mSnM5OcHY2dQaxLMu2+E8u3gN0MLOzdjurqN4ZRVuzQycOQ==
 
-"@pepperize/cdk-route53-health-check@^0.0.609":
-  version "0.0.609"
-  resolved "https://registry.yarnpkg.com/@pepperize/cdk-route53-health-check/-/cdk-route53-health-check-0.0.609.tgz#1cc80efc82b08e9bab325bcf14be49834efd8f36"
-  integrity sha512-svKZUwdYfFVLAfjS/llOI7F3DX4YAfCtYYBcuay+u9/w+i6Ir4g5h7Vd0wyqxBczDBv2ci1q2ksVE/e+bUHqrQ==
+"@pepperize/cdk-route53-health-check@^0.0.610":
+  version "0.0.610"
+  resolved "https://registry.yarnpkg.com/@pepperize/cdk-route53-health-check/-/cdk-route53-health-check-0.0.610.tgz#272b7ec9f1bd03a433255e60e00936428a400134"
+  integrity sha512-ieb0TuRaLtNX8RdwTnzrURrr76m34cAQCatpsq+4Zq+RrVqGy4hCaE/w8MP3fd4ClRzOfg0bUVGLARdgF9BZrQ==
 
 "@playwright/test@^1.45.0":
   version "1.45.0"
@@ -2245,9 +2245,9 @@
   integrity sha512-PLwiVvTBg59tGFL/8VpcGvqOu3L4OuveNvPi0EYbWchRdEVP++yRUXJPFl+CApKEq13017/4Nf7aQ5lTtHUNsA==
 
 "@types/node@*":
-  version "20.14.8"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.14.8.tgz#45c26a2a5de26c3534a9504530ddb3b27ce031ac"
-  integrity sha512-DO+2/jZinXfROG7j7WKFn/3C6nFwxy2lLpgLjEXJz+0XKphZlTLJ14mo8Vfg8X5BWN6XjyESXq+LcYdT7tR3bA==
+  version "20.14.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.14.9.tgz#12e8e765ab27f8c421a1820c99f5f313a933b420"
+  integrity sha512-06OCtnTXtWOZBJlRApleWndH4JsRVs1pDCc8dLSQp+7PpUpX3ePdHyeNSFTeSe7FtKyQkrlPvHwJOW3SLd8Oyg==
   dependencies:
     undici-types "~5.26.4"
 
