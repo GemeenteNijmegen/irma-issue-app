@@ -43,7 +43,7 @@
     "projen": "npx projen"
   },
   "devDependencies": {
-    "@gemeentenijmegen/projen-project-type": "^1.7.3",
+    "@gemeentenijmegen/projen-project-type": "^1.7.4",
     "@glen/jest-raw-loader": "^2.0.0",
     "@playwright/test": "^1.46.0",
     "@types/jest": "^29.5.12",
@@ -80,9 +80,9 @@
     "@gemeentenijmegen/dnssec-record": "^0.0.18",
     "@gemeentenijmegen/session": "^0.0.13",
     "@gemeentenijmegen/utils": "^0.0.14",
-    "@pepperize/cdk-route53-health-check": "^0.0.621",
+    "@pepperize/cdk-route53-health-check": "^0.0.623",
     "@privacybydesign/yivi-frontend": "^0.1.3",
-    "@types/aws-lambda": "^8.10.142",
+    "@types/aws-lambda": "^8.10.143",
     "@types/cookie": "^0.6.0",
     "@types/mustache": "^4.2.5",
     "aws-cdk-lib": "^2.22.0",
