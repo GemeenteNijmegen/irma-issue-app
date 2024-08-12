@@ -37,7 +37,7 @@ export class YiviApi {
     }
     this.host = process.env.YIVI_API_HOST;
     this.region = process.env.YIVI_API_REGION;
-    this.apiKey = process.env.YIVI_API_KEY_ARN;
+    this.apiKey = await AWS.getSecret(process.env.YIVI_API_KEY_ARN);
 
     if (process.env.USE_LAMBDA_ROLE_FOR_YIVI_SERVER === 'yes') {
       console.info('Using lambda role credentials for YIVI API');

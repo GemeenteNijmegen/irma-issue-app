@@ -1,22 +1,22 @@
+import { randomUUID } from 'crypto';
 import { CloudWatchLogsClient, PutLogEventsCommand } from '@aws-sdk/client-cloudwatch-logs';
 import { DynamoDBClient, GetItemCommand, GetItemCommandOutput } from '@aws-sdk/client-dynamodb';
 import { SecretsManagerClient, GetSecretValueCommandOutput, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import { mockClient } from 'aws-sdk-client-mock';
-import { randomUUID } from 'crypto';
 import { handleRequest } from '../../src/app/auth/handleRequest';
 import { OpenIDConnect } from '../../src/app/code/OpenIDConnect';
 
 jest.mock('@gemeentenijmegen/utils/lib/AWS', () => ({
   AWS: {
-      getParameter: jest.fn().mockImplementation((name) => name),
-      getSecret: jest.fn().mockImplementation((arn) => arn),
-  }
+    getParameter: jest.fn().mockImplementation((name) => name),
+    getSecret: jest.fn().mockImplementation((arn) => arn),
+  },
 }));
 
 const OIDC = new OpenIDConnect();
 
 beforeAll( async () => {
-  
+
   if (process.env.VERBOSETESTS!='True') {
     global.console.error = jest.fn();
     global.console.info = jest.fn();
@@ -32,7 +32,7 @@ beforeAll( async () => {
   process.env.OIDC_CLIENT_ID_SSM = '1234';
   process.env.OIDC_SCOPE_SSM = 'openid';
 
-  process.env.TICKEN_LOG_GROUP_NAME= 'ticken-group'
+  process.env.TICKEN_LOG_GROUP_NAME= 'ticken-group';
   process.env.TICKEN_LOG_STREAM_NAME = 'ticken-stream';
 
   await OIDC.init();
@@ -57,7 +57,7 @@ jest.mock('openid-client', () => {
     Issuer: jest.fn(() => {
       // If we do not comment this out tests fail. However not sure of the impact of it
       // See: https://jestjs.io/docs/jest-object#jestrequireactualmodulename
-      //const originalIssuer = jest.requireActual('openid-client/lib/issuer'); 
+      //const originalIssuer = jest.requireActual('openid-client/lib/issuer');
       return {
         Client: jest.fn(() => {
           return {
@@ -104,8 +104,8 @@ test('Successful auth redirects to home', async () => {
   ddbMock.on(GetItemCommand).resolves(getItemOutput);
   logsMock.on(PutLogEventsCommand).resolves({
     $metadata: {
-      requestId: randomUUID()
-    }
+      requestId: randomUUID(),
+    },
   });
 
   const result = await handleRequest(params(`session=${sessionId}`, 'state', '12345'), dynamoDBClient, OIDC, logsClient);
@@ -180,7 +180,7 @@ test('Incorrect state errors', async () => {
   expect(console.error).toHaveBeenCalled();
 });
 
-function params(cookies: string, code: string, state: string, error?: string, error_description?: string){
+function params(cookies: string, code: string, state: string, error?: string, error_description?: string) {
   return {
     cookies,
     code,
