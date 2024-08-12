@@ -2,15 +2,15 @@ import { writeFile } from 'fs';
 import * as path from 'path';
 import { DynamoDBClient, GetItemCommandOutput, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { mockClient } from 'aws-sdk-client-mock';
-import { handleLoginRequest } from '../../src/app/login/loginRequestHandler';
 import { OpenIDConnect } from '../../src/app/code/OpenIDConnect';
+import { handleLoginRequest } from '../../src/app/login/loginRequestHandler';
 
 const ddbMock = mockClient(DynamoDBClient);
 jest.mock('@gemeentenijmegen/utils/lib/AWS', () => ({
   AWS: {
-      getParameter: jest.fn().mockImplementation((name) => name),
-      getSecret: jest.fn().mockImplementation((arn) => arn),
-  }
+    getParameter: jest.fn().mockImplementation((name) => name),
+    getSecret: jest.fn().mockImplementation((arn) => arn),
+  },
 }));
 const OIDC = new OpenIDConnect();
 
@@ -50,7 +50,7 @@ test('index is ok', async () => {
 test('Return login page with correct link', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
   const result = await handleLoginRequest({ cookies: '' }, dynamoDBClient, OIDC);
-  if(!('body' in result)){
+  if (!('body' in result)) {
     expect('body' in result).toBe(true);
     return;
   }
@@ -92,7 +92,7 @@ test('Redirect to home if already logged in', async () => {
   const sessionId = '12345';
   const result = await handleLoginRequest({ cookies: `session=${sessionId}` }, dynamoDBClient, OIDC);
   expect(result.statusCode).toBe(302);
-  if(!('Location' in (result.headers ?? {}))){
+  if (!('Location' in (result.headers ?? {}))) {
     expect('Location' in (result.headers ?? {})).toBe(true);
     return;
   }
@@ -120,15 +120,15 @@ test('Known session without login returns login page, without creating new sessi
   ddbMock.on(GetItemCommand).resolves(output);
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
   const sessionId = '12345';
-  const result = await handleLoginRequest({cookies: `session=${sessionId}` }, dynamoDBClient, OIDC);
+  const result = await handleLoginRequest({ cookies: `session=${sessionId}` }, dynamoDBClient, OIDC);
   expect(ddbMock.calls().length).toBe(2);
   expect(result.statusCode).toBe(200);
 });
 
 test('Request without session returns session cookie', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
-  const result = await handleLoginRequest({cookies: ''}, dynamoDBClient, OIDC);
-  if(!('cookies' in result)){
+  const result = await handleLoginRequest({ cookies: '' }, dynamoDBClient, OIDC);
+  if (!('cookies' in result)) {
     expect('cookies' in result).toBe(true);
     return;
   }
@@ -142,7 +142,7 @@ test('DynamoDB error', async () => {
   const dynamoDBClient = new DynamoDBClient({ region: 'eu-west-1' });
   let failed = false;
   try {
-    await handleLoginRequest({ cookies: `session=12345` }, dynamoDBClient, OIDC);
+    await handleLoginRequest({ cookies: 'session=12345' }, dynamoDBClient, OIDC);
   } catch (error) {
     failed = true;
   }

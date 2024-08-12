@@ -1,5 +1,5 @@
 import { ApiClient } from '@gemeentenijmegen/apiclient';
-import { AWS, Bsn } from '@gemeentenijmegen/utils';
+import { Bsn } from '@gemeentenijmegen/utils';
 
 export class BrpApi {
 
@@ -15,7 +15,7 @@ export class BrpApi {
     if (!process.env.BRP_API_URL) {
       throw new Error('Could not initialize brp api as no endpoint parameter is provided in BRP_API_URL (should be SSM parameter path)');
     }
-    this.endpoint = await AWS.getParameter(process.env.BRP_API_URL);
+    this.endpoint = process.env.BRP_API_URL;
   }
 
   /**

@@ -35,8 +35,8 @@ export class YiviApi {
           || !process.env.YIVI_API_KEY_ARN || !process.env.YIVI_API_HOST || !process.env.YIVI_API_REGION) {
       throw Error('Clould not initialize YIVI API client');
     }
-    this.host = await AWS.getParameter(process.env.YIVI_API_HOST);
-    this.region = await AWS.getParameter(process.env.YIVI_API_REGION);
+    this.host = process.env.YIVI_API_HOST;
+    this.region = process.env.YIVI_API_REGION;
     this.apiKey = await AWS.getSecret(process.env.YIVI_API_KEY_ARN);
 
     if (process.env.USE_LAMBDA_ROLE_FOR_YIVI_SERVER === 'yes') {

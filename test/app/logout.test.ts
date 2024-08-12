@@ -36,7 +36,6 @@ test('Return empty session cookie', async () => {
   const result = await handleLogoutRequest('', dynamoDBClient);
   let cookies = result.cookies?.filter((cookie: string) => cookie.indexOf('sessionid=;'));
   expect(cookies).not.toBeUndefined();
-  if(cookies)
-    expect(cookies.length).toBe(1);
+  if (cookies) {expect(cookies.length).toBe(1);}
   expect(result.statusCode).toBe(200);
 });
