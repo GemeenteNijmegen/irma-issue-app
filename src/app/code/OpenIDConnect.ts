@@ -26,9 +26,9 @@ export class OpenIDConnect {
       ].join(', ');
       throw Error(errorMsg);
     }
-    this.authBaseUrl = await AWS.getParameter(process.env.AUTH_URL_BASE_SSM);
-    this.oidcClientId = await AWS.getParameter(process.env.OIDC_CLIENT_ID_SSM);
-    this.oidcScope = await AWS.getParameter(process.env.OIDC_SCOPE_SSM);
+    this.authBaseUrl = process.env.AUTH_URL_BASE_SSM;
+    this.oidcClientId = process.env.OIDC_CLIENT_ID_SSM;
+    this.oidcScope = process.env.OIDC_SCOPE_SSM;
 
     this.issuer = this.getIssuer(this.authBaseUrl);
     this.applicationBaseUrl = process.env.APPLICATION_URL_BASE;
