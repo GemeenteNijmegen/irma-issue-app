@@ -11,7 +11,6 @@ const project = new GemeenteNijmegenCdkApp({
     'cdk-remote-stack',
     '@gemeentenijmegen/dnssec-record',
     '@gemeentenijmegen/aws-constructs',
-
     '@pepperize/cdk-route53-health-check',
 
     // Lambda packages
@@ -24,11 +23,10 @@ const project = new GemeenteNijmegenCdkApp({
     '@gemeentenijmegen/session',
     '@gemeentenijmegen/utils',
     '@gemeentenijmegen/apigateway-http',
-    //'@privacybydesign/yivi-frontend', // YIVI check if this package is actually used in the code
     'axios',
     'mustache',
     '@types/mustache',
-    'aws4-axios@3.3.0',
+    'aws4-axios',
     'openid-client',
     '@types/cookie',
     'cookie',
