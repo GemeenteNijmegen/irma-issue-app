@@ -71,7 +71,7 @@
     "@aws-sdk/client-cloudwatch-logs": "^3.635.0",
     "@aws-sdk/client-dynamodb": "^3.635.0",
     "@aws-sdk/client-secrets-manager": "^3.635.0",
-    "@aws-sdk/client-ses": "^3.635.0",
+    "@aws-sdk/client-ses": "^3.636.0",
     "@aws-sdk/client-ssm": "^3.635.0",
     "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.65.0",
     "@gemeentenijmegen/apiclient": "^0.0.17",
