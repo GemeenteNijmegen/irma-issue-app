@@ -300,6 +300,7 @@ export class CloudfrontStack extends Stack {
       'default-src \'self\';',
       'frame-ancestors \'none\';',
       'base-uri \'self\';',
+      'form-action \'self\';',
       'frame-src \'self\';',
       `connect-src \'self\' https://componenten.nijmegen.nl https://${yiviHost};`,
       'style-src \'self\' https://componenten.nijmegen.nl https://fonts.googleapis.com https://fonts.gstatic.com \'sha256-hS1LM/30PjUBJK3kBX9Vm9eOAhQNCiNhf/SCDnUqu14=\' \'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=\' \'sha256-OTeu7NEHDo6qutIWo0F2TmYrDhsKWCzrUgGoxxHGJ8o=\';',
