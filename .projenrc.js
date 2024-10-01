@@ -5,6 +5,7 @@ const project = new GemeenteNijmegenCdkApp({
   defaultReleaseBranch: 'production',
   majorVersion: 1,
   name: 'yivi-issue-app',
+  repository: 'https://github.com/GemeenteNijmegen/yivi-issue-app.git',
   deps: [
     'dotenv',
     '@aws-solutions-constructs/aws-lambda-dynamodb',
