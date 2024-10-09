@@ -49,7 +49,7 @@
   "devDependencies": {
     "@gemeentenijmegen/projen-project-type": "^1.8.1",
     "@glen/jest-raw-loader": "^2.0.0",
-    "@playwright/test": "^1.47.2",
+    "@playwright/test": "^1.48.0",
     "@types/jest": "^29.5.13",
     "@types/node": "^18",
     "@typescript-eslint/eslint-plugin": "^7",
@@ -72,11 +72,11 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@aws-sdk/client-cloudwatch-logs": "^3.666.0",
-    "@aws-sdk/client-dynamodb": "^3.666.0",
-    "@aws-sdk/client-secrets-manager": "^3.666.0",
-    "@aws-sdk/client-ses": "^3.666.0",
-    "@aws-sdk/client-ssm": "^3.666.0",
+    "@aws-sdk/client-cloudwatch-logs": "^3.667.0",
+    "@aws-sdk/client-dynamodb": "^3.667.0",
+    "@aws-sdk/client-secrets-manager": "^3.667.0",
+    "@aws-sdk/client-ses": "^3.667.0",
+    "@aws-sdk/client-ssm": "^3.667.0",
     "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.72.0",
     "@gemeentenijmegen/apiclient": "^0.0.19",
     "@gemeentenijmegen/apigateway-http": "^0.0.16",
